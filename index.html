@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Wirtualny spacer — mieszkanie</title>
+<style>
+:root{--glass:rgba(20,20,17,.72);--line:rgba(255,255,255,.16);--text:#f5f2e9;--muted:rgba(245,242,233,.56)}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#171714;color:var(--text);font-family:Inter,Arial,sans-serif}
+#app{position:fixed;inset:0}canvas{display:block;width:100%;height:100%}
+.top{position:absolute;z-index:5;top:0;left:0;right:0;padding:22px 26px;display:flex;justify-content:space-between;pointer-events:none;background:linear-gradient(#11110f99,transparent)}
+.brand{pointer-events:auto}.eyebrow{font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:var(--muted)}h1{font-size:20px;font-weight:500;margin:5px 0 0}.sub{font-size:10px;color:var(--muted);margin-top:5px}
+.actions{display:flex;gap:8px;pointer-events:auto}.btn{height:40px;padding:0 15px;border:1px solid var(--line);border-radius:999px;background:var(--glass);backdrop-filter:blur(18px);color:var(--text);cursor:pointer}.btn:hover{background:rgba(40,40,35,.85)}
+.rooms{position:absolute;z-index:5;left:22px;top:50%;transform:translateY(-50%);width:245px;max-height:72vh;overflow:auto;padding:13px;border:1px solid var(--line);border-radius:18px;background:var(--glass);backdrop-filter:blur(20px);box-shadow:0 18px 60px #0003}
+.rooms::-webkit-scrollbar{width:4px}.rooms::-webkit-scrollbar-thumb{background:#fff2;border-radius:5px}.label{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);padding:4px 8px 9px}
+.room{width:100%;display:grid;grid-template-columns:25px 1fr auto;gap:7px;padding:9px 8px;border:0;border-radius:10px;background:transparent;color:#fff9;cursor:pointer;text-align:left}.room:hover,.room.active{background:#fff1;color:#fff}.num{font-size:9px;color:#fff6;padding-top:2px}.name{font-size:12px}.area{font-size:10px;color:#fff5}.separator{margin:10px 5px;border-top:1px solid #fff1}
+.hint{position:absolute;z-index:5;left:22px;bottom:22px;padding:10px 13px;border:1px solid var(--line);border-radius:11px;background:var(--glass);backdrop-filter:blur(18px);font-size:10px;color:var(--muted)}
+.controls{position:absolute;z-index:5;right:22px;bottom:22px;display:flex;gap:5px;padding:5px;border:1px solid var(--line);border-radius:999px;background:var(--glass);backdrop-filter:blur(18px)}
+.control{width:40px;height:36px;border:0;border-radius:999px;background:transparent;color:#fff9;cursor:pointer}.control:hover{background:#fff1;color:#fff}.control.active{background:#eee9de;color:#171714}
+.location{position:absolute;z-index:5;right:22px;top:80px;padding:9px 13px;border:1px solid var(--line);border-radius:999px;background:var(--glass);backdrop-filter:blur(18px);font-size:10px;color:#fff9}
+.hotspot{position:absolute;z-index:4;width:46px;height:46px;border:1px solid #fff9;border-radius:50%;background:#171714aa;backdrop-filter:blur(10px);display:grid;place-items:center;color:#fff;cursor:pointer;transform:translate(-50%,-50%);box-shadow:0 8px 25px #0004;transition:.2s}.hotspot:hover{transform:translate(-50%,-50%) scale(1.08)}.hotspot span{font-size:18px}
+.loading{position:absolute;z-index:20;inset:0;background:#171714;display:grid;place-items:center;transition:.5s}.loading.hide{opacity:0;visibility:hidden;pointer-events:none}.loader{text-align:center}.spinner{width:28px;height:28px;border:2px solid #fff2;border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;margin:auto auto 14px}@keyframes spin{to{transform:rotate(360deg)}}.load-title{font-size:14px}.load-sub{font-size:11px;color:var(--muted);margin-top:6px}
+.welcome{position:absolute;z-index:15;inset:0;display:grid;place-items:center;background:linear-gradient(#171714b8,#17171480);backdrop-filter:blur(3px);transition:.55s}.welcome.hide{opacity:0;visibility:hidden;pointer-events:none}.welcome-inner{text-align:center;width:min(520px,90vw)}.welcome .eyebrow{margin-bottom:16px}.welcome h2{font-size:clamp(42px,7vw,70px);font-weight:400;letter-spacing:-.05em;margin:0}.welcome p{font-size:12px;line-height:1.7;color:var(--muted);max-width:410px;margin:18px auto 26px}.start{height:48px;padding:0 25px;border:0;border-radius:999px;background:#eee9de;color:#171714;font-size:11px;letter-spacing:.04em;cursor:pointer}
+#minimap{position:absolute;z-index:6;right:22px;bottom:76px;width:230px;height:180px;border:1px solid var(--line);border-radius:15px;background:#f2f0e9e8;box-shadow:0 12px 40px #0004;overflow:hidden;display:none}#minimap.show{display:block}.mapTitle{position:absolute;left:10px;top:8px;color:#222;font-size:9px;letter-spacing:.14em;text-transform:uppercase}.map{position:absolute;inset:28px 10px 10px;display:grid;grid-template-columns:1.1fr 1fr 1fr;grid-template-rows:1fr 1fr 1.1fr;gap:2px}.cell{border:1px solid #777;background:#eee;display:flex;align-items:center;justify-content:center;text-align:center;color:#444;font-size:8px;position:relative}.cell span{position:absolute;width:8px;height:8px;border-radius:50%;background:#222;display:none}.cell.active span{display:block}
+@media(max-width:700px){.top{padding:15px}.sub{display:none}.actions .btn:first-child{display:none}.rooms{left:10px;right:10px;top:auto;bottom:70px;transform:none;width:auto;max-height:none;display:flex;overflow-x:auto;padding:6px;gap:3px}.label,.separator{display:none}.room{min-width:145px;display:flex;justify-content:center}.area{display:none}.hint{display:none}.controls{right:10px;bottom:12px}.location{top:68px;right:10px}#minimap{right:10px;bottom:65px;width:210px}}
+</style>
+</head>
+<body>
+<div id="app">
+<canvas id="scene"></canvas>
+
+<div class="top"><div class="brand"><div class="eyebrow">Wirtualny spacer</div><h1>Mieszkanie</h1><div class="sub">Interaktywna prezentacja projektu</div></div><div class="actions"><button class="btn" id="mapBtn">Rzut</button><button class="btn" id="infoBtn">O projekcie</button><button class="btn" id="fullBtn">⛶</button></div></div>
+
+<div class="rooms" id="rooms">
+<div class="label">Pomieszczenia</div>
+<button class="room active" data-id="01"><span class="num">01</span><span class="name">Korytarz</span><span class="area">11,48 m²</span></button>
+<button class="room" data-id="02"><span class="num">02</span><span class="name">Pokój dzienny</span><span class="area">18,71 m²</span></button>
+<button class="room" data-id="03"><span class="num">03</span><span class="name">Kuchnia</span><span class="area">12,06 m²</span></button>
+<button class="room" data-id="04"><span class="num">04</span><span class="name">Pokój</span><span class="area">11,83 m²</span></button>
+<button class="room" data-id="05"><span class="num">05</span><span class="name">Garderoba</span><span class="area">2,35 m²</span></button>
+<button class="room" data-id="06"><span class="num">06</span><span class="name">Garderoba</span><span class="area">1,40 m²</span></button>
+<button class="room" data-id="07"><span class="num">07</span><span class="name">WC</span><span class="area">1,65 m²</span></button>
+<button class="room" data-id="08"><span class="num">08</span><span class="name">Łazienka</span><span class="area">4,96 m²</span></button>
+<button class="room" data-id="09"><span class="num">09</span><span class="name">Pokój</span><span class="area">12,63 m²</span></button>
+<div class="separator"></div><div class="label">Balkony</div>
+<button class="room" data-id="10"><span class="num">10</span><span class="name">Balkon</span><span class="area">7,44 m²</span></button>
+<button class="room" data-id="11"><span class="num">11</span><span class="name">Balkon</span><span class="area">5,48 m²</span></button>
+</div>
+
+<div class="location" id="location">Korytarz · 11,48 m²</div>
+<div class="hint">Przeciągnij, aby się rozglądać · klikaj punkty przejścia</div>
+<div class="controls"><button class="control" id="back" title="Poprzedni punkt">‹</button><button class="control" id="home" title="Wejście">⌂</button><button class="control" id="next" title="Następny punkt">›</button></div>
+
+<div id="minimap"><div class="mapTitle">Rzut mieszkania</div><div class="map">
+<div class="cell" data-cell="02">Pokój dzienny<span></span></div><div class="cell" data-cell="03">Kuchnia<span></span></div><div class="cell" data-cell="04">Pokój<span></span></div>
+<div class="cell" data-cell="08">Łazienka<span></span></div><div class="cell" data-cell="01">Korytarz<span></span></div><div class="cell" data-cell="05">Garderoba<span></span></div>
+<div class="cell" data-cell="09">Pokój<span></span></div><div class="cell" data-cell="07">WC<span></span></div><div class="cell" data-cell="06">Garderoba<span></span></div>
+</div></div>
+
+<div class="welcome" id="welcome"><div class="welcome-inner"><div class="eyebrow">Wirtualna prezentacja</div><h2>Wirtualny spacer</h2><p>Spacer rozpoczyna się wewnątrz mieszkania, przy drzwiach wejściowych. Rozglądaj się i przechodź pomiędzy przygotowanymi punktami.</p><button class="start" id="start">ROZPOCZNIJ SPACER</button></div></div>
+
+<div class="loading" id="loading"><div class="loader"><div class="spinner"></div><div class="load-title">Ładowanie mieszkania</div><div class="load-sub">Przygotowuję wnętrze…</div></div></div>
+</div>
+
+<script type="module">
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.179.1/build/three.module.js';
+import {GLTFLoader} from 'https://cdn.jsdelivr.net/npm/three@0.179.1/examples/jsm/loaders/GLTFLoader.js';
+
+const canvas=document.querySelector('#scene');
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true,preserveDrawingBuffer:false});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2)); renderer.setSize(innerWidth,innerHeight);
+renderer.outputColorSpace=THREE.SRGBColorSpace; renderer.toneMapping=THREE.ACESFilmicToneMapping; renderer.toneMappingExposure=1.15;
+const scene=new THREE.Scene(); scene.background=new THREE.Color(0xd7d5ce);
+scene.add(new THREE.HemisphereLight(0xf7f5ef,0x77766f,2.1));
+const sun=new THREE.DirectionalLight(0xffffff,2.4); sun.position.set(115,8,276); scene.add(sun);
+
+const camera=new THREE.PerspectiveCamera(72,innerWidth/innerHeight,.03,100);
+const START=new THREE.Vector3(118.42,1.62,280.47);
+
+const points={
+'01':{name:'Korytarz',area:'11,48 m²',p:[118.42,1.62,280.47],look:[116.6,1.62,280.47]},
+'02':{name:'Pokój dzienny',area:'18,71 m²',p:[113.55,1.62,275.35],look:[112.7,1.62,274.6]},
+'03':{name:'Kuchnia',area:'12,06 m²',p:[116.75,1.62,276.75],look:[116.1,1.62,275.4]},
+'04':{name:'Pokój',area:'11,83 m²',p:[119.15,1.62,274.9],look:[118.2,1.62,274.9]},
+'05':{name:'Garderoba',area:'2,35 m²',p:[119.15,1.62,278.0],look:[118.2,1.62,278.0]},
+'06':{name:'Garderoba',area:'1,40 m²',p:[119.15,1.62,279.55],look:[118.2,1.62,279.55]},
+'07':{name:'WC',area:'1,65 m²',p:[115.8,1.62,279.45],look:[114.8,1.62,279.45]},
+'08':{name:'Łazienka',area:'4,96 m²',p:[112.35,1.62,276.0],look:[111.3,1.62,275.3]},
+'09':{name:'Pokój',area:'12,63 m²',p:[113.15,1.62,282.8],look:[112.2,1.62,282.8]},
+'10':{name:'Balkon',area:'7,44 m²',p:[115.0,1.62,271.9],look:[115.0,1.62,273.0]},
+'11':{name:'Balkon',area:'5,48 m²',p:[113.4,1.62,286.6],look:[113.4,1.62,285.2]}
+};
+
+let yaw=-Math.PI/2,pitch=0,model=null,current='01',drag=false,lastX=0,lastY=0,targetPos=new THREE.Vector3(...points['01'].p),targetLook=new THREE.Vector3(...points['01'].look),moving=false;
+
+function setAnglesFromLook(pos,look){const d=new THREE.Vector3().subVectors(new THREE.Vector3(...look),new THREE.Vector3(...pos)); yaw=Math.atan2(-d.z,-d.x); pitch=Math.atan2(d.y,Math.hypot(d.x,d.z));}
+setAnglesFromLook(points['01'].p,points['01'].look);
+camera.position.copy(START);
+
+function orientCamera(){
+ const dir=new THREE.Vector3(Math.cos(yaw)*Math.cos(pitch),Math.sin(pitch),Math.sin(yaw)*Math.cos(pitch));
+ camera.lookAt(camera.position.clone().add(dir));
+}
+orientCamera();
+
+async function loadModel(){
+ const [a,c]=await Promise.all([fetch('mieszkanie.part1').then(r=>r.arrayBuffer()),fetch('mieszkanie.part2').then(r=>r.arrayBuffer())]);
+ const merged=new Uint8Array(a.byteLength+c.byteLength); merged.set(new Uint8Array(a),0); merged.set(new Uint8Array(c),a.byteLength);
+ const loader=new GLTFLoader();
+ await new Promise((resolve,reject)=>loader.parse(merged.buffer,'',g=>{model=g.scene;scene.add(model);model.traverse(o=>{if(o.isMesh){o.frustumCulled=true;o.castShadow=false;o.receiveShadow=true;if(o.material){o.material.side=THREE.DoubleSide}}});resolve()},reject));
+ document.querySelector('#loading').classList.add('hide');
+}
+
+function go(id){
+ const q=points[id]; if(!q)return;
+ current=id; moving=true; targetPos.set(...q.p); targetLook.set(...q.look);
+ document.querySelectorAll('.room').forEach(b=>b.classList.toggle('active',b.dataset.id===id));
+ document.querySelector('#location').textContent=`${q.name} · ${q.area}`;
+ document.querySelectorAll('.cell').forEach(c=>c.classList.toggle('active',c.dataset.cell===id));
+ setAnglesFromLook(q.p,q.look);
+}
+
+function updateHotspots(){
+ document.querySelectorAll('.hotspot').forEach(e=>e.remove());
+ if(!model)return;
+ const ids=Object.keys(points).filter(id=>id!==current && !['10','11'].includes(id));
+ const cur=points[current];
+ const near=ids.filter(id=>{
+   const p=new THREE.Vector3(...points[id].p); return p.distanceTo(new THREE.Vector3(...cur.p))<7;
+ }).slice(0,4);
+ near.forEach(id=>{
+   const q=points[id], v=new THREE.Vector3(...q.p);
+   v.y=1.35; v.project(camera);
+   if(v.z<1){const el=document.createElement('button');el.className='hotspot';el.innerHTML='<span>→</span>';el.title=q.name;el.style.left=((v.x+1)*50)+'%';el.style.top=((-v.y+1)*50)+'%';el.onclick=()=>go(id);document.querySelector('#app').appendChild(el)}
+ });
+}
+
+document.querySelectorAll('.room').forEach(b=>b.onclick=()=>go(b.dataset.id));
+document.querySelector('#start').onclick=()=>{document.querySelector('#welcome').classList.add('hide');go('01')};
+document.querySelector('#home').onclick=()=>go('01');
+document.querySelector('#next').onclick=()=>{const ids=Object.keys(points);const i=ids.indexOf(current);go(ids[(i+1)%ids.length])};
+document.querySelector('#back').onclick=()=>{const ids=Object.keys(points);const i=ids.indexOf(current);go(ids[(i-1+ids.length)%ids.length])};
+document.querySelector('#mapBtn').onclick=()=>document.querySelector('#minimap').classList.toggle('show');
+document.querySelector('#fullBtn').onclick=()=>document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen();
+document.querySelector('#infoBtn').onclick=()=>alert('Wirtualny spacer po mieszkaniu. Rozglądaj się przeciągając myszką lub palcem i wybieraj pomieszczenia z panelu.');
+
+canvas.addEventListener('pointerdown',e=>{drag=true;lastX=e.clientX;lastY=e.clientY;canvas.setPointerCapture(e.pointerId)});
+canvas.addEventListener('pointerup',()=>drag=false);
+canvas.addEventListener('pointermove',e=>{if(!drag)return;const dx=e.clientX-lastX,dy=e.clientY-lastY;lastX=e.clientX;lastY=e.clientY;yaw-=dx*.004;pitch-=dy*.003;pitch=Math.max(-1.35,Math.min(1.35,pitch));moving=false});
+window.addEventListener('keydown',e=>{if(e.key==='Escape'){drag=false} if(e.key==='ArrowLeft')yaw+=.08;if(e.key==='ArrowRight')yaw-=.08;if(e.key==='ArrowUp')pitch+=.06;if(e.key==='ArrowDown')pitch-=.06});
+
+window.addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
+
+loadModel().catch(e=>{document.querySelector('.load-title').textContent='Nie udało się wczytać modelu';document.querySelector('.load-sub').textContent=e.message;console.error(e)});
+
+function animate(){
+ requestAnimationFrame(animate);
+ if(moving){camera.position.lerp(targetPos,.075);if(camera.position.distanceTo(targetPos)<.012)moving=false}
+ orientCamera(); renderer.render(scene,camera); updateHotspots();
+}
+animate();
+</script>
+</body>
+</html>
