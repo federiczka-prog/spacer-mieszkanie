@@ -1,512 +1,2310 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<title>Wirtualny spacer</title>
+  <title>Wirtualny spacer — mieszkanie</title>
 
-<style>
-html,
-body {
-    margin: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    background: #111;
-    font-family: Arial, sans-serif;
-}
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-#app {
-    position: fixed;
-    inset: 0;
-}
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #11110f;
+      font-family: Arial, Helvetica, sans-serif;
+    }
 
-canvas {
-    display: block;
-}
+    #app {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      background: #11110f;
+    }
 
-#loading {
-    position: fixed;
-    inset: 0;
-    z-index: 10;
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    /* =========================
+       START SCREEN
+    ========================= */
 
-    background: #161613;
-    color: white;
+    #startScreen {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
 
-    font-size: 14px;
-}
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
-#loading.hidden {
-    display: none;
-}
+      background:
+        linear-gradient(
+          rgba(15, 15, 13, .55),
+          rgba(15, 15, 13, .65)
+        );
 
-#error {
-    position: fixed;
-    left: 50%;
-    top: 50%;
+      backdrop-filter: blur(4px);
 
-    transform: translate(-50%, -50%);
+      transition:
+        opacity .6s ease,
+        visibility .6s ease;
+    }
 
-    max-width: 600px;
-    padding: 25px;
+    #startScreen.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
 
-    background: #201b1b;
-    color: white;
+    .startBox {
+      text-align: center;
+      color: white;
+      width: min(520px, 90%);
+    }
 
-    border-radius: 15px;
+    .startSmall {
+      font-size: 10px;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      opacity: .55;
+      margin-bottom: 20px;
+    }
 
-    font-size: 13px;
-    line-height: 1.6;
+    .startTitle {
+      font-size: clamp(42px, 7vw, 72px);
+      font-weight: 300;
+      letter-spacing: -.05em;
+      margin: 0;
+    }
 
-    display: none;
-}
-</style>
+    .startDescription {
+      margin: 22px auto 30px;
+      max-width: 430px;
+
+      font-size: 13px;
+      line-height: 1.7;
+
+      color: rgba(255,255,255,.65);
+    }
+
+    #startButton {
+      border: 0;
+
+      background: #eee9de;
+      color: #171713;
+
+      height: 50px;
+      padding: 0 28px;
+
+      border-radius: 999px;
+
+      font-size: 11px;
+      letter-spacing: .08em;
+
+      cursor: pointer;
+    }
+
+    #startButton:hover {
+      transform: scale(1.03);
+    }
+
+
+    /* =========================
+       TOP BAR
+    ========================= */
+
+    #topBar {
+      position: fixed;
+      z-index: 20;
+
+      top: 0;
+      left: 0;
+      right: 0;
+
+      padding: 25px 28px;
+
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+
+      pointer-events: none;
+
+      background:
+        linear-gradient(
+          rgba(12,12,10,.55),
+          transparent
+        );
+    }
+
+    .brand {
+      color: white;
+    }
+
+    .brandSmall {
+      font-size: 9px;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+
+      opacity: .5;
+
+      margin-bottom: 7px;
+    }
+
+    .brandTitle {
+      font-size: 21px;
+      font-weight: 500;
+    }
+
+    .brandSubtitle {
+      font-size: 11px;
+      opacity: .45;
+      margin-top: 5px;
+    }
+
+    .topButtons {
+      display: flex;
+      gap: 8px;
+      pointer-events: auto;
+    }
+
+    .topButton {
+      height: 40px;
+      padding: 0 15px;
+
+      border-radius: 999px;
+
+      border: 1px solid rgba(255,255,255,.15);
+
+      background: rgba(20,20,17,.65);
+
+      color: white;
+
+      backdrop-filter: blur(15px);
+
+      cursor: pointer;
+    }
+
+
+    /* =========================
+       ROOMS
+    ========================= */
+
+    #rooms {
+      position: fixed;
+      z-index: 20;
+
+      left: 25px;
+      top: 50%;
+
+      transform: translateY(-50%);
+
+      width: 235px;
+
+      padding: 15px;
+
+      border-radius: 18px;
+
+      background: rgba(20,20,17,.76);
+
+      border: 1px solid rgba(255,255,255,.13);
+
+      backdrop-filter: blur(20px);
+
+      color: white;
+    }
+
+    .roomsTitle {
+      font-size: 9px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+
+      color: rgba(255,255,255,.45);
+
+      padding: 4px 8px 11px;
+    }
+
+    .room {
+      width: 100%;
+
+      display: grid;
+
+      grid-template-columns:
+        25px
+        1fr
+        auto;
+
+      gap: 7px;
+
+      border: 0;
+
+      background: transparent;
+
+      color: rgba(255,255,255,.65);
+
+      text-align: left;
+
+      padding: 9px;
+
+      border-radius: 10px;
+
+      cursor: pointer;
+    }
+
+    .room:hover {
+      background: rgba(255,255,255,.07);
+      color: white;
+    }
+
+    .room.active {
+      background: rgba(255,255,255,.11);
+      color: white;
+    }
+
+    .roomNumber {
+      font-size: 9px;
+      opacity: .4;
+    }
+
+    .roomName {
+      font-size: 12px;
+    }
+
+    .roomArea {
+      font-size: 9px;
+      opacity: .35;
+    }
+
+    .section {
+      margin-top: 10px;
+
+      padding-top: 10px;
+
+      border-top:
+        1px solid rgba(255,255,255,.08);
+    }
+
+
+    /* =========================
+       BOTTOM
+    ========================= */
+
+    #bottom {
+      position: fixed;
+      z-index: 20;
+
+      left: 25px;
+      right: 25px;
+      bottom: 20px;
+
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      pointer-events: none;
+    }
+
+    #hint {
+      padding: 10px 13px;
+
+      border-radius: 11px;
+
+      background: rgba(20,20,17,.7);
+
+      border: 1px solid rgba(255,255,255,.12);
+
+      backdrop-filter: blur(15px);
+
+      color: rgba(255,255,255,.5);
+
+      font-size: 10px;
+    }
+
+    #controls {
+      display: flex;
+      gap: 4px;
+
+      padding: 5px;
+
+      border-radius: 999px;
+
+      background: rgba(20,20,17,.75);
+
+      border: 1px solid rgba(255,255,255,.13);
+
+      backdrop-filter: blur(15px);
+
+      pointer-events: auto;
+    }
+
+    .control {
+      width: 40px;
+      height: 36px;
+
+      border: 0;
+      border-radius: 999px;
+
+      background: transparent;
+
+      color: white;
+
+      cursor: pointer;
+    }
+
+    .control:hover {
+      background: rgba(255,255,255,.08);
+    }
+
+
+    /* =========================
+       LOADING
+    ========================= */
+
+    #loading {
+      position: fixed;
+      inset: 0;
+
+      z-index: 200;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background: #161613;
+
+      color: white;
+
+      transition: opacity .5s ease;
+    }
+
+    #loading.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .loader {
+      text-align: center;
+    }
+
+    .spinner {
+      width: 30px;
+      height: 30px;
+
+      margin: 0 auto 15px;
+
+      border-radius: 50%;
+
+      border:
+        2px solid rgba(255,255,255,.15);
+
+      border-top-color: white;
+
+      animation:
+        spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .loadingText {
+      font-size: 13px;
+    }
+
+
+    /* =========================
+       MOBILE
+    ========================= */
+
+    @media(max-width:700px) {
+
+      #topBar {
+        padding: 16px;
+      }
+
+      .brandTitle {
+        font-size: 18px;
+      }
+
+      .brandSubtitle {
+        display: none;
+      }
+
+      .topButton:first-child {
+        display: none;
+      }
+
+      #rooms {
+        left: 10px;
+        right: 10px;
+
+        bottom: 70px;
+        top: auto;
+
+        width: auto;
+
+        transform: none;
+
+        display: flex;
+
+        overflow-x: auto;
+
+        padding: 7px;
+      }
+
+      .roomsTitle,
+      .section {
+        display: none;
+      }
+
+      .room {
+        min-width: 145px;
+      }
+
+      #bottom {
+        left: 10px;
+        right: 10px;
+
+        bottom: 10px;
+      }
+
+      #hint {
+        display: none;
+      }
+    }
+  </style>
 </head>
-
 
 <body>
 
 <div id="app"></div>
 
+
+<!-- =========================
+     LOADING
+========================= -->
+
 <div id="loading">
-    Ładowanie mieszkania…
+
+  <div class="loader">
+
+    <div class="spinner"></div>
+
+    <div class="loadingText">
+      Ładowanie mieszkania…
+    </div>
+
+  </div>
+
 </div>
 
-<div id="error"></div>
 
+<!-- =========================
+     START
+========================= -->
+
+<div id="startScreen">
+
+  <div class="startBox">
+
+    <div class="startSmall">
+      Wirtualny spacer
+    </div>
+
+    <h1 class="startTitle">
+      Mieszkanie
+    </h1>
+
+    <p class="startDescription">
+
+      Zobacz układ mieszkania z góry,
+      a następnie rozpocznij spacer
+      i przejdź do jego wnętrza.
+
+    </p>
+
+    <button id="startButton">
+      ROZPOCZNIJ SPACER
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- =========================
+     TOP
+========================= -->
+
+<header id="topBar">
+
+  <div class="brand">
+
+    <div class="brandSmall">
+      Wirtualny spacer
+    </div>
+
+    <div class="brandTitle">
+      Mieszkanie
+    </div>
+
+    <div class="brandSubtitle">
+      Interaktywna prezentacja wnętrza
+    </div>
+
+  </div>
+
+
+  <div class="topButtons">
+
+    <button
+      class="topButton"
+      id="infoButton">
+
+      O projekcie
+
+    </button>
+
+
+    <button
+      class="topButton"
+      id="fullscreenButton">
+
+      ⛶
+
+    </button>
+
+  </div>
+
+</header>
+
+
+<!-- =========================
+     ROOMS
+========================= -->
+
+<aside id="rooms">
+
+  <div class="roomsTitle">
+    Pomieszczenia
+  </div>
+
+
+  <!-- KORYTARZ -->
+
+  <button
+    class="room active"
+
+    data-x="119.05"
+    data-y="1.65"
+    data-z="280.90"
+
+    data-tx="116.8"
+    data-ty="1.55"
+    data-tz="280.90">
+
+    <span class="roomNumber">
+      01
+    </span>
+
+    <span class="roomName">
+      Korytarz
+    </span>
+
+    <span class="roomArea">
+      11,48 m²
+    </span>
+
+  </button>
+
+
+  <!-- POKÓJ DZIENNY -->
+
+  <button
+    class="room"
+
+    data-x="116.2"
+    data-y="1.65"
+    data-z="278.4"
+
+    data-tx="114.2"
+    data-ty="1.55"
+    data-tz="278.4">
+
+    <span class="roomNumber">
+      02
+    </span>
+
+    <span class="roomName">
+      Pokój dzienny
+    </span>
+
+    <span class="roomArea">
+      18,71 m²
+    </span>
+
+  </button>
+
+
+  <!-- KUCHNIA -->
+
+  <button
+    class="room"
+
+    data-x="113.2"
+    data-y="1.65"
+    data-z="276.7"
+
+    data-tx="111.5"
+    data-ty="1.55"
+    data-tz="276.7">
+
+    <span class="roomNumber">
+      03
+    </span>
+
+    <span class="roomName">
+      Kuchnia
+    </span>
+
+    <span class="roomArea">
+      12,06 m²
+    </span>
+
+  </button>
+
+
+  <!-- POKÓJ -->
+
+  <button
+    class="room"
+
+    data-x="116.0"
+    data-y="1.65"
+    data-z="273.9"
+
+    data-tx="116.0"
+    data-ty="1.55"
+    data-tz="275.8">
+
+    <span class="roomNumber">
+      04
+    </span>
+
+    <span class="roomName">
+      Pokój
+    </span>
+
+    <span class="roomArea">
+      11,83 m²
+    </span>
+
+  </button>
+
+
+  <!-- GARDEROBA -->
+
+  <button
+    class="room"
+
+    data-x="113.0"
+    data-y="1.65"
+    data-z="282.2"
+
+    data-tx="114.2"
+    data-ty="1.55"
+    data-tz="282.2">
+
+    <span class="roomNumber">
+      05
+    </span>
+
+    <span class="roomName">
+      Garderoba
+    </span>
+
+    <span class="roomArea">
+      2,35 m²
+    </span>
+
+  </button>
+
+
+  <!-- GARDEROBA 2 -->
+
+  <button
+    class="room"
+
+    data-x="112.0"
+    data-y="1.65"
+    data-z="283.9"
+
+    data-tx="113.2"
+    data-ty="1.55"
+    data-tz="283.9">
+
+    <span class="roomNumber">
+      06
+    </span>
+
+    <span class="roomName">
+      Garderoba
+    </span>
+
+    <span class="roomArea">
+      1,40 m²
+    </span>
+
+  </button>
+
+
+  <!-- WC -->
+
+  <button
+    class="room"
+
+    data-x="115.0"
+    data-y="1.65"
+    data-z="282.2"
+
+    data-tx="116.0"
+    data-ty="1.55"
+    data-tz="282.2">
+
+    <span class="roomNumber">
+      07
+    </span>
+
+    <span class="roomName">
+      WC
+    </span>
+
+    <span class="roomArea">
+      1,65 m²
+    </span>
+
+  </button>
+
+
+  <!-- ŁAZIENKA -->
+
+  <button
+    class="room"
+
+    data-x="117.0"
+    data-y="1.65"
+    data-z="284.0"
+
+    data-tx="117.0"
+    data-ty="1.55"
+    data-tz="282.3">
+
+    <span class="roomNumber">
+      08
+    </span>
+
+    <span class="roomName">
+      Łazienka
+    </span>
+
+    <span class="roomArea">
+      4,96 m²
+    </span>
+
+  </button>
+
+
+  <!-- POKÓJ 2 -->
+
+  <button
+    class="room"
+
+    data-x="119.0"
+    data-y="1.65"
+    data-z="285.0"
+
+    data-tx="118.0"
+    data-ty="1.55"
+    data-tz="283.5">
+
+    <span class="roomNumber">
+      09
+    </span>
+
+    <span class="roomName">
+      Pokój
+    </span>
+
+    <span class="roomArea">
+      12,63 m²
+    </span>
+
+  </button>
+
+
+  <div class="section">
+
+
+    <!-- BALKON 1 -->
+
+    <button
+      class="room"
+
+      data-x="115.0"
+      data-y="1.65"
+      data-z="286.0"
+
+      data-tx="115.0"
+      data-ty="1.55"
+      data-tz="287.0">
+
+      <span class="roomNumber">
+        10
+      </span>
+
+      <span class="roomName">
+        Balkon
+      </span>
+
+      <span class="roomArea">
+        7,44 m²
+      </span>
+
+    </button>
+
+
+    <!-- BALKON 2 -->
+
+    <button
+      class="room"
+
+      data-x="119.0"
+      data-y="1.65"
+      data-z="286.0"
+
+      data-tx="119.0"
+      data-ty="1.55"
+      data-tz="287.0">
+
+      <span class="roomNumber">
+        11
+      </span>
+
+      <span class="roomName">
+        Balkon
+      </span>
+
+      <span class="roomArea">
+        5,48 m²
+      </span>
+
+    </button>
+
+  </div>
+
+</aside>
+
+
+<!-- =========================
+     BOTTOM
+========================= -->
+
+<div id="bottom">
+
+  <div id="hint">
+
+    Przeciągnij, aby się rozglądać
+    · WASD = poruszanie
+
+  </div>
+
+
+  <div id="controls">
+
+    <button
+      class="control"
+      id="resetButton">
+
+      ↻
+
+    </button>
+
+
+    <button
+      class="control"
+      id="fullscreenButton2">
+
+      ⛶
+
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- =========================
+     THREE.JS
+========================= -->
 
 <script type="importmap">
+
 {
-    "imports": {
-        "three":
-        "https://unpkg.com/three@0.160.0/build/three.module.js"
-    }
+  "imports": {
+    "three":
+      "https://unpkg.com/three@0.160.0/build/three.module.js"
+  }
 }
+
 </script>
 
 
 <script type="module">
 
-import * as THREE from "three";
+import * as THREE
+  from "three";
 
 import {
-    GLTFLoader
-} from
-"https://unpkg.com/three@0.160.0/examples/jsm/loaders/GLTFLoader.js";
+  GLTFLoader
+}
+from
+  "https://unpkg.com/three@0.160.0/examples/jsm/loaders/GLTFLoader.js";
 
 
-/* ==========================================
-   SCENA
-========================================== */
+/* =====================================================
+   SCENE
+===================================================== */
 
 const scene =
-    new THREE.Scene();
+  new THREE.Scene();
 
 scene.background =
-    new THREE.Color(0xd5d3cc);
+  new THREE.Color(
+    0xd5d3cc
+  );
 
 
-/* ==========================================
-   KAMERA
-========================================== */
+/* =====================================================
+   CAMERA
+===================================================== */
 
 const camera =
-    new THREE.PerspectiveCamera(
-        70,
-        window.innerWidth /
-        window.innerHeight,
-        0.01,
-        10000
-    );
+  new THREE.PerspectiveCamera(
+    70,
+
+    window.innerWidth /
+    window.innerHeight,
+
+    0.01,
+
+    10000
+  );
 
 
-/* ==========================================
+/* =====================================================
+   START POINT
+===================================================== */
+
+const START = {
+
+  x: 119.05,
+
+  y: 1.65,
+
+  z: 280.90
+
+};
+
+
+const START_TARGET = {
+
+  x: 116.8,
+
+  y: 1.55,
+
+  z: 280.90
+
+};
+
+
+/* =====================================================
    RENDERER
-========================================== */
+===================================================== */
 
 const renderer =
-    new THREE.WebGLRenderer({
-        antialias: true,
-        logarithmicDepthBuffer: true
-    });
+  new THREE.WebGLRenderer({
+
+    antialias: true,
+
+    logarithmicDepthBuffer: true
+
+  });
 
 
 renderer.setPixelRatio(
-    Math.min(
-        window.devicePixelRatio,
-        2
-    )
+
+  Math.min(
+    window.devicePixelRatio,
+    2
+  )
+
 );
 
 
 renderer.setSize(
-    window.innerWidth,
-    window.innerHeight
+
+  window.innerWidth,
+
+  window.innerHeight
+
 );
 
 
 renderer.outputColorSpace =
-    THREE.SRGBColorSpace;
+  THREE.SRGBColorSpace;
 
 
 renderer.toneMapping =
-    THREE.ACESFilmicToneMapping;
+  THREE.ACESFilmicToneMapping;
 
 
 renderer.toneMappingExposure =
-    1;
+  1;
+
+
+/*
+  Bardzo ważne:
+
+  Clipping jest używany tylko podczas
+  rzutu z góry.
+
+  Podczas spaceru zostaje wyłączony.
+*/
+
+renderer.localClippingEnabled =
+  true;
 
 
 document
-    .getElementById("app")
-    .appendChild(
-        renderer.domElement
-    );
+  .getElementById("app")
+  .appendChild(
+    renderer.domElement
+  );
 
 
-/* ==========================================
-   ŚWIATŁO
-========================================== */
+/* =====================================================
+   LIGHT
+===================================================== */
 
 scene.add(
-    new THREE.HemisphereLight(
-        0xffffff,
-        0x555555,
-        2
-    )
+
+  new THREE.HemisphereLight(
+
+    0xffffff,
+
+    0x555555,
+
+    2
+
+  )
+
 );
 
 
-const light =
-    new THREE.DirectionalLight(
-        0xffffff,
-        2
+const directional =
+  new THREE.DirectionalLight(
+
+    0xffffff,
+
+    2
+
+  );
+
+
+directional.position.set(
+
+  110,
+
+  30,
+
+  275
+
+);
+
+
+scene.add(
+  directional
+);
+
+
+/* =====================================================
+   MODEL
+===================================================== */
+
+let model = null;
+
+let modelBox = null;
+
+let modelCenter = null;
+
+let modelSize = null;
+
+
+/* =====================================================
+   TOP VIEW CLIPPING
+===================================================== */
+
+let topCutPlane = null;
+
+
+/*
+  Ta funkcja ustawia rzut z góry.
+
+  Sufit zostaje odcięty przez
+  clipping plane.
+
+  Ściany pozostają widoczne
+  poniżej poziomu cięcia.
+*/
+
+function showTopView() {
+
+  if (!model)
+    return;
+
+
+  /*
+    Włączamy cięcie tylko teraz.
+  */
+
+  renderer.clippingPlanes =
+    [topCutPlane];
+
+
+  /*
+    Kamera wysoko nad mieszkaniem.
+  */
+
+  const maxSize =
+    Math.max(
+      modelSize.x,
+      modelSize.z
     );
 
 
-light.position.set(
-    100,
-    100,
-    100
-);
+  camera.position.set(
+
+    modelCenter.x,
+
+    modelCenter.y +
+      maxSize * 1.15,
+
+    modelCenter.z
+
+  );
 
 
-scene.add(light);
+  camera.fov =
+    45;
 
 
-/* ==========================================
-   BŁĄD
-========================================== */
+  camera.updateProjectionMatrix();
 
-function showError(message) {
 
-    console.error(message);
+  camera.lookAt(
 
-    const error =
-        document.getElementById(
-            "error"
-        );
+    modelCenter.x,
 
-    error.style.display =
-        "block";
+    modelCenter.y,
 
-    error.textContent =
-        message;
+    modelCenter.z
 
-    document
-        .getElementById(
-            "loading"
-        )
-        .classList.add(
-            "hidden"
-        );
+  );
+
 }
 
 
-/* ==========================================
-   ŁADOWANIE MODELU
-========================================== */
+/* =====================================================
+   START WALK
+===================================================== */
+
+function startWalk() {
+
+  /*
+    Wyłączamy clipping.
+
+    Dzięki temu sufit wraca.
+  */
+
+  renderer.clippingPlanes = [];
+
+
+  camera.fov =
+    70;
+
+
+  camera.updateProjectionMatrix();
+
+
+  setCamera(
+
+    START,
+
+    START_TARGET
+
+  );
+
+
+  updateAnglesFromCamera(
+
+    START,
+
+    START_TARGET
+
+  );
+
+
+  document
+    .getElementById(
+      "startScreen"
+    )
+    .classList.add(
+      "hidden"
+    );
+
+}
+
+
+/* =====================================================
+   LOAD MODEL
+===================================================== */
+
+const loading =
+  document.getElementById(
+    "loading"
+  );
+
+
+const loader =
+  new GLTFLoader();
+
 
 async function loadModel() {
 
-    try {
+  try {
 
-        console.log(
-            "Ładowanie części modelu..."
-        );
+    const files = [
 
+      "mieszkanie.part1",
 
-        const part1 =
-            await fetch(
-                "mieszkanie.part1"
-            );
+      "mieszkanie.part2"
+
+    ];
 
 
-        if (!part1.ok) {
+    const buffers =
+      await Promise.all(
 
-            throw new Error(
-                "Nie można pobrać mieszkanie.part1"
-            );
+        files.map(
 
-        }
+          async file => {
 
-
-        const part2 =
-            await fetch(
-                "mieszkanie.part2"
-            );
+            const response =
+              await fetch(
+                file + "?" + Date.now()
+              );
 
 
-        if (!part2.ok) {
+            if (!response.ok) {
 
-            throw new Error(
-                "Nie można pobrać mieszkanie.part2"
-            );
+              throw new Error(
+                "Nie można wczytać " +
+                file
+              );
 
-        }
-
-
-        const buffer1 =
-            await part1.arrayBuffer();
+            }
 
 
-        const buffer2 =
-            await part2.arrayBuffer();
+            return response.arrayBuffer();
+
+          }
+
+        )
+
+      );
 
 
-        console.log(
-            "PART 1:",
-            buffer1.byteLength
-        );
+    const total =
+
+      buffers[0].byteLength +
+
+      buffers[1].byteLength;
 
 
-        console.log(
-            "PART 2:",
-            buffer2.byteLength
+    const combined =
+      new Uint8Array(
+        total
+      );
+
+
+    combined.set(
+
+      new Uint8Array(
+        buffers[0]
+      ),
+
+      0
+
+    );
+
+
+    combined.set(
+
+      new Uint8Array(
+        buffers[1]
+      ),
+
+      buffers[0].byteLength
+
+    );
+
+
+    loader.parse(
+
+      combined.buffer,
+
+      "",
+
+      gltf => {
+
+        model =
+          gltf.scene;
+
+
+        scene.add(
+          model
         );
 
 
         /*
-           Łączymy oba fragmenty.
+          Obliczamy rozmiar modelu.
         */
 
-        const combined =
-            new Uint8Array(
-                buffer1.byteLength +
-                buffer2.byteLength
+        modelBox =
+          new THREE.Box3()
+            .setFromObject(
+              model
             );
 
 
-        combined.set(
-            new Uint8Array(
-                buffer1
-            ),
-            0
-        );
+        modelCenter =
+          modelBox.getCenter(
+            new THREE.Vector3()
+          );
 
 
-        combined.set(
-            new Uint8Array(
-                buffer2
-            ),
-            buffer1.byteLength
+        modelSize =
+          modelBox.getSize(
+            new THREE.Vector3()
+          );
+
+
+        console.log(
+          "MODEL CENTER:",
+          modelCenter
         );
 
 
         console.log(
-            "Łączny rozmiar:",
-            combined.byteLength
+          "MODEL SIZE:",
+          modelSize
         );
 
 
-        /* ==================================
-           GLTF
-        ================================== */
+        /*
+          POZIOM CIĘCIA DLA RZUTU.
 
-        const loader =
-            new GLTFLoader();
+          Nie tniemy modelu na wysokości
+          podłogi.
 
+          Tniemy go mniej więcej na
+          wysokości górnej części ścian.
 
-        loader.parse(
+          Dzięki temu sufit znika,
+          ale wnętrze zostaje.
+        */
 
-            combined.buffer,
+        const cutY =
 
-            "",
+          modelBox.min.y +
 
-            function(gltf) {
-
-                console.log(
-                    "MODEL ZAŁADOWANY",
-                    gltf
-                );
+          modelSize.y * 0.78;
 
 
-                scene.add(
-                    gltf.scene
-                );
+        topCutPlane =
+          new THREE.Plane(
+
+            new THREE.Vector3(
+              0,
+              -1,
+              0
+            ),
+
+            cutY
+
+          );
 
 
-                /*
-                   Obliczamy środek
-                   i wielkość modelu.
-                */
+        /*
+          Pierwszy ekran:
+          rzut mieszkania z góry.
+        */
 
-                const box =
-                    new THREE.Box3()
-                        .setFromObject(
-                            gltf.scene
-                        );
+        showTopView();
 
 
-                const center =
-                    box.getCenter(
-                        new THREE.Vector3()
-                    );
+        loading
+          .classList
+          .add(
+            "hidden"
+          );
 
+      },
 
-                const size =
-                    box.getSize(
-                        new THREE.Vector3()
-                    );
+      error => {
 
-
-                console.log(
-                    "CENTER:",
-                    center
-                );
-
-
-                console.log(
-                    "SIZE:",
-                    size
-                );
-
-
-                /*
-                   Pierwszy widok:
-                   rzut mieszkania z góry.
-                */
-
-                const maxSize =
-                    Math.max(
-                        size.x,
-                        size.z
-                    );
-
-
-                camera.position.set(
-
-                    center.x,
-
-                    center.y +
-                    maxSize * 1.2,
-
-                    center.z
-
-                );
-
-
-                camera.lookAt(
-                    center
-                );
-
-
-                document
-                    .getElementById(
-                        "loading"
-                    )
-                    .classList.add(
-                        "hidden"
-                    );
-
-            },
-
-            function(error) {
-
-                console.error(
-                    "BŁĄD GLTF:",
-                    error
-                );
-
-
-                showError(
-                    "Model nie może zostać odczytany. " +
-                    "Sprawdź konsolę przeglądarki."
-                );
-
-            }
-
+        console.error(
+          "Błąd GLTF:",
+          error
         );
 
-    }
-    catch(error) {
 
-        showError(
-            error.message
-        );
+        loading
+          .querySelector(
+            ".loadingText"
+          )
+          .textContent =
+            "Błąd ładowania modelu";
 
-    }
+      }
+
+    );
+
+  }
+
+  catch(error) {
+
+    console.error(
+      error
+    );
+
+
+    loading
+      .querySelector(
+        ".loadingText"
+      )
+      .textContent =
+        error.message;
+
+  }
 
 }
 
 
-/* ==========================================
-   RESIZE
-========================================== */
-
-window.addEventListener(
-    "resize",
-    () => {
-
-        camera.aspect =
-            window.innerWidth /
-            window.innerHeight;
+loadModel();
 
 
-        camera.updateProjectionMatrix();
+/* =====================================================
+   CAMERA
+===================================================== */
+
+function setCamera(
+  position,
+  target
+) {
+
+  camera.position.set(
+
+    position.x,
+
+    position.y,
+
+    position.z
+
+  );
 
 
-        renderer.setSize(
-            window.innerWidth,
-            window.innerHeight
-        );
+  camera.lookAt(
 
-    }
+    target.x,
+
+    target.y,
+
+    target.z
+
+  );
+
+}
+
+
+/* =====================================================
+   MOUSE LOOK
+===================================================== */
+
+let yaw = 0;
+
+let pitch = 0;
+
+let dragging = false;
+
+let previousX = 0;
+
+let previousY = 0;
+
+
+renderer.domElement.addEventListener(
+
+  "pointerdown",
+
+  event => {
+
+    /*
+      Kliknięcie na modelie rozpoczyna
+      rozglądanie.
+    */
+
+    dragging = true;
+
+
+    previousX =
+      event.clientX;
+
+
+    previousY =
+      event.clientY;
+
+
+    renderer.domElement
+      .setPointerCapture(
+        event.pointerId
+      );
+
+  }
+
 );
 
 
-/* ==========================================
-   ANIMACJA
-========================================== */
+renderer.domElement.addEventListener(
+
+  "pointermove",
+
+  event => {
+
+    if (!dragging)
+      return;
+
+
+    const dx =
+
+      event.clientX -
+      previousX;
+
+
+    const dy =
+
+      event.clientY -
+      previousY;
+
+
+    previousX =
+      event.clientX;
+
+
+    previousY =
+      event.clientY;
+
+
+    yaw -=
+      dx * 0.003;
+
+
+    pitch -=
+      dy * 0.0025;
+
+
+    const limit =
+      Math.PI / 2.1;
+
+
+    pitch =
+
+      Math.max(
+
+        -limit,
+
+        Math.min(
+          limit,
+          pitch
+        )
+
+      );
+
+  }
+
+);
+
+
+renderer.domElement.addEventListener(
+
+  "pointerup",
+
+  () => {
+
+    dragging = false;
+
+  }
+
+);
+
+
+renderer.domElement.addEventListener(
+
+  "pointercancel",
+
+  () => {
+
+    dragging = false;
+
+  }
+
+);
+
+
+/* =====================================================
+   KEYBOARD
+===================================================== */
+
+const keys = {};
+
+
+window.addEventListener(
+
+  "keydown",
+
+  event => {
+
+    keys[
+      event.key.toLowerCase()
+    ] = true;
+
+  }
+
+);
+
+
+window.addEventListener(
+
+  "keyup",
+
+  event => {
+
+    keys[
+      event.key.toLowerCase()
+    ] = false;
+
+  }
+
+);
+
+
+/* =====================================================
+   MOVEMENT
+===================================================== */
+
+const direction =
+  new THREE.Vector3();
+
+
+const right =
+  new THREE.Vector3();
+
+
+const move =
+  new THREE.Vector3();
+
+
+function updateMovement() {
+
+  /*
+    Nie poruszamy się podczas
+    rzutu z góry.
+
+    Spacer zaczyna się dopiero
+    po kliknięciu przycisku.
+  */
+
+  if (
+    !document
+      .getElementById(
+        "startScreen"
+      )
+      .classList.contains(
+        "hidden"
+      )
+  ) {
+
+    return;
+
+  }
+
+
+  move.set(
+    0,
+    0,
+    0
+  );
+
+
+  direction.set(
+
+    -Math.sin(yaw),
+
+    0,
+
+    -Math.cos(yaw)
+
+  );
+
+
+  right.set(
+
+    Math.cos(yaw),
+
+    0,
+
+    -Math.sin(yaw)
+
+  );
+
+
+  if (keys["w"])
+    move.add(
+      direction
+    );
+
+
+  if (keys["s"])
+    move.sub(
+      direction
+    );
+
+
+  if (keys["a"])
+    move.sub(
+      right
+    );
+
+
+  if (keys["d"])
+    move.add(
+      right
+    );
+
+
+  if (
+    move.lengthSq() > 0
+  ) {
+
+    move.normalize();
+
+
+    move.multiplyScalar(
+      0.035
+    );
+
+
+    camera.position.add(
+      move
+    );
+
+  }
+
+
+  /*
+    Stała wysokość oczu.
+  */
+
+  camera.position.y =
+    1.65;
+
+}
+
+
+/* =====================================================
+   LOOK
+===================================================== */
+
+function updateLook() {
+
+  /*
+    Nie zmieniamy kierunku kamery
+    podczas rzutu z góry.
+  */
+
+  if (
+    !document
+      .getElementById(
+        "startScreen"
+      )
+      .classList.contains(
+        "hidden"
+      )
+  ) {
+
+    return;
+
+  }
+
+
+  const lookDistance =
+    2;
+
+
+  const target =
+    new THREE.Vector3(
+
+      camera.position.x -
+
+        Math.sin(yaw) *
+
+        Math.cos(pitch) *
+
+        lookDistance,
+
+
+      camera.position.y +
+
+        Math.sin(pitch) *
+
+        lookDistance,
+
+
+      camera.position.z -
+
+        Math.cos(yaw) *
+
+        Math.cos(pitch) *
+
+        lookDistance
+
+    );
+
+
+  camera.lookAt(
+    target
+  );
+
+}
+
+
+/* =====================================================
+   UPDATE ANGLES
+===================================================== */
+
+function updateAnglesFromCamera(
+  position,
+  target
+) {
+
+  const dx =
+    target.x -
+    position.x;
+
+
+  const dy =
+    target.y -
+    position.y;
+
+
+  const dz =
+    target.z -
+    position.z;
+
+
+  yaw =
+    Math.atan2(
+      -dx,
+      -dz
+    );
+
+
+  pitch =
+    Math.atan2(
+
+      dy,
+
+      Math.sqrt(
+        dx * dx +
+        dz * dz
+      )
+
+    );
+
+}
+
+
+/* =====================================================
+   ROOM BUTTONS
+===================================================== */
+
+document
+  .querySelectorAll(
+    ".room"
+  )
+  .forEach(
+
+    button => {
+
+      button.addEventListener(
+
+        "click",
+
+        () => {
+
+          /*
+            Kliknięcie pomieszczenia
+            automatycznie uruchamia
+            spacer.
+          */
+
+          renderer.clippingPlanes =
+            [];
+
+
+          document
+            .getElementById(
+              "startScreen"
+            )
+            .classList.add(
+              "hidden"
+            );
+
+
+          document
+            .querySelectorAll(
+              ".room"
+            )
+            .forEach(
+
+              item =>
+                item.classList.remove(
+                  "active"
+                )
+
+            );
+
+
+          button.classList.add(
+            "active"
+          );
+
+
+          const position = {
+
+            x: Number(
+              button.dataset.x
+            ),
+
+            y: Number(
+              button.dataset.y
+            ),
+
+            z: Number(
+              button.dataset.z
+            )
+
+          };
+
+
+          const target = {
+
+            x: Number(
+              button.dataset.tx
+            ),
+
+            y: Number(
+              button.dataset.ty
+            ),
+
+            z: Number(
+              button.dataset.tz
+            )
+
+          };
+
+
+          setCamera(
+            position,
+            target
+          );
+
+
+          updateAnglesFromCamera(
+            position,
+            target
+          );
+
+        }
+
+      );
+
+    }
+
+  );
+
+
+/* =====================================================
+   RESET
+===================================================== */
+
+document
+  .getElementById(
+    "resetButton"
+  )
+  .addEventListener(
+
+    "click",
+
+    () => {
+
+      /*
+        Reset oznacza powrót
+        do wejścia do mieszkania.
+      */
+
+      renderer.clippingPlanes =
+        [];
+
+
+      document
+        .getElementById(
+          "startScreen"
+        )
+        .classList.add(
+          "hidden"
+        );
+
+
+      setCamera(
+
+        START,
+
+        START_TARGET
+
+      );
+
+
+      updateAnglesFromCamera(
+
+        START,
+
+        START_TARGET
+
+      );
+
+    }
+
+  );
+
+
+/* =====================================================
+   START BUTTON
+===================================================== */
+
+document
+  .getElementById(
+    "startButton"
+  )
+  .addEventListener(
+
+    "click",
+
+    () => {
+
+      startWalk();
+
+    }
+
+  );
+
+
+/* =====================================================
+   FULLSCREEN
+===================================================== */
+
+async function fullscreen() {
+
+  try {
+
+    if (
+      !document.fullscreenElement
+    ) {
+
+      await document
+        .documentElement
+        .requestFullscreen();
+
+    }
+
+    else {
+
+      await document
+        .exitFullscreen();
+
+    }
+
+  }
+
+  catch(e) {
+
+    console.error(e);
+
+  }
+
+}
+
+
+document
+  .getElementById(
+    "fullscreenButton"
+  )
+  .addEventListener(
+
+    "click",
+
+    fullscreen
+
+  );
+
+
+document
+  .getElementById(
+    "fullscreenButton2"
+  )
+  .addEventListener(
+
+    "click",
+
+    fullscreen
+
+  );
+
+
+/* =====================================================
+   INFO
+===================================================== */
+
+document
+  .getElementById(
+    "infoButton"
+  )
+  .addEventListener(
+
+    "click",
+
+    () => {
+
+      alert(
+
+        "Wirtualny spacer po mieszkaniu.\n\n" +
+
+        "Przeciągnij myszką, aby się rozglądać.\n" +
+
+        "Użyj W, A, S, D, aby się poruszać.\n\n" +
+
+        "Kliknij pomieszczenie na liście, " +
+
+        "aby przejść bezpośrednio do wybranego miejsca."
+
+      );
+
+    }
+
+  );
+
+
+/* =====================================================
+   RESIZE
+===================================================== */
+
+window.addEventListener(
+
+  "resize",
+
+  () => {
+
+    camera.aspect =
+
+      window.innerWidth /
+      window.innerHeight;
+
+
+    camera.updateProjectionMatrix();
+
+
+    renderer.setSize(
+
+      window.innerWidth,
+
+      window.innerHeight
+
+    );
+
+  }
+
+);
+
+
+/* =====================================================
+   ANIMATION
+===================================================== */
 
 function animate() {
 
-    requestAnimationFrame(
-        animate
-    );
+  requestAnimationFrame(
+    animate
+  );
 
 
-    renderer.render(
-        scene,
-        camera
-    );
+  updateMovement();
+
+
+  updateLook();
+
+
+  renderer.render(
+
+    scene,
+
+    camera
+
+  );
 
 }
 
 
 animate();
-
-
-/* ==========================================
-   START
-========================================== */
-
-loadModel();
 
 </script>
 
