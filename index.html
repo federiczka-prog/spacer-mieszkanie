@@ -60,6 +60,8 @@
       width: 100%;
       height: 100%;
 
+      touch-action: none;
+
     }
 
 
@@ -559,63 +561,42 @@
 
 
     /* =========================================
-       STRZAŁKI NAWIGACYJNE
+       STRZAŁKI NA PODŁODZE
     ========================================= */
 
-    #navigationArrows {
+    .floorNavigation {
 
-      position: fixed;
+      position: relative;
 
-      z-index: 40;
+      width: 0;
 
-      left: 50%;
-
-      bottom: 82px;
-
-      transform:
-        translateX(-50%);
-
-      display: none;
-
-      align-items: center;
-
-      gap: 8px;
-
-      pointer-events: auto;
+      height: 0;
 
     }
 
 
-    #navigationArrows.visible {
+    .floorNavigationArrow {
 
-      display: flex;
+      width: 56px;
 
-    }
-
-
-    .navArrow {
-
-      width: 48px;
-
-      height: 48px;
+      height: 56px;
 
       border-radius: 50%;
 
       border:
         1px solid
-        rgba(255,255,255,.18);
+        rgba(255,255,255,.75);
 
       background:
-        rgba(20,20,17,.68);
-
-      color: white;
+        rgba(20,20,17,.62);
 
       backdrop-filter:
-        blur(15px);
+        blur(10px);
 
-      cursor: pointer;
-
-      font-size: 20px;
+      box-shadow:
+        0 5px 25px rgba(0,0,0,.35),
+        inset 0 0 0 1px
+        rgba(255,255,255,.08);
 
       display: flex;
 
@@ -623,38 +604,64 @@
 
       justify-content: center;
 
+      color: white;
+
+      font-size: 25px;
+
+      cursor: pointer;
+
       transition:
         transform .2s ease,
-        background .2s ease,
-        opacity .2s ease;
+        background .2s ease;
 
     }
 
 
-    .navArrow:hover {
+    .floorNavigationArrow:hover {
+
+      transform:
+        scale(1.12);
 
       background:
-        rgba(255,255,255,.16);
-
-      transform:
-        scale(1.08);
+        rgba(255,255,255,.18);
 
     }
 
 
-    .navArrow:active {
+    .floorNavigationLabel {
+
+      position: absolute;
+
+      left: 50%;
+
+      top: 63px;
 
       transform:
-        scale(.94);
+        translateX(-50%);
 
-    }
+      white-space: nowrap;
 
+      padding:
+        5px 9px;
 
-    .navArrow.disabled {
+      border-radius: 7px;
 
-      opacity: .25;
+      background:
+        rgba(20,20,17,.75);
 
-      pointer-events: none;
+      border:
+        1px solid
+        rgba(255,255,255,.12);
+
+      color:
+        rgba(255,255,255,.85);
+
+      font-size: 9px;
+
+      letter-spacing: .05em;
+
+      pointer-events:
+        none;
 
     }
 
@@ -835,18 +842,13 @@
       }
 
 
-      #navigationArrows {
+      .floorNavigationArrow {
 
-        bottom: 65px;
+        width: 48px;
 
-      }
+        height: 48px;
 
-
-      .navArrow {
-
-        width: 44px;
-
-        height: 44px;
+        font-size: 21px;
 
       }
 
@@ -983,54 +985,6 @@
 
 
 <!-- =========================================
-     STRZAŁKI
-========================================= -->
-
-<div id="navigationArrows">
-
-  <button
-    class="navArrow"
-    id="arrowLeft"
-    title="Poprzedni punkt">
-
-    ←
-
-  </button>
-
-
-  <button
-    class="navArrow"
-    id="arrowBack"
-    title="Cofnij">
-
-    ↓
-
-  </button>
-
-
-  <button
-    class="navArrow"
-    id="arrowForward"
-    title="Przejdź dalej">
-
-    ↑
-
-  </button>
-
-
-  <button
-    class="navArrow"
-    id="arrowRight"
-    title="Następny punkt">
-
-    →
-
-  </button>
-
-</div>
-
-
-<!-- =========================================
      BOTTOM
 ========================================= -->
 
@@ -1040,6 +994,7 @@
 
     Przeciągnij, aby się rozglądać
     · WASD = poruszanie
+    · Kliknij strzałkę na podłodze
 
   </div>
 
@@ -1246,6 +1201,24 @@ let modelCenter = null;
 let modelSize = null;
 
 let topCutPlane = null;
+
+
+/* =====================================================
+   NAWIGACJA 3D
+===================================================== */
+
+let floorNavigationGroup = null;
+
+const navigationHotspots = [];
+
+const navigationRaycaster =
+  new THREE.Raycaster();
+
+const collisionDistance =
+  0.30;
+
+const movementSpeed =
+  0.035;
 
 
 /* =====================================================
@@ -1640,6 +1613,14 @@ function createRoomButtons() {
             sceneName
           );
 
+
+          setTimeout(
+            () => {
+              updateFloorNavigation();
+            },
+            950
+          );
+
         }
 
       );
@@ -1893,120 +1874,603 @@ function startWalk() {
   }
 
 
-  showNavigationArrows();
-
-
   updateRoomActive(
     "SPACER_KORYTARZ"
   );
 
+
+  updateFloorNavigation();
+
 }
 
 
 /* =====================================================
-   STRZAŁKI - POKAZYWANIE
+   USUWANIE STRZAŁEK
 ===================================================== */
 
-function showNavigationArrows() {
+function clearFloorNavigation() {
 
-  document
-    .getElementById(
-      "navigationArrows"
-    )
-    .classList.add(
-      "visible"
+  if (!floorNavigationGroup)
+    return;
+
+
+  while (
+    floorNavigationGroup.children.length
+  ) {
+
+    const child =
+      floorNavigationGroup
+        .children[0];
+
+    floorNavigationGroup
+      .remove(child);
+
+
+    child.traverse(
+      object => {
+
+        if (object.geometry) {
+
+          object.geometry.dispose();
+
+        }
+
+
+        if (
+          object.material
+        ) {
+
+          if (
+            Array.isArray(
+              object.material
+            )
+          ) {
+
+            object.material.forEach(
+              material =>
+                material.dispose()
+            );
+
+          }
+          else {
+
+            object.material.dispose();
+
+          }
+
+        }
+
+      }
     );
 
+  }
 
-  updateNavigationButtons();
+
+  navigationHotspots.length = 0;
 
 }
 
 
 /* =====================================================
-   STRZAŁKI - UKRYWANIE
+   TWORZENIE STRZAŁKI NA PODŁODZE
 ===================================================== */
 
-function hideNavigationArrows() {
+function createFloorArrow(
+  fromScene,
+  toScene,
+  toIndex,
+  label,
+  arrowDirection
+) {
 
-  document
-    .getElementById(
-      "navigationArrows"
-    )
-    .classList.remove(
-      "visible"
+  if (
+    !fromScene ||
+    !toScene ||
+    !floorNavigationGroup
+  ) {
+
+    return;
+
+  }
+
+
+  const from =
+    convertPoint(
+      fromScene.eye
     );
+
+
+  const to =
+    convertPoint(
+      toScene.eye
+    );
+
+
+  /*
+    Punkt pomiędzy kamerami.
+  */
+
+  const position =
+    new THREE.Vector3(
+
+      from.x +
+        (to.x - from.x) *
+        0.42,
+
+      modelBox
+        ? modelBox.min.y + 0.035
+        : 0.035,
+
+      from.z +
+        (to.z - from.z) *
+        0.42
+
+    );
+
+
+  /*
+    Kierunek następnego punktu.
+  */
+
+  const direction =
+    new THREE.Vector3(
+
+      to.x - from.x,
+
+      0,
+
+      to.z - from.z
+
+    );
+
+
+  if (
+    direction.lengthSq() === 0
+  ) {
+
+    return;
+
+  }
+
+
+  direction.normalize();
+
+
+  /*
+    Grupa.
+  */
+
+  const group =
+    new THREE.Group();
+
+
+  group.position.copy(
+    position
+  );
+
+
+  /*
+    Obracamy całość płasko
+    na podłodze.
+  */
+
+  group.rotation.x =
+    -Math.PI / 2;
+
+
+  /*
+    Okrąg.
+  */
+
+  const circle =
+    new THREE.Mesh(
+
+      new THREE.CircleGeometry(
+        0.28,
+        32
+      ),
+
+      new THREE.MeshBasicMaterial({
+
+        color: 0xffffff,
+
+        transparent: true,
+
+        opacity: 0.72,
+
+        depthWrite: false,
+
+        side: THREE.DoubleSide
+
+      })
+
+    );
+
+
+  group.add(
+    circle
+  );
+
+
+  /*
+    Strzałka.
+  */
+
+  const arrowShape =
+    new THREE.Shape();
+
+
+  arrowShape.moveTo(
+    0,
+    0.22
+  );
+
+
+  arrowShape.lineTo(
+    -0.13,
+    0.02
+  );
+
+
+  arrowShape.lineTo(
+    -0.055,
+    0.02
+  );
+
+
+  arrowShape.lineTo(
+    -0.055,
+    -0.20
+  );
+
+
+  arrowShape.lineTo(
+    0.055,
+    -0.20
+  );
+
+
+  arrowShape.lineTo(
+    0.055,
+    0.02
+  );
+
+
+  arrowShape.lineTo(
+    0.13,
+    0.02
+  );
+
+
+  arrowShape.closePath();
+
+
+  const arrow =
+    new THREE.Mesh(
+
+      new THREE.ShapeGeometry(
+        arrowShape
+      ),
+
+      new THREE.MeshBasicMaterial({
+
+        color: 0x171713,
+
+        transparent: true,
+
+        opacity: 0.9,
+
+        depthWrite: false,
+
+        side: THREE.DoubleSide
+
+      })
+
+    );
+
+
+  arrow.position.z =
+    0.01;
+
+
+  group.add(
+    arrow
+  );
+
+
+  /*
+    Obrót strzałki w stronę
+    następnego/poprzedniego punktu.
+  */
+
+  group.rotation.z =
+    -Math.atan2(
+      direction.x,
+      direction.z
+    );
+
+
+  group.userData.navigationIndex =
+    toIndex;
+
+
+  group.userData.target =
+    toScene.name;
+
+
+  group.userData.label =
+    label;
+
+
+  group.userData.arrowDirection =
+    arrowDirection;
+
+
+  floorNavigationGroup.add(
+    group
+  );
+
+
+  navigationHotspots.push(
+    group
+  );
 
 }
 
 
 /* =====================================================
-   STAN STRZAŁEK
+   AKTUALIZACJA STRZAŁEK
 ===================================================== */
 
-function updateNavigationButtons() {
+function updateFloorNavigation() {
 
-  const left =
-    document.getElementById(
-      "arrowLeft"
+  clearFloorNavigation();
+
+
+  if (
+    !floorNavigationGroup ||
+    !scenes.length
+  ) {
+
+    return;
+
+  }
+
+
+  const currentName =
+    navigationOrder[
+      currentNavigationIndex
+    ];
+
+
+  const currentScene =
+    getScene(
+      currentName
     );
 
 
-  const right =
-    document.getElementById(
-      "arrowRight"
-    );
+  if (!currentScene)
+    return;
 
 
-  const back =
-    document.getElementById(
-      "arrowBack"
-    );
+  /*
+    Poprzednie pomieszczenie.
+  */
+
+  if (
+    currentNavigationIndex > 0
+  ) {
+
+    const previousName =
+      navigationOrder[
+        currentNavigationIndex - 1
+      ];
 
 
-  const forward =
-    document.getElementById(
-      "arrowForward"
-    );
+    const previousScene =
+      getScene(
+        previousName
+      );
 
 
-  const atBeginning =
-    currentNavigationIndex <= 0;
+    if (previousScene) {
+
+      createFloorArrow(
+
+        currentScene,
+
+        previousScene,
+
+        currentNavigationIndex - 1,
+
+        roomSettings[
+          previousName
+        ]?.name || "Wróć",
+
+        "back"
+
+      );
+
+    }
+
+  }
 
 
-  const atEnd =
-    currentNavigationIndex >=
-    navigationOrder.length - 1;
+  /*
+    Następne pomieszczenie.
+  */
+
+  if (
+    currentNavigationIndex <
+    navigationOrder.length - 1
+  ) {
+
+    const nextName =
+      navigationOrder[
+        currentNavigationIndex + 1
+      ];
 
 
-  left.classList.toggle(
-    "disabled",
-    atBeginning
-  );
+    const nextScene =
+      getScene(
+        nextName
+      );
 
 
-  back.classList.toggle(
-    "disabled",
-    atBeginning
-  );
+    if (nextScene) {
 
+      createFloorArrow(
 
-  right.classList.toggle(
-    "disabled",
-    atEnd
-  );
+        currentScene,
 
+        nextScene,
 
-  forward.classList.toggle(
-    "disabled",
-    atEnd
-  );
+        currentNavigationIndex + 1,
+
+        roomSettings[
+          nextName
+        ]?.name || "Dalej",
+
+        "forward"
+
+      );
+
+    }
+
+  }
 
 }
 
 
 /* =====================================================
-   PŁYNNE PRZEJŚCIE KAMERY
+   KLIKANIE STRZAŁEK
+===================================================== */
+
+renderer.domElement.addEventListener(
+
+  "pointerdown",
+
+  event => {
+
+    if (
+      !floorNavigationGroup
+    ) {
+
+      return;
+
+    }
+
+
+    if (
+      !document
+        .getElementById(
+          "startScreen"
+        )
+        .classList
+        .contains(
+          "hidden"
+        )
+    ) {
+
+      return;
+
+    }
+
+
+    const rect =
+      renderer.domElement
+        .getBoundingClientRect();
+
+
+    const mouse =
+      new THREE.Vector2(
+
+        (
+          (
+            event.clientX -
+            rect.left
+          ) /
+          rect.width
+        ) * 2 - 1,
+
+        -(
+          (
+            event.clientY -
+            rect.top
+          ) /
+          rect.height
+        ) * 2 + 1
+
+      );
+
+
+    navigationRaycaster.setFromCamera(
+
+      mouse,
+
+      camera
+
+    );
+
+
+    const intersections =
+      navigationRaycaster
+        .intersectObjects(
+          navigationHotspots,
+          true
+        );
+
+
+    if (
+      intersections.length === 0
+    ) {
+
+      return;
+
+    }
+
+
+    let hotspot =
+      intersections[0].object;
+
+
+    while (
+      hotspot &&
+      !hotspot.userData.navigationIndex &&
+      hotspot !== floorNavigationGroup
+    ) {
+
+      hotspot =
+        hotspot.parent;
+
+    }
+
+
+    if (
+      !hotspot ||
+      hotspot === floorNavigationGroup
+    ) {
+
+      return;
+
+    }
+
+
+    const targetIndex =
+      hotspot.userData.navigationIndex;
+
+
+    goToNavigationPoint(
+      targetIndex
+    );
+
+  }
+
+);
+
+
+/* =====================================================
+   KAMERA — PRZEJŚCIE
 ===================================================== */
 
 let cameraTransition = null;
@@ -2122,10 +2586,6 @@ function updateCameraTransition() {
     );
 
 
-  /*
-    Smoothstep
-  */
-
   const eased =
     progress *
     progress *
@@ -2186,6 +2646,9 @@ function updateCameraTransition() {
     cameraTransition =
       null;
 
+
+    updateFloorNavigation();
+
   }
 
 }
@@ -2245,110 +2708,7 @@ function goToNavigationPoint(
     sceneName
   );
 
-
-  updateNavigationButtons();
-
 }
-
-
-/* =====================================================
-   STRZAŁKA LEWO
-===================================================== */
-
-document
-  .getElementById(
-    "arrowLeft"
-  )
-  .addEventListener(
-
-    "click",
-
-    () => {
-
-      goToNavigationPoint(
-
-        currentNavigationIndex - 1
-
-      );
-
-    }
-
-  );
-
-
-/* =====================================================
-   STRZAŁKA PRAWO
-===================================================== */
-
-document
-  .getElementById(
-    "arrowRight"
-  )
-  .addEventListener(
-
-    "click",
-
-    () => {
-
-      goToNavigationPoint(
-
-        currentNavigationIndex + 1
-
-      );
-
-    }
-
-  );
-
-
-/* =====================================================
-   STRZAŁKA GÓRA
-===================================================== */
-
-document
-  .getElementById(
-    "arrowForward"
-  )
-  .addEventListener(
-
-    "click",
-
-    () => {
-
-      goToNavigationPoint(
-
-        currentNavigationIndex + 1
-
-      );
-
-    }
-
-  );
-
-
-/* =====================================================
-   STRZAŁKA DÓŁ
-===================================================== */
-
-document
-  .getElementById(
-    "arrowBack"
-  )
-  .addEventListener(
-
-    "click",
-
-    () => {
-
-      goToNavigationPoint(
-
-        currentNavigationIndex - 1
-
-      );
-
-    }
-
-  );
 
 
 /* =====================================================
@@ -2473,6 +2833,19 @@ async function loadModel() {
             );
 
 
+            /*
+              Grupa dla strzałek.
+            */
+
+            floorNavigationGroup =
+              new THREE.Group();
+
+
+            scene.add(
+              floorNavigationGroup
+            );
+
+
             modelBox =
               new THREE.Box3()
                 .setFromObject(
@@ -2564,15 +2937,6 @@ async function loadModel() {
     showTopView();
 
 
-    /*
-      Strzałki są ukryte,
-      dopóki użytkownik nie
-      rozpocznie spaceru.
-    */
-
-    hideNavigationArrows();
-
-
     loading
       .classList
       .add(
@@ -2628,6 +2992,15 @@ renderer.domElement.addEventListener(
   event => {
 
     if (
+      event.button !== 0
+    ) {
+
+      return;
+
+    }
+
+
+    if (
 
       !document
         .getElementById(
@@ -2638,6 +3011,64 @@ renderer.domElement.addEventListener(
           "hidden"
         )
 
+    ) {
+
+      return;
+
+    }
+
+
+    /*
+      Najpierw sprawdzamy,
+      czy kliknięto hotspot.
+    */
+
+    const rect =
+      renderer.domElement
+        .getBoundingClientRect();
+
+
+    const mouse =
+      new THREE.Vector2(
+
+        (
+          (
+            event.clientX -
+            rect.left
+          ) /
+          rect.width
+        ) * 2 - 1,
+
+        -(
+          (
+            event.clientY -
+            rect.top
+          ) /
+          rect.height
+        ) * 2 + 1
+
+      );
+
+
+    navigationRaycaster.setFromCamera(
+
+      mouse,
+
+      camera
+
+    );
+
+
+    const hotspotHits =
+      navigationRaycaster
+        .intersectObjects(
+          navigationHotspots,
+          true
+        );
+
+
+    if (
+      hotspotHits.length > 0
     ) {
 
       return;
@@ -2730,9 +3161,24 @@ renderer.domElement.addEventListener(
 
   "pointerup",
 
-  () => {
+  event => {
 
     dragging = false;
+
+
+    if (
+      renderer.domElement
+        .hasPointerCapture(
+          event.pointerId
+        )
+    ) {
+
+      renderer.domElement
+        .releasePointerCapture(
+          event.pointerId
+        );
+
+    }
 
   }
 
@@ -2770,10 +3216,6 @@ window.addEventListener(
     ] = true;
 
 
-    /*
-      Strzałki klawiatury
-    */
-
     if (
 
       document
@@ -2787,6 +3229,12 @@ window.addEventListener(
 
     ) {
 
+      /*
+        Strzałki klawiatury
+        przechodzą pomiędzy
+        punktami nawigacji.
+      */
+
       if (
         event.key ===
         "ArrowRight" ||
@@ -2796,6 +3244,7 @@ window.addEventListener(
       ) {
 
         event.preventDefault();
+
 
         goToNavigationPoint(
 
@@ -2815,6 +3264,7 @@ window.addEventListener(
       ) {
 
         event.preventDefault();
+
 
         goToNavigationPoint(
 
@@ -2847,7 +3297,7 @@ window.addEventListener(
 
 
 /* =====================================================
-   RUCH WASD
+   RUCH WASD Z KOLIZJĄ
 ===================================================== */
 
 const direction =
@@ -2860,6 +3310,170 @@ const right =
 
 const move =
   new THREE.Vector3();
+
+
+const testPosition =
+  new THREE.Vector3();
+
+
+function canMoveTo(
+  newPosition
+) {
+
+  if (!model)
+    return true;
+
+
+  /*
+    Kilka promieni dookoła kamery.
+    Dzięki temu nie można przejść
+    bezpośrednio przez ścianę.
+  */
+
+  const offsets = [
+
+    new THREE.Vector3(
+      0,
+      0,
+      0
+    ),
+
+    new THREE.Vector3(
+      0.18,
+      0,
+      0
+    ),
+
+    new THREE.Vector3(
+      -0.18,
+      0,
+      0
+    ),
+
+    new THREE.Vector3(
+      0,
+      0,
+      0.18
+    ),
+
+    new THREE.Vector3(
+      0,
+      0,
+      -0.18
+    )
+
+  ];
+
+
+  for (
+    const offset
+    of offsets
+  ) {
+
+    testPosition
+      .copy(
+        newPosition
+      )
+      .add(
+        offset
+      );
+
+
+    const travel =
+      testPosition
+        .clone()
+        .sub(
+          camera.position
+        );
+
+
+    const distance =
+      travel.length();
+
+
+    if (
+      distance <= 0
+    ) {
+
+      continue;
+
+    }
+
+
+    travel.normalize();
+
+
+    navigationRaycaster.set(
+
+      camera.position,
+
+      travel
+
+    );
+
+
+    const intersections =
+      navigationRaycaster
+        .intersectObject(
+          model,
+          true
+        );
+
+
+    for (
+      const hit
+      of intersections
+    ) {
+
+      if (
+        hit.distance >
+        0.01 &&
+        hit.distance <
+        Math.max(
+          collisionDistance,
+          distance
+        )
+      ) {
+
+        if (
+          hit.face
+        ) {
+
+          const normal =
+            hit.face.normal
+              .clone()
+              .transformDirection(
+                hit.object.matrixWorld
+              );
+
+
+          /*
+            Blokujemy przede wszystkim
+            ściany i pionowe przeszkody.
+          */
+
+          if (
+            Math.abs(
+              normal.y
+            ) < 0.7
+          ) {
+
+            return false;
+
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+
+
+  return true;
+
+}
 
 
 function updateMovement() {
@@ -2881,12 +3495,6 @@ function updateMovement() {
 
   }
 
-
-  /*
-    Podczas płynnego przejścia
-    nie pozwalamy WASD zmieniać
-    pozycji kamery.
-  */
 
   if (cameraTransition) {
 
@@ -2949,26 +3557,53 @@ function updateMovement() {
 
 
   if (
-    move.lengthSq() > 0
+    move.lengthSq() === 0
   ) {
 
-    move.normalize();
-
-
-    move.multiplyScalar(
-      0.035
-    );
-
-
-    camera.position.add(
-      move
-    );
+    return;
 
   }
 
 
-  camera.position.y =
+  move.normalize();
+
+
+  move.multiplyScalar(
+    movementSpeed
+  );
+
+
+  /*
+    Próbujemy wykonać ruch.
+  */
+
+  const newPosition =
+    camera.position
+      .clone()
+      .add(
+        move
+      );
+
+
+  /*
+    Zostawiamy wysokość oczu.
+  */
+
+  newPosition.y =
     1.65;
+
+
+  if (
+    canMoveTo(
+      newPosition
+    )
+  ) {
+
+    camera.position.copy(
+      newPosition
+    );
+
+  }
 
 }
 
@@ -3149,12 +3784,12 @@ document
       }
 
 
-      showNavigationArrows();
-
-
       updateRoomActive(
         "SPACER_KORYTARZ"
       );
+
+
+      updateFloorNavigation();
 
     }
 
@@ -3262,9 +3897,9 @@ document
 
         "Użyj W, A, S, D, aby się poruszać.\n\n" +
 
-        "Możesz również korzystać ze strzałek " +
+        "Kliknij strzałkę na podłodze, aby przejść " +
 
-        "nawigacyjnych."
+        "do kolejnego lub poprzedniego pomieszczenia."
 
       );
 
