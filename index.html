@@ -1,466 +1,376 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Wirtualny spacer — mieszkanie</title>
-
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    html,
-    body {
-      margin: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background: #11110f;
-      font-family: Arial, Helvetica, sans-serif;
-    }
-
-    #app {
-      position: fixed;
-      inset: 0;
-      overflow: hidden;
-      background: #11110f;
-    }
-
-    canvas {
-      display: block;
-      width: 100%;
-      height: 100%;
-    }
-
-    /* -------------------------
-       START SCREEN
-    ------------------------- */
-
-    #startScreen {
-      position: fixed;
-      inset: 0;
-      z-index: 100;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      background:
-        linear-gradient(
-          rgba(15,15,13,.62),
-          rgba(15,15,13,.72)
-        );
-
-      backdrop-filter: blur(5px);
-
-      transition:
-        opacity .6s ease,
-        visibility .6s ease;
-    }
-
-    #startScreen.hidden {
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-    }
-
-    .startBox {
-      text-align: center;
-      color: white;
-      width: min(520px, 90%);
-    }
-
-    .startSmall {
-      font-size: 10px;
-      letter-spacing: .3em;
-      text-transform: uppercase;
-      opacity: .55;
-      margin-bottom: 20px;
-    }
-
-    .startTitle {
-      font-size: clamp(42px, 7vw, 72px);
-      font-weight: 300;
-      letter-spacing: -.05em;
-      margin: 0;
-    }
-
-    .startDescription {
-      margin: 22px auto 30px;
-      max-width: 430px;
-      font-size: 13px;
-      line-height: 1.7;
-      color: rgba(255,255,255,.6);
-    }
-
-    #startButton {
-      border: 0;
-      background: #eee9de;
-      color: #171713;
-
-      height: 50px;
-      padding: 0 28px;
-
-      border-radius: 999px;
-
-      font-size: 11px;
-      letter-spacing: .08em;
-
-      cursor: pointer;
-    }
-
-    /* -------------------------
-       TOP
-    ------------------------- */
-
-    #topBar {
-      position: fixed;
-      z-index: 20;
-
-      top: 0;
-      left: 0;
-      right: 0;
-
-      padding: 25px 28px;
-
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-
-      pointer-events: none;
-
-      background:
-        linear-gradient(
-          rgba(12,12,10,.55),
-          transparent
-        );
-    }
-
-    .brand {
-      color: white;
-    }
-
-    .brandSmall {
-      font-size: 9px;
-      letter-spacing: .25em;
-      text-transform: uppercase;
-      opacity: .5;
-      margin-bottom: 7px;
-    }
-
-    .brandTitle {
-      font-size: 21px;
-      font-weight: 500;
-    }
-
-    .brandSubtitle {
-      font-size: 11px;
-      opacity: .45;
-      margin-top: 5px;
-    }
-
-    .topButtons {
-      display: flex;
-      gap: 8px;
-      pointer-events: auto;
-    }
-
-    .topButton {
-      height: 40px;
-      padding: 0 15px;
-
-      border-radius: 999px;
-
-      border: 1px solid rgba(255,255,255,.15);
-
-      background: rgba(20,20,17,.65);
-
-      color: white;
-
-      backdrop-filter: blur(15px);
-
-      cursor: pointer;
-    }
-
-    /* -------------------------
-       ROOMS
-    ------------------------- */
-
-    #rooms {
-      position: fixed;
-      z-index: 20;
-
-      left: 25px;
-      top: 50%;
-
-      transform: translateY(-50%);
-
-      width: 235px;
-
-      padding: 15px;
-
-      border-radius: 18px;
-
-      background: rgba(20,20,17,.76);
-
-      border: 1px solid rgba(255,255,255,.13);
-
-      backdrop-filter: blur(20px);
-
-      color: white;
-    }
-
-    .roomsTitle {
-      font-size: 9px;
-      letter-spacing: .2em;
-      text-transform: uppercase;
-
-      color: rgba(255,255,255,.45);
-
-      padding: 4px 8px 11px;
-    }
-
-    .room {
-      width: 100%;
-
-      display: grid;
-      grid-template-columns: 25px 1fr auto;
-
-      gap: 7px;
-
-      border: 0;
-
-      background: transparent;
-
-      color: rgba(255,255,255,.65);
-
-      text-align: left;
-
-      padding: 9px;
-
-      border-radius: 10px;
-
-      cursor: pointer;
-    }
-
-    .room:hover {
-      background: rgba(255,255,255,.07);
-      color: white;
-    }
-
-    .room.active {
-      background: rgba(255,255,255,.11);
-      color: white;
-    }
-
-    .roomNumber {
-      font-size: 9px;
-      opacity: .4;
-    }
-
-    .roomName {
-      font-size: 12px;
-    }
-
-    .roomArea {
-      font-size: 9px;
-      opacity: .35;
-    }
-
-    .section {
-      margin-top: 10px;
-
-      padding-top: 10px;
-
-      border-top:
-        1px solid rgba(255,255,255,.08);
-    }
-
-    /* -------------------------
-       BOTTOM
-    ------------------------- */
-
-    #bottom {
-      position: fixed;
-      z-index: 20;
-
-      left: 25px;
-      right: 25px;
-      bottom: 20px;
-
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-
-      pointer-events: none;
-    }
-
-    #hint {
-      padding: 10px 13px;
-
-      border-radius: 11px;
-
-      background: rgba(20,20,17,.7);
-
-      border: 1px solid rgba(255,255,255,.12);
-
-      backdrop-filter: blur(15px);
-
-      color: rgba(255,255,255,.5);
-
-      font-size: 10px;
-    }
-
-    #controls {
-      display: flex;
-      gap: 4px;
-
-      padding: 5px;
-
-      border-radius: 999px;
-
-      background: rgba(20,20,17,.75);
-
-      border: 1px solid rgba(255,255,255,.13);
-
-      backdrop-filter: blur(15px);
-
-      pointer-events: auto;
-    }
-
-    .control {
-      width: 40px;
-      height: 36px;
-
-      border: 0;
-      border-radius: 999px;
-
-      background: transparent;
-
-      color: white;
-
-      cursor: pointer;
-    }
-
-    .control:hover {
-      background: rgba(255,255,255,.08);
-    }
-
-    /* -------------------------
-       LOADING
-    ------------------------- */
-
-    #loading {
-      position: fixed;
-      inset: 0;
-
-      z-index: 200;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      background: #161613;
-
-      color: white;
-
-      transition: opacity .5s ease;
-    }
-
-    #loading.hidden {
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .loader {
-      text-align: center;
-    }
-
-    .spinner {
-      width: 30px;
-      height: 30px;
-
-      margin: 0 auto 15px;
-
-      border-radius: 50%;
-
-      border:
-        2px solid rgba(255,255,255,.15);
-
-      border-top-color: white;
-
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
-    .loadingText {
-      font-size: 13px;
-    }
-
-    /* -------------------------
-       MOBILE
-    ------------------------- */
-
-    @media(max-width:700px) {
-
-      #topBar {
-        padding: 16px;
-      }
-
-      .brandTitle {
-        font-size: 18px;
-      }
-
-      .brandSubtitle {
-        display: none;
-      }
-
-      .topButton:first-child {
-        display: none;
-      }
-
-      #rooms {
-        left: 10px;
-        right: 10px;
-        bottom: 70px;
-        top: auto;
-
-        width: auto;
-
-        transform: none;
-
-        display: flex;
-
-        overflow-x: auto;
-
-        padding: 7px;
-      }
-
-      .roomsTitle,
-      .section {
-        display: none;
-      }
-
-      .room {
-        min-width: 145px;
-      }
-
-      #bottom {
-        left: 10px;
-        right: 10px;
-        bottom: 10px;
-      }
-
-      #hint {
-        display: none;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wirtualny spacer — mieszkanie</title>
+
+<style>
+*{box-sizing:border-box}
+
+html,body{
+  margin:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background:#11110f;
+  font-family:Arial,Helvetica,sans-serif;
+}
+
+#app{
+  position:fixed;
+  inset:0;
+}
+
+canvas{
+  display:block;
+  width:100%;
+  height:100%;
+}
+
+/* LOADING */
+
+#loading{
+  position:fixed;
+  inset:0;
+  z-index:200;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#161613;
+  color:white;
+  transition:opacity .5s ease;
+}
+
+#loading.hidden{
+  opacity:0;
+  pointer-events:none;
+}
+
+.loader{
+  text-align:center;
+}
+
+.spinner{
+  width:32px;
+  height:32px;
+  margin:0 auto 15px;
+  border:2px solid rgba(255,255,255,.15);
+  border-top-color:white;
+  border-radius:50%;
+  animation:spin 1s linear infinite;
+}
+
+@keyframes spin{
+  to{transform:rotate(360deg)}
+}
+
+/* START */
+
+#startScreen{
+  position:fixed;
+  inset:0;
+  z-index:100;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  padding-bottom:8vh;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(0,0,0,.02),
+      rgba(0,0,0,.72)
+    );
+  transition:opacity .6s ease,visibility .6s ease;
+}
+
+#startScreen.hidden{
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+}
+
+.startBox{
+  text-align:center;
+  color:white;
+  width:min(620px,90%);
+}
+
+.startSmall{
+  font-size:10px;
+  letter-spacing:.3em;
+  text-transform:uppercase;
+  opacity:.7;
+  margin-bottom:14px;
+}
+
+.startTitle{
+  font-size:clamp(40px,6vw,70px);
+  font-weight:300;
+  letter-spacing:-.05em;
+  margin:0;
+}
+
+.startDescription{
+  margin:15px auto 26px;
+  max-width:500px;
+  font-size:13px;
+  line-height:1.7;
+  color:rgba(255,255,255,.72);
+}
+
+#startButton{
+  border:0;
+  background:#eee9de;
+  color:#171713;
+  height:52px;
+  padding:0 32px;
+  border-radius:999px;
+  font-size:11px;
+  letter-spacing:.1em;
+  cursor:pointer;
+}
+
+/* TOP */
+
+#topBar{
+  position:fixed;
+  z-index:20;
+  top:0;
+  left:0;
+  right:0;
+  padding:25px 28px;
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  pointer-events:none;
+  background:linear-gradient(rgba(12,12,10,.6),transparent);
+}
+
+.brand{
+  color:white;
+}
+
+.brandSmall{
+  font-size:9px;
+  letter-spacing:.25em;
+  text-transform:uppercase;
+  opacity:.5;
+  margin-bottom:7px;
+}
+
+.brandTitle{
+  font-size:21px;
+  font-weight:500;
+}
+
+.brandSubtitle{
+  font-size:11px;
+  opacity:.45;
+  margin-top:5px;
+}
+
+.topButtons{
+  display:flex;
+  gap:8px;
+  pointer-events:auto;
+}
+
+.topButton{
+  height:40px;
+  padding:0 15px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.15);
+  background:rgba(20,20,17,.65);
+  color:white;
+  backdrop-filter:blur(15px);
+  cursor:pointer;
+}
+
+/* ROOMS */
+
+#rooms{
+  position:fixed;
+  z-index:20;
+  left:24px;
+  top:50%;
+  transform:translateY(-50%);
+  width:245px;
+  padding:15px;
+  border-radius:18px;
+  background:rgba(20,20,17,.78);
+  border:1px solid rgba(255,255,255,.13);
+  backdrop-filter:blur(20px);
+  color:white;
+}
+
+.roomsTitle{
+  font-size:9px;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.45);
+  padding:4px 8px 11px;
+}
+
+.room{
+  width:100%;
+  display:grid;
+  grid-template-columns:28px 1fr;
+  border:0;
+  background:transparent;
+  color:rgba(255,255,255,.68);
+  text-align:left;
+  padding:9px;
+  border-radius:10px;
+  cursor:pointer;
+}
+
+.room:hover,
+.room.active{
+  background:rgba(255,255,255,.1);
+  color:white;
+}
+
+.roomNumber{
+  font-size:9px;
+  opacity:.4;
+}
+
+.roomName{
+  display:block;
+  font-size:12px;
+}
+
+.roomArea{
+  display:block;
+  font-size:9px;
+  opacity:.35;
+  margin-top:3px;
+}
+
+/* BADGE */
+
+#modeBadge{
+  position:fixed;
+  z-index:21;
+  right:28px;
+  bottom:82px;
+  padding:9px 13px;
+  border-radius:999px;
+  background:rgba(20,20,17,.68);
+  border:1px solid rgba(255,255,255,.12);
+  color:rgba(255,255,255,.65);
+  font-size:10px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  backdrop-filter:blur(15px);
+}
+
+/* BOTTOM */
+
+#bottom{
+  position:fixed;
+  z-index:20;
+  left:24px;
+  right:24px;
+  bottom:20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  pointer-events:none;
+}
+
+#hint{
+  padding:10px 13px;
+  border-radius:11px;
+  background:rgba(20,20,17,.7);
+  border:1px solid rgba(255,255,255,.12);
+  backdrop-filter:blur(15px);
+  color:rgba(255,255,255,.55);
+  font-size:10px;
+}
+
+#controls{
+  display:flex;
+  gap:4px;
+  padding:5px;
+  border-radius:999px;
+  background:rgba(20,20,17,.75);
+  border:1px solid rgba(255,255,255,.13);
+  backdrop-filter:blur(15px);
+  pointer-events:auto;
+}
+
+.control{
+  width:40px;
+  height:36px;
+  border:0;
+  border-radius:999px;
+  background:transparent;
+  color:white;
+  cursor:pointer;
+}
+
+.control:hover{
+  background:rgba(255,255,255,.08);
+}
+
+/* MOBILE */
+
+@media(max-width:700px){
+
+  #topBar{
+    padding:15px;
+  }
+
+  .brandTitle{
+    font-size:18px;
+  }
+
+  .brandSubtitle{
+    display:none;
+  }
+
+  .topButton:first-child{
+    display:none;
+  }
+
+  #rooms{
+    left:10px;
+    right:10px;
+    bottom:68px;
+    top:auto;
+    width:auto;
+    transform:none;
+    display:flex;
+    overflow-x:auto;
+    padding:7px;
+  }
+
+  .roomsTitle{
+    display:none;
+  }
+
+  .room{
+    min-width:145px;
+  }
+
+  #bottom{
+    left:10px;
+    right:10px;
+    bottom:10px;
+  }
+
+  #hint{
+    display:none;
+  }
+
+  #modeBadge{
+    right:12px;
+    bottom:64px;
+  }
+}
+</style>
 </head>
 
 <body>
@@ -477,7 +387,6 @@
 </div>
 
 <div id="startScreen">
-
   <div class="startBox">
 
     <div class="startSmall">
@@ -489,9 +398,9 @@
     </h1>
 
     <p class="startDescription">
-      Rozpocznij spacer od wejścia do mieszkania.
-      Rozglądaj się dookoła i przechodź pomiędzy
-      przygotowanymi pomieszczeniami.
+      Obejrzyj układ mieszkania z góry,
+      a następnie wejdź do wnętrza
+      i rozglądaj się w 360°.
     </p>
 
     <button id="startButton">
@@ -499,7 +408,6 @@
     </button>
 
   </div>
-
 </div>
 
 <header id="topBar">
@@ -524,8 +432,8 @@
 
     <button
       class="topButton"
-      id="infoButton">
-      O projekcie
+      id="overviewButton">
+      Rzut 3D
     </button>
 
     <button
@@ -538,178 +446,24 @@
 
 </header>
 
-
 <aside id="rooms">
 
   <div class="roomsTitle">
     Pomieszczenia
   </div>
 
-  <button class="room active"
-    data-x="119.05"
-    data-y="1.65"
-    data-z="280.90"
-    data-tx="116.8"
-    data-ty="1.55"
-    data-tz="280.90">
-
-    <span class="roomNumber">01</span>
-    <span class="roomName">Korytarz</span>
-    <span class="roomArea">11,48 m²</span>
-
-  </button>
-
-  <button class="room"
-    data-x="116.2"
-    data-y="1.65"
-    data-z="278.4"
-    data-tx="114.2"
-    data-ty="1.55"
-    data-tz="278.4">
-
-    <span class="roomNumber">02</span>
-    <span class="roomName">Pokój dzienny</span>
-    <span class="roomArea">18,71 m²</span>
-
-  </button>
-
-  <button class="room"
-    data-x="113.2"
-    data-y="1.65"
-    data-z="276.7"
-    data-tx="111.5"
-    data-ty="1.55"
-    data-tz="276.7">
-
-    <span class="roomNumber">03</span>
-    <span class="roomName">Kuchnia</span>
-    <span class="roomArea">12,06 m²</span>
-
-  </button>
-
-  <button class="room"
-    data-x="116.0"
-    data-y="1.65"
-    data-z="273.9"
-    data-tx="116.0"
-    data-ty="1.55"
-    data-tz="275.8">
-
-    <span class="roomNumber">04</span>
-    <span class="roomName">Pokój</span>
-    <span class="roomArea">11,83 m²</span>
-
-  </button>
-
-  <button class="room"
-    data-x="113.0"
-    data-y="1.65"
-    data-z="282.2"
-    data-tx="114.2"
-    data-ty="1.55"
-    data-tz="282.2">
-
-    <span class="roomNumber">05</span>
-    <span class="roomName">Garderoba</span>
-    <span class="roomArea">2,35 m²</span>
-
-  </button>
-
-  <button class="room"
-    data-x="112.0"
-    data-y="1.65"
-    data-z="283.9"
-    data-tx="113.2"
-    data-ty="1.55"
-    data-tz="283.9">
-
-    <span class="roomNumber">06</span>
-    <span class="roomName">Garderoba</span>
-    <span class="roomArea">1,40 m²</span>
-
-  </button>
-
-  <button class="room"
-    data-x="115.0"
-    data-y="1.65"
-    data-z="282.2"
-    data-tx="116.0"
-    data-ty="1.55"
-    data-tz="282.2">
-
-    <span class="roomNumber">07</span>
-    <span class="roomName">WC</span>
-    <span class="roomArea">1,65 m²</span>
-
-  </button>
-
-  <button class="room"
-    data-x="117.0"
-    data-y="1.65"
-    data-z="284.0"
-    data-tx="117.0"
-    data-ty="1.55"
-    data-tz="282.3">
-
-    <span class="roomNumber">08</span>
-    <span class="roomName">Łazienka</span>
-    <span class="roomArea">4,96 m²</span>
-
-  </button>
-
-  <button class="room"
-    data-x="119.0"
-    data-y="1.65"
-    data-z="285.0"
-    data-tx="118.0"
-    data-ty="1.55"
-    data-tz="283.5">
-
-    <span class="roomNumber">09</span>
-    <span class="roomName">Pokój</span>
-    <span class="roomArea">12,63 m²</span>
-
-  </button>
-
-  <div class="section">
-
-    <button class="room"
-      data-x="115.0"
-      data-y="1.65"
-      data-z="286.0"
-      data-tx="115.0"
-      data-ty="1.55"
-      data-tz="287.0">
-
-      <span class="roomNumber">10</span>
-      <span class="roomName">Balkon</span>
-      <span class="roomArea">7,44 m²</span>
-
-    </button>
-
-    <button class="room"
-      data-x="119.0"
-      data-y="1.65"
-      data-z="286.0"
-      data-tx="119.0"
-      data-ty="1.55"
-      data-tz="287.0">
-
-      <span class="roomNumber">11</span>
-      <span class="roomName">Balkon</span>
-      <span class="roomArea">5,48 m²</span>
-
-    </button>
-
-  </div>
+  <div id="roomList"></div>
 
 </aside>
 
+<div id="modeBadge">
+  Rzut 3D
+</div>
 
 <div id="bottom">
 
   <div id="hint">
-    Przeciągnij, aby się rozglądać · WASD = poruszanie
+    Przeciągnij, aby się rozglądać · kliknij pomieszczenie, aby przejść
   </div>
 
   <div id="controls">
@@ -730,30 +484,28 @@
 
 </div>
 
-
 <script type="module">
 
 import * as THREE from
-  "https://unpkg.com/three@0.160.0/build/three.module.js";
+"https://unpkg.com/three@0.160.0/build/three.module.js";
 
-import { GLTFLoader }
-  from "https://unpkg.com/three@0.160.0/examples/jsm/loaders/GLTFLoader.js";
+import { GLTFLoader } from
+"https://unpkg.com/three@0.160.0/examples/jsm/loaders/GLTFLoader.js";
 
 
-/* -----------------------------------
-   SCENE
------------------------------------ */
+/* --------------------------------
+   SCENA
+-------------------------------- */
 
-const scene =
-  new THREE.Scene();
+const scene = new THREE.Scene();
 
 scene.background =
   new THREE.Color(0xd5d3cc);
 
 
-/* -----------------------------------
-   CAMERA
------------------------------------ */
+/* --------------------------------
+   KAMERA
+-------------------------------- */
 
 const camera =
   new THREE.PerspectiveCamera(
@@ -761,64 +513,22 @@ const camera =
     window.innerWidth /
     window.innerHeight,
     0.05,
-    500
+    1000
   );
 
 
-/*
-   RZECZYWISTE DRZWI Z MODELU
-
-   znalezione w modelu:
-
-   X = 119.09
-   Z = 280.92
-
-   Kamera stoi tuż wewnątrz.
-*/
-
-const START = {
-  x: 119.05,
-  y: 1.65,
-  z: 280.90
-};
-
-
-/*
-   Patrzymy w kierunku wnętrza.
-*/
-
-const START_TARGET = {
-  x: 116.8,
-  y: 1.55,
-  z: 280.90
-};
-
-
-camera.position.set(
-  START.x,
-  START.y,
-  START.z
-);
-
-camera.lookAt(
-  START_TARGET.x,
-  START_TARGET.y,
-  START_TARGET.z
-);
-
-
-/* -----------------------------------
+/* --------------------------------
    RENDERER
------------------------------------ */
+-------------------------------- */
 
 const renderer =
   new THREE.WebGLRenderer({
-    antialias: true,
-    logarithmicDepthBuffer: true
+    antialias:true,
+    logarithmicDepthBuffer:true
   });
 
 renderer.setPixelRatio(
-  Math.min(window.devicePixelRatio, 2)
+  Math.min(window.devicePixelRatio,2)
 );
 
 renderer.setSize(
@@ -832,17 +542,16 @@ renderer.outputColorSpace =
 renderer.toneMapping =
   THREE.ACESFilmicToneMapping;
 
-renderer.toneMappingExposure =
-  1;
+renderer.toneMappingExposure = 1;
 
 document
   .getElementById("app")
   .appendChild(renderer.domElement);
 
 
-/* -----------------------------------
-   LIGHT
------------------------------------ */
+/* --------------------------------
+   ŚWIATŁO
+-------------------------------- */
 
 scene.add(
   new THREE.HemisphereLight(
@@ -867,104 +576,195 @@ directional.position.set(
 scene.add(directional);
 
 
-/* -----------------------------------
-   LOAD SPLIT GLB
------------------------------------ */
+/* --------------------------------
+   DANE PUNKTÓW
+-------------------------------- */
 
-const loading =
-  document.getElementById("loading");
+let points = [];
 
-const loader =
-  new GLTFLoader();
+let currentPoint = null;
 
-async function loadModel() {
+let overview = true;
 
-  const files = [
-    "mieszkanie.part1",
-    "mieszkanie.part2"
-  ];
+let dragging = false;
 
-  const buffers =
-    await Promise.all(
+let yaw = 0;
+let pitch = 0;
 
-      files.map(async file => {
+let previousX = 0;
+let previousY = 0;
 
-        const response =
-          await fetch(file);
 
-        if (!response.ok) {
+/*
+   SketchUp:
+   X -> X
+   Z -> Y
+   -Y -> Z
 
-          throw new Error(
-            "Nie można wczytać " + file
+   cale -> metry
+*/
+
+function convertPoint(point){
+
+  return {
+
+    name: point.name,
+
+    position:
+      new THREE.Vector3(
+        point.x * 0.0254,
+        point.z * 0.0254,
+        -point.y * 0.0254
+      ),
+
+    target:
+      new THREE.Vector3(
+        point.target_x * 0.0254,
+        point.target_z * 0.0254,
+        -point.target_y * 0.0254
+      ),
+
+    fov:
+      point.fov || 90
+
+  };
+
+}
+
+
+/* --------------------------------
+   ŁADOWANIE JSON
+-------------------------------- */
+
+async function loadPoints(){
+
+  const response =
+    await fetch(
+      "punkty_spaceru.json",
+      {
+        cache:"no-store"
+      }
+    );
+
+  if(!response.ok){
+
+    throw new Error(
+      "Nie można wczytać punkty_spaceru.json"
+    );
+
+  }
+
+  const data =
+    await response.json();
+
+  points =
+    data.map(convertPoint);
+
+}
+
+
+/* --------------------------------
+   NAZWY POMIESZCZEŃ
+-------------------------------- */
+
+const roomMeta = {
+
+  SPACER_KORYTARZ:
+    ["Korytarz","11,48 m²"],
+
+  SPACER_SALON_KUCHNIA:
+    ["Salon + kuchnia","30,77 m²"],
+
+  SPACER_LAZIENKA:
+    ["Łazienka","4,96 m²"],
+
+  SPACER_SYPIALNIA_01:
+    ["Sypialnia 01","11,83 m²"],
+
+  SPACER_WC:
+    ["WC","1,65 m²"],
+
+  SPACER_GARDEROBA:
+    ["Garderoba","3,75 m²"],
+
+  SPACER_SYPIALNIA_02:
+    ["Sypialnia 02","12,63 m²"]
+
+};
+
+
+/* --------------------------------
+   LISTA POMIESZCZEŃ
+-------------------------------- */
+
+function buildRooms(){
+
+  const list =
+    document.getElementById(
+      "roomList"
+    );
+
+  list.innerHTML = "";
+
+  const interiorPoints =
+    points.filter(
+      point =>
+        point.name !== "SPACER_START"
+    );
+
+  interiorPoints.forEach(
+    (point,index)=>{
+
+      const button =
+        document.createElement(
+          "button"
+        );
+
+      button.className =
+        "room";
+
+      button.dataset.point =
+        point.name;
+
+      const meta =
+        roomMeta[point.name] ||
+        [
+          point.name
+            .replace("SPACER_","")
+            .replaceAll("_"," "),
+          ""
+        ];
+
+      button.innerHTML = `
+
+        <span class="roomNumber">
+          ${String(index+1).padStart(2,"0")}
+        </span>
+
+        <span>
+          <span class="roomName">
+            ${meta[0]}
+          </span>
+
+          <span class="roomArea">
+            ${meta[1]}
+          </span>
+        </span>
+
+      `;
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          goToPoint(
+            point.name
           );
 
         }
-
-        return response.arrayBuffer();
-
-      })
-
-    );
-
-
-  /*
-     Łączymy oba fragmenty
-     z powrotem w jeden GLB.
-  */
-
-  const total =
-    buffers[0].byteLength +
-    buffers[1].byteLength;
-
-  const combined =
-    new Uint8Array(total);
-
-  combined.set(
-    new Uint8Array(buffers[0]),
-    0
-  );
-
-  combined.set(
-    new Uint8Array(buffers[1]),
-    buffers[0].byteLength
-  );
-
-
-  loader.parse(
-    combined.buffer,
-    "",
-    gltf => {
-
-      scene.add(gltf.scene);
-
-      /*
-         Model zachowuje oryginalne
-         współrzędne.
-      */
-
-      loading.classList.add(
-        "hidden"
       );
 
-      /*
-         Ponownie ustawiamy kamerę
-         po załadowaniu modelu.
-      */
-
-      setCamera(
-        START,
-        START_TARGET
-      );
-
-    },
-    error => {
-
-      console.error(error);
-
-      loading.querySelector(
-        ".loadingText"
-      ).textContent =
-        "Błąd ładowania modelu";
+      list.appendChild(button);
 
     }
   );
@@ -972,241 +772,176 @@ async function loadModel() {
 }
 
 
-loadModel();
-
-
-/* -----------------------------------
-   CAMERA
------------------------------------ */
+/* --------------------------------
+   USTAWIENIE KAMERY
+-------------------------------- */
 
 function setCamera(
-  position,
-  target
-) {
+  point,
+  animate = true
+){
 
-  camera.position.set(
-    position.x,
-    position.y,
-    position.z
-  );
+  const from =
+    camera.position.clone();
 
-  camera.lookAt(
-    target.x,
-    target.y,
-    target.z
-  );
+  const to =
+    point.position.clone();
 
-}
+  const target =
+    point.target.clone();
+
+  const newFov =
+    point.fov || 90;
 
 
-/* -----------------------------------
-   MOUSE LOOK
------------------------------------ */
+  const dx =
+    target.x - to.x;
 
-let yaw = 0;
-let pitch = 0;
+  const dy =
+    target.y - to.y;
 
-let dragging = false;
-
-let previousX = 0;
-let previousY = 0;
+  const dz =
+    target.z - to.z;
 
 
-renderer.domElement.addEventListener(
-  "pointerdown",
-  event => {
-
-    dragging = true;
-
-    previousX =
-      event.clientX;
-
-    previousY =
-      event.clientY;
-
-    renderer.domElement.setPointerCapture(
-      event.pointerId
+  yaw =
+    Math.atan2(
+      -dx,
+      -dz
     );
 
+
+  pitch =
+    Math.atan2(
+      dy,
+      Math.sqrt(
+        dx*dx +
+        dz*dz
+      )
+    );
+
+
+  if(!animate){
+
+    camera.position.copy(to);
+
+    camera.fov =
+      newFov;
+
+    camera.updateProjectionMatrix();
+
+    camera.lookAt(target);
+
+    currentPoint =
+      point;
+
+    return;
+
   }
-);
 
 
-renderer.domElement.addEventListener(
-  "pointermove",
-  event => {
+  const start =
+    performance.now();
 
-    if (!dragging)
-      return;
-
-    const dx =
-      event.clientX -
-      previousX;
-
-    const dy =
-      event.clientY -
-      previousY;
-
-    previousX =
-      event.clientX;
-
-    previousY =
-      event.clientY;
+  const duration =
+    750;
 
 
-    yaw -= dx * 0.003;
+  function animateCamera(now){
 
-    pitch -= dy * 0.0025;
-
-
-    const limit =
-      Math.PI / 2.1;
-
-    pitch =
-      Math.max(
-        -limit,
-        Math.min(limit, pitch)
+    const t =
+      Math.min(
+        1,
+        (now-start) /
+        duration
       );
 
-  }
-);
+
+    const ease =
+      t*t*(3-2*t);
 
 
-renderer.domElement.addEventListener(
-  "pointerup",
-  () => {
-
-    dragging = false;
-
-  }
-);
-
-
-/* -----------------------------------
-   KEYBOARD
------------------------------------ */
-
-const keys = {};
-
-
-window.addEventListener(
-  "keydown",
-  event => {
-
-    keys[event.key.toLowerCase()] =
-      true;
-
-  }
-);
-
-
-window.addEventListener(
-  "keyup",
-  event => {
-
-    keys[event.key.toLowerCase()] =
-      false;
-
-  }
-);
-
-
-/* -----------------------------------
-   MOVEMENT
------------------------------------ */
-
-const direction =
-  new THREE.Vector3();
-
-const right =
-  new THREE.Vector3();
-
-const move =
-  new THREE.Vector3();
-
-
-function updateMovement() {
-
-  move.set(0,0,0);
-
-
-  direction.set(
-    -Math.sin(yaw),
-    0,
-    -Math.cos(yaw)
-  );
-
-  right.set(
-    Math.cos(yaw),
-    0,
-    -Math.sin(yaw)
-  );
-
-
-  if (keys["w"])
-    move.add(direction);
-
-  if (keys["s"])
-    move.sub(direction);
-
-  if (keys["a"])
-    move.sub(right);
-
-  if (keys["d"])
-    move.add(right);
-
-
-  if (
-    move.lengthSq() > 0
-  ) {
-
-    move.normalize();
-
-    move.multiplyScalar(
-      0.035
+    camera.position.lerpVectors(
+      from,
+      to,
+      ease
     );
 
-    camera.position.add(
-      move
+
+    camera.fov =
+      THREE.MathUtils.lerp(
+        camera.fov,
+        newFov,
+        ease
+      );
+
+
+    camera.updateProjectionMatrix();
+
+    camera.lookAt(
+      target
     );
+
+
+    if(t < 1){
+
+      requestAnimationFrame(
+        animateCamera
+      );
+
+    }else{
+
+      currentPoint =
+        point;
+
+    }
 
   }
 
 
-  /*
-     Kamera nie może zejść
-     poniżej poziomu człowieka.
-  */
-
-  camera.position.y =
-    1.65;
+  requestAnimationFrame(
+    animateCamera
+  );
 
 }
 
 
-/* -----------------------------------
-   CAMERA ROTATION
------------------------------------ */
+/* --------------------------------
+   WIDOK 360
+-------------------------------- */
 
-function updateLook() {
+function applyLook(){
 
-  const lookDistance = 2;
+  if(
+    overview ||
+    !currentPoint
+  ){
+
+    return;
+
+  }
+
+
+  const distance = 2;
+
 
   const target =
     new THREE.Vector3(
+
       camera.position.x -
         Math.sin(yaw) *
         Math.cos(pitch) *
-        lookDistance,
+        distance,
 
       camera.position.y +
         Math.sin(pitch) *
-        lookDistance,
+        distance,
 
       camera.position.z -
         Math.cos(yaw) *
         Math.cos(pitch) *
-        lookDistance
+        distance
+
     );
 
 
@@ -1217,186 +952,343 @@ function updateLook() {
 }
 
 
-/* -----------------------------------
-   ROOM BUTTONS
------------------------------------ */
+/* --------------------------------
+   PRZEJŚCIE DO PUNKTU
+-------------------------------- */
 
-document
-  .querySelectorAll(".room")
-  .forEach(button => {
+function goToPoint(name){
 
-    button.addEventListener(
-      "click",
-      () => {
+  const point =
+    points.find(
+      item =>
+        item.name === name
+    );
 
-        document
-          .querySelectorAll(".room")
-          .forEach(
-            item =>
-              item.classList.remove(
-                "active"
-              )
-          );
+  if(!point){
+
+    return;
+
+  }
 
 
-        button.classList.add(
-          "active"
+  overview = false;
+
+
+  document
+    .getElementById(
+      "modeBadge"
+    )
+    .textContent =
+      roomMeta[name]?.[0] ||
+      name;
+
+
+  document
+    .querySelectorAll(".room")
+    .forEach(
+      button => {
+
+        button.classList.toggle(
+          "active",
+          button.dataset.point === name
         );
-
-
-        const position = {
-          x: Number(
-            button.dataset.x
-          ),
-
-          y: Number(
-            button.dataset.y
-          ),
-
-          z: Number(
-            button.dataset.z
-          )
-        };
-
-
-        const target = {
-          x: Number(
-            button.dataset.tx
-          ),
-
-          y: Number(
-            button.dataset.ty
-          ),
-
-          z: Number(
-            button.dataset.tz
-          )
-        };
-
-
-        setCamera(
-          position,
-          target
-        );
-
-
-        /*
-           Aktualizujemy yaw/pitch,
-           żeby dalsze rozglądanie
-           działało od nowego punktu.
-        */
-
-        const dx =
-          target.x -
-          position.x;
-
-        const dy =
-          target.y -
-          position.y;
-
-        const dz =
-          target.z -
-          position.z;
-
-
-        yaw =
-          Math.atan2(
-            -dx,
-            -dz
-          );
-
-        pitch =
-          Math.atan2(
-            dy,
-            Math.sqrt(
-              dx * dx +
-              dz * dz
-            )
-          );
 
       }
     );
 
-  });
+
+  setCamera(
+    point,
+    true
+  );
+
+}
 
 
-/* -----------------------------------
-   RESET
------------------------------------ */
+/* --------------------------------
+   RZUT 3D
+-------------------------------- */
+
+function goOverview(){
+
+  const point =
+    points.find(
+      item =>
+        item.name ===
+        "SPACER_START"
+    );
+
+  if(!point){
+
+    return;
+
+  }
+
+
+  overview = true;
+
+  currentPoint =
+    point;
+
+
+  document
+    .getElementById(
+      "modeBadge"
+    )
+    .textContent =
+      "Rzut 3D";
+
+
+  document
+    .querySelectorAll(".room")
+    .forEach(
+      button =>
+        button.classList.remove(
+          "active"
+        )
+    );
+
+
+  setCamera(
+    point,
+    false
+  );
+
+}
+
+
+/* --------------------------------
+   START
+-------------------------------- */
 
 document
-  .getElementById("resetButton")
+  .getElementById(
+    "startButton"
+  )
   .addEventListener(
     "click",
     () => {
 
-      setCamera(
-        START,
-        START_TARGET
-      );
+      document
+        .getElementById(
+          "startScreen"
+        )
+        .classList.add(
+          "hidden"
+        );
 
-      yaw = 0;
-      pitch = 0;
+
+      const first =
+        points.find(
+          point =>
+            point.name ===
+            "SPACER_KORYTARZ"
+        );
+
+
+      if(first){
+
+        goToPoint(
+          first.name
+        );
+
+      }
 
     }
   );
 
 
-/* -----------------------------------
-   START
------------------------------------ */
+/* --------------------------------
+   RZUT 3D
+-------------------------------- */
 
 document
-  .getElementById("startButton")
+  .getElementById(
+    "overviewButton"
+  )
+  .addEventListener(
+    "click",
+    goOverview
+  );
+
+
+/* --------------------------------
+   RESET
+-------------------------------- */
+
+document
+  .getElementById(
+    "resetButton"
+  )
   .addEventListener(
     "click",
     () => {
 
-      setCamera(
-        START,
-        START_TARGET
-      );
+      if(overview){
 
-      document
-        .getElementById("startScreen")
-        .classList.add(
-          "hidden"
+        goOverview();
+
+      }else if(currentPoint){
+
+        setCamera(
+          currentPoint,
+          false
+        );
+
+      }
+
+    }
+  );
+
+
+/* --------------------------------
+   MYSZ
+-------------------------------- */
+
+renderer.domElement
+  .addEventListener(
+    "pointerdown",
+    event => {
+
+      if(overview){
+
+        return;
+
+      }
+
+
+      dragging = true;
+
+      previousX =
+        event.clientX;
+
+      previousY =
+        event.clientY;
+
+
+      renderer.domElement
+        .setPointerCapture(
+          event.pointerId
         );
 
     }
   );
 
 
-/* -----------------------------------
+renderer.domElement
+  .addEventListener(
+    "pointermove",
+    event => {
+
+      if(
+        !dragging ||
+        overview
+      ){
+
+        return;
+
+      }
+
+
+      const dx =
+        event.clientX -
+        previousX;
+
+      const dy =
+        event.clientY -
+        previousY;
+
+
+      previousX =
+        event.clientX;
+
+      previousY =
+        event.clientY;
+
+
+      yaw -=
+        dx * 0.003;
+
+
+      pitch -=
+        dy * 0.0025;
+
+
+      const limit =
+        Math.PI / 2.05;
+
+
+      pitch =
+        Math.max(
+          -limit,
+          Math.min(
+            limit,
+            pitch
+          )
+        );
+
+    }
+  );
+
+
+renderer.domElement
+  .addEventListener(
+    "pointerup",
+    () => {
+
+      dragging = false;
+
+    }
+  );
+
+
+renderer.domElement
+  .addEventListener(
+    "pointercancel",
+    () => {
+
+      dragging = false;
+
+    }
+  );
+
+
+/* --------------------------------
    FULLSCREEN
------------------------------------ */
+-------------------------------- */
 
-async function fullscreen() {
+async function fullscreen(){
 
-  try {
+  try{
 
-    if (
+    if(
       !document.fullscreenElement
-    ) {
+    ){
 
       await document
         .documentElement
         .requestFullscreen();
 
-    } else {
+    }else{
 
       await document
         .exitFullscreen();
 
     }
 
-  } catch(e) {}
+  }catch(error){
+
+    console.error(error);
+
+  }
 
 }
 
 
 document
-  .getElementById("fullscreenButton")
+  .getElementById(
+    "fullscreenButton"
+  )
   .addEventListener(
     "click",
     fullscreen
@@ -1404,36 +1296,163 @@ document
 
 
 document
-  .getElementById("fullscreenButton2")
+  .getElementById(
+    "fullscreenButton2"
+  )
   .addEventListener(
     "click",
     fullscreen
   );
 
 
-/* -----------------------------------
-   INFO
------------------------------------ */
+/* --------------------------------
+   ŁADOWANIE MODELU
+-------------------------------- */
 
-document
-  .getElementById("infoButton")
-  .addEventListener(
-    "click",
-    () => {
+const loader =
+  new GLTFLoader();
 
-      alert(
-        "Wirtualny spacer po mieszkaniu.\n\n" +
-        "Przeciągnij myszką, aby się rozglądać.\n" +
-        "Użyj W, A, S, D, aby się poruszać."
+
+async function loadModel(){
+
+  try{
+
+    await loadPoints();
+
+    buildRooms();
+
+
+    const files = [
+
+      "mieszkanie.part1",
+      "mieszkanie.part2"
+
+    ];
+
+
+    const buffers =
+      await Promise.all(
+
+        files.map(
+          async file => {
+
+            const response =
+              await fetch(file);
+
+            if(!response.ok){
+
+              throw new Error(
+                "Nie można wczytać " +
+                file
+              );
+
+            }
+
+            return response
+              .arrayBuffer();
+
+          }
+        )
+
       );
 
-    }
-  );
+
+    const total =
+      buffers[0].byteLength +
+      buffers[1].byteLength;
 
 
-/* -----------------------------------
+    const combined =
+      new Uint8Array(
+        total
+      );
+
+
+    combined.set(
+      new Uint8Array(
+        buffers[0]
+      ),
+      0
+    );
+
+
+    combined.set(
+      new Uint8Array(
+        buffers[1]
+      ),
+      buffers[0].byteLength
+    );
+
+
+    loader.parse(
+
+      combined.buffer,
+
+      "",
+
+      gltf => {
+
+        scene.add(
+          gltf.scene
+        );
+
+
+        loading
+          .classList
+          .add(
+            "hidden"
+          );
+
+
+        goOverview();
+
+      },
+
+      error => {
+
+        console.error(
+          error
+        );
+
+
+        document
+          .querySelector(
+            ".loadingText"
+          )
+          .textContent =
+            "Błąd ładowania modelu";
+
+      }
+
+    );
+
+
+  }catch(error){
+
+    console.error(
+      error
+    );
+
+
+    document
+      .querySelector(
+        ".loadingText"
+      )
+      .textContent =
+        "Błąd: " +
+        error.message;
+
+  }
+
+}
+
+
+loadModel();
+
+
+/* --------------------------------
    RESIZE
------------------------------------ */
+-------------------------------- */
 
 window.addEventListener(
   "resize",
@@ -1443,7 +1462,9 @@ window.addEventListener(
       window.innerWidth /
       window.innerHeight;
 
+
     camera.updateProjectionMatrix();
+
 
     renderer.setSize(
       window.innerWidth,
@@ -1454,20 +1475,23 @@ window.addEventListener(
 );
 
 
-/* -----------------------------------
-   ANIMATION
------------------------------------ */
+/* --------------------------------
+   ANIMACJA
+-------------------------------- */
 
-function animate() {
+function animate(){
 
   requestAnimationFrame(
     animate
   );
 
 
-  updateMovement();
+  if(!overview){
 
-  updateLook();
+    applyLook();
+
+  }
+
 
   renderer.render(
     scene,
