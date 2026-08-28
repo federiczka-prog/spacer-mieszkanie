@@ -3,549 +3,862 @@
 
 <head>
 
-<meta charset="UTF-8">
-
-<meta
-  name="viewport"
-  content="width=device-width, initial-scale=1.0"
->
-
-<title>Wirtualny spacer — mieszkanie</title>
-
-<style>
-
-* {
-  box-sizing: border-box;
-}
-
-html,
-body {
-  margin: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  background: #11110f;
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-#app {
-  position: fixed;
-  inset: 0;
-  overflow: hidden;
-  background: #11110f;
-}
-
-canvas {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-
-/* =========================================
-   START SCREEN
-========================================= */
-
-#startScreen {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  background:
-    linear-gradient(
-      rgba(15,15,13,.55),
-      rgba(15,15,13,.65)
-    );
-
-  backdrop-filter: blur(4px);
-
-  transition:
-    opacity .6s ease,
-    visibility .6s ease;
-}
-
-#startScreen.hidden {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-}
-
-.startBox {
-  text-align: center;
-  color: white;
-  width: min(520px, 90%);
-}
-
-.startSmall {
-  font-size: 10px;
-  letter-spacing: .3em;
-  text-transform: uppercase;
-  opacity: .55;
-  margin-bottom: 20px;
-}
-
-.startTitle {
-  font-size: clamp(42px, 7vw, 72px);
-  font-weight: 300;
-  letter-spacing: -.05em;
-  margin: 0;
-}
-
-.startDescription {
-  margin: 22px auto 30px;
-  max-width: 430px;
-  font-size: 13px;
-  line-height: 1.7;
-  color: rgba(255,255,255,.65);
-}
-
-#startButton {
-  border: 0;
-  background: #eee9de;
-  color: #171713;
-  height: 50px;
-  padding: 0 28px;
-  border-radius: 999px;
-  font-size: 11px;
-  letter-spacing: .08em;
-  cursor: pointer;
-  transition: transform .2s ease;
-}
-
-#startButton:hover {
-  transform: scale(1.03);
-}
-
-
-/* =========================================
-   TOP BAR
-========================================= */
+  <meta charset="UTF-8">
 
-#topBar {
-  position: fixed;
-  z-index: 20;
-  top: 0;
-  left: 0;
-  right: 0;
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
-  padding: 25px 28px;
-
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+  <title>Wirtualny spacer — mieszkanie</title>
 
-  pointer-events: none;
 
-  background:
-    linear-gradient(
-      rgba(12,12,10,.55),
-      transparent
-    );
-}
+  <style>
 
-.brand {
-  color: white;
-}
+    * {
+      box-sizing: border-box;
+    }
 
-.brandSmall {
-  font-size: 9px;
-  letter-spacing: .25em;
-  text-transform: uppercase;
-  opacity: .5;
-  margin-bottom: 7px;
-}
 
-.brandTitle {
-  font-size: 21px;
-  font-weight: 500;
-}
+    html,
+    body {
 
-.brandSubtitle {
-  font-size: 11px;
-  opacity: .45;
-  margin-top: 5px;
-}
+      margin: 0;
 
-.topButtons {
-  display: flex;
-  gap: 8px;
-  pointer-events: auto;
-}
+      width: 100%;
+      height: 100%;
 
-.topButton {
-  height: 40px;
-  padding: 0 15px;
-  border-radius: 999px;
+      overflow: hidden;
 
-  border:
-    1px solid
-    rgba(255,255,255,.15);
+      background: #11110f;
 
-  background:
-    rgba(20,20,17,.65);
+      font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
 
-  color: white;
+    }
 
-  backdrop-filter: blur(15px);
 
-  cursor: pointer;
-}
+    #app {
 
+      position: fixed;
 
-/* =========================================
-   ROOMS
-========================================= */
+      inset: 0;
 
-#rooms {
-  position: fixed;
-  z-index: 20;
+      overflow: hidden;
 
-  left: 25px;
-  top: 50%;
+      background: #11110f;
 
-  transform: translateY(-50%);
+    }
 
-  width: 235px;
-  padding: 15px;
 
-  border-radius: 18px;
+    canvas {
 
-  background:
-    rgba(20,20,17,.76);
+      display: block;
 
-  border:
-    1px solid
-    rgba(255,255,255,.13);
+      width: 100%;
+      height: 100%;
 
-  backdrop-filter: blur(20px);
+    }
 
-  color: white;
-}
 
-.roomsTitle {
-  font-size: 9px;
-  letter-spacing: .2em;
-  text-transform: uppercase;
+    /* =========================================
+       START SCREEN
+    ========================================= */
 
-  color:
-    rgba(255,255,255,.45);
+    #startScreen {
 
-  padding: 4px 8px 11px;
-}
+      position: fixed;
 
-.room {
-  width: 100%;
+      inset: 0;
 
-  display: grid;
+      z-index: 100;
 
-  grid-template-columns:
-    25px 1fr auto;
+      display: flex;
 
-  gap: 7px;
+      align-items: center;
+      justify-content: center;
 
-  border: 0;
+      background:
+        linear-gradient(
+          rgba(15,15,13,.55),
+          rgba(15,15,13,.65)
+        );
 
-  background: transparent;
+      backdrop-filter: blur(4px);
 
-  color:
-    rgba(255,255,255,.65);
+      transition:
+        opacity .6s ease,
+        visibility .6s ease;
 
-  text-align: left;
+    }
 
-  padding: 9px;
 
-  border-radius: 10px;
+    #startScreen.hidden {
 
-  cursor: pointer;
+      opacity: 0;
 
-  transition:
-    background .2s ease,
-    color .2s ease;
-}
+      visibility: hidden;
 
-.room:hover {
-  background:
-    rgba(255,255,255,.07);
+      pointer-events: none;
 
-  color: white;
-}
+    }
 
-.room.active {
-  background:
-    rgba(255,255,255,.11);
 
-  color: white;
-}
+    .startBox {
 
-.roomNumber {
-  font-size: 9px;
-  opacity: .4;
-}
+      text-align: center;
 
-.roomName {
-  font-size: 12px;
-}
+      color: white;
 
-.roomArea {
-  font-size: 9px;
-  opacity: .35;
-}
+      width: min(520px, 90%);
 
+    }
 
-/* =========================================
-   BOTTOM
-========================================= */
 
-#bottom {
-  position: fixed;
-  z-index: 20;
+    .startSmall {
 
-  left: 25px;
-  right: 25px;
-  bottom: 20px;
+      font-size: 10px;
 
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+      letter-spacing: .3em;
 
-  pointer-events: none;
-}
+      text-transform: uppercase;
 
-#hint {
-  padding: 10px 13px;
+      opacity: .55;
 
-  border-radius: 11px;
+      margin-bottom: 20px;
 
-  background:
-    rgba(20,20,17,.7);
+    }
 
-  border:
-    1px solid
-    rgba(255,255,255,.12);
 
-  backdrop-filter: blur(15px);
+    .startTitle {
 
-  color:
-    rgba(255,255,255,.5);
+      font-size:
+        clamp(42px, 7vw, 72px);
 
-  font-size: 10px;
-}
+      font-weight: 300;
 
-#controls {
-  display: flex;
-  gap: 4px;
+      letter-spacing: -.05em;
 
-  padding: 5px;
+      margin: 0;
 
-  border-radius: 999px;
+    }
 
-  background:
-    rgba(20,20,17,.75);
 
-  border:
-    1px solid
-    rgba(255,255,255,.13);
+    .startDescription {
 
-  backdrop-filter: blur(15px);
+      margin:
+        22px auto 30px;
 
-  pointer-events: auto;
-}
+      max-width: 430px;
 
-.control {
-  width: 40px;
-  height: 36px;
+      font-size: 13px;
 
-  border: 0;
-  border-radius: 999px;
+      line-height: 1.7;
 
-  background: transparent;
+      color:
+        rgba(255,255,255,.65);
 
-  color: white;
+    }
 
-  cursor: pointer;
-}
 
-.control:hover {
-  background:
-    rgba(255,255,255,.08);
-}
+    #startButton {
 
+      border: 0;
 
-/* =========================================
-   AKTUALNY PUNKT
-========================================= */
+      background: #eee9de;
 
-#navigationLabel {
-  position: fixed;
-  z-index: 45;
+      color: #171713;
 
-  left: 50%;
-  bottom: 95px;
+      height: 50px;
 
-  transform: translateX(-50%);
+      padding:
+        0 28px;
 
-  padding: 8px 13px;
+      border-radius: 999px;
 
-  border-radius: 999px;
+      font-size: 11px;
 
-  background:
-    rgba(20,20,17,.65);
+      letter-spacing: .08em;
 
-  border:
-    1px solid
-    rgba(255,255,255,.12);
+      cursor: pointer;
 
-  backdrop-filter: blur(15px);
+      transition:
+        transform .2s ease;
 
-  color:
-    rgba(255,255,255,.75);
+    }
 
-  font-size: 10px;
 
-  letter-spacing: .04em;
+    #startButton:hover {
 
-  pointer-events: none;
+      transform:
+        scale(1.03);
 
-  opacity: 0;
+    }
 
-  transition:
-    opacity .25s ease;
-}
 
-#navigationLabel.visible {
-  opacity: 1;
-}
+    /* =========================================
+       TOP BAR
+    ========================================= */
 
+    #topBar {
 
-/* =========================================
-   LOADING
-========================================= */
+      position: fixed;
 
-#loading {
-  position: fixed;
-  inset: 0;
-  z-index: 200;
+      z-index: 20;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+      top: 0;
+      left: 0;
+      right: 0;
 
-  background: #161613;
-  color: white;
+      padding:
+        25px 28px;
 
-  transition: opacity .5s ease;
-}
+      display: flex;
 
-#loading.hidden {
-  opacity: 0;
-  pointer-events: none;
-}
+      justify-content:
+        space-between;
 
-.loader {
-  text-align: center;
-}
+      align-items:
+        flex-start;
 
-.spinner {
-  width: 30px;
-  height: 30px;
+      pointer-events:
+        none;
 
-  margin: 0 auto 15px;
+      background:
+        linear-gradient(
+          rgba(12,12,10,.55),
+          transparent
+        );
 
-  border-radius: 50%;
+    }
 
-  border:
-    2px solid
-    rgba(255,255,255,.15);
 
-  border-top-color: white;
+    .brand {
 
-  animation:
-    spin 1s linear infinite;
-}
+      color: white;
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
+    }
 
-.loadingText {
-  font-size: 13px;
-}
 
+    .brandSmall {
 
-/* =========================================
-   MOBILE
-========================================= */
+      font-size: 9px;
 
-@media(max-width:700px) {
+      letter-spacing: .25em;
 
-  #topBar {
-    padding: 16px;
-  }
+      text-transform: uppercase;
 
-  .brandTitle {
-    font-size: 18px;
-  }
+      opacity: .5;
 
-  .brandSubtitle {
-    display: none;
-  }
+      margin-bottom: 7px;
 
-  .topButton:first-child {
-    display: none;
-  }
+    }
 
-  #rooms {
-    left: 10px;
-    right: 10px;
-    bottom: 70px;
-    top: auto;
 
-    width: auto;
+    .brandTitle {
 
-    transform: none;
+      font-size: 21px;
 
-    display: flex;
+      font-weight: 500;
 
-    overflow-x: auto;
+    }
 
-    padding: 7px;
-  }
 
-  .roomsTitle {
-    display: none;
-  }
+    .brandSubtitle {
 
-  .room {
-    min-width: 145px;
-  }
+      font-size: 11px;
 
-  #bottom {
-    left: 10px;
-    right: 10px;
-    bottom: 10px;
-  }
+      opacity: .45;
 
-  #hint {
-    display: none;
-  }
+      margin-top: 5px;
 
-  #navigationLabel {
-    bottom: 65px;
-  }
+    }
 
-}
 
-</style>
+    .topButtons {
+
+      display: flex;
+
+      gap: 8px;
+
+      pointer-events:
+        auto;
+
+    }
+
+
+    .topButton {
+
+      height: 40px;
+
+      padding:
+        0 15px;
+
+      border-radius: 999px;
+
+      border:
+        1px solid
+        rgba(255,255,255,.15);
+
+      background:
+        rgba(20,20,17,.65);
+
+      color: white;
+
+      backdrop-filter:
+        blur(15px);
+
+      cursor: pointer;
+
+    }
+
+
+    /* =========================================
+       ROOMS
+    ========================================= */
+
+    #rooms {
+
+      position: fixed;
+
+      z-index: 20;
+
+      left: 25px;
+
+      top: 50%;
+
+      transform:
+        translateY(-50%);
+
+      width: 235px;
+
+      padding: 15px;
+
+      border-radius: 18px;
+
+      background:
+        rgba(20,20,17,.76);
+
+      border:
+        1px solid
+        rgba(255,255,255,.13);
+
+      backdrop-filter:
+        blur(20px);
+
+      color: white;
+
+    }
+
+
+    .roomsTitle {
+
+      font-size: 9px;
+
+      letter-spacing: .2em;
+
+      text-transform: uppercase;
+
+      color:
+        rgba(255,255,255,.45);
+
+      padding:
+        4px 8px 11px;
+
+    }
+
+
+    .room {
+
+      width: 100%;
+
+      display: grid;
+
+      grid-template-columns:
+        25px 1fr auto;
+
+      gap: 7px;
+
+      border: 0;
+
+      background:
+        transparent;
+
+      color:
+        rgba(255,255,255,.65);
+
+      text-align: left;
+
+      padding: 9px;
+
+      border-radius: 10px;
+
+      cursor: pointer;
+
+      transition:
+        background .2s ease,
+        color .2s ease;
+
+    }
+
+
+    .room:hover {
+
+      background:
+        rgba(255,255,255,.07);
+
+      color: white;
+
+    }
+
+
+    .room.active {
+
+      background:
+        rgba(255,255,255,.11);
+
+      color: white;
+
+    }
+
+
+    .roomNumber {
+
+      font-size: 9px;
+
+      opacity: .4;
+
+    }
+
+
+    .roomName {
+
+      font-size: 12px;
+
+    }
+
+
+    .roomArea {
+
+      font-size: 9px;
+
+      opacity: .35;
+
+    }
+
+
+    /* =========================================
+       BOTTOM
+    ========================================= */
+
+    #bottom {
+
+      position: fixed;
+
+      z-index: 20;
+
+      left: 25px;
+
+      right: 25px;
+
+      bottom: 20px;
+
+      display: flex;
+
+      justify-content:
+        space-between;
+
+      align-items:
+        center;
+
+      pointer-events:
+        none;
+
+    }
+
+
+    #hint {
+
+      padding:
+        10px 13px;
+
+      border-radius: 11px;
+
+      background:
+        rgba(20,20,17,.7);
+
+      border:
+        1px solid
+        rgba(255,255,255,.12);
+
+      backdrop-filter:
+        blur(15px);
+
+      color:
+        rgba(255,255,255,.5);
+
+      font-size: 10px;
+
+    }
+
+
+    #controls {
+
+      display: flex;
+
+      gap: 4px;
+
+      padding: 5px;
+
+      border-radius: 999px;
+
+      background:
+        rgba(20,20,17,.75);
+
+      border:
+        1px solid
+        rgba(255,255,255,.13);
+
+      backdrop-filter:
+        blur(15px);
+
+      pointer-events:
+        auto;
+
+    }
+
+
+    .control {
+
+      width: 40px;
+
+      height: 36px;
+
+      border: 0;
+
+      border-radius: 999px;
+
+      background:
+        transparent;
+
+      color: white;
+
+      cursor: pointer;
+
+    }
+
+
+    .control:hover {
+
+      background:
+        rgba(255,255,255,.08);
+
+    }
+
+
+    /* =========================================
+       STRZAŁKI NAWIGACYJNE
+    ========================================= */
+
+    #navigationArrows {
+
+      position: fixed;
+
+      z-index: 40;
+
+      left: 50%;
+
+      bottom: 82px;
+
+      transform:
+        translateX(-50%);
+
+      display: none;
+
+      align-items: center;
+
+      gap: 8px;
+
+      pointer-events: auto;
+
+    }
+
+
+    #navigationArrows.visible {
+
+      display: flex;
+
+    }
+
+
+    .navArrow {
+
+      width: 48px;
+
+      height: 48px;
+
+      border-radius: 50%;
+
+      border:
+        1px solid
+        rgba(255,255,255,.18);
+
+      background:
+        rgba(20,20,17,.68);
+
+      color: white;
+
+      backdrop-filter:
+        blur(15px);
+
+      cursor: pointer;
+
+      font-size: 20px;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      transition:
+        transform .2s ease,
+        background .2s ease,
+        opacity .2s ease;
+
+    }
+
+
+    .navArrow:hover {
+
+      background:
+        rgba(255,255,255,.16);
+
+      transform:
+        scale(1.08);
+
+    }
+
+
+    .navArrow:active {
+
+      transform:
+        scale(.94);
+
+    }
+
+
+    .navArrow.disabled {
+
+      opacity: .25;
+
+      pointer-events: none;
+
+    }
+
+
+    /* =========================================
+       LOADING
+    ========================================= */
+
+    #loading {
+
+      position: fixed;
+
+      inset: 0;
+
+      z-index: 200;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      background: #161613;
+
+      color: white;
+
+      transition:
+        opacity .5s ease;
+
+    }
+
+
+    #loading.hidden {
+
+      opacity: 0;
+
+      pointer-events: none;
+
+    }
+
+
+    .loader {
+
+      text-align: center;
+
+    }
+
+
+    .spinner {
+
+      width: 30px;
+
+      height: 30px;
+
+      margin:
+        0 auto 15px;
+
+      border-radius: 50%;
+
+      border:
+        2px solid
+        rgba(255,255,255,.15);
+
+      border-top-color:
+        white;
+
+      animation:
+        spin 1s linear infinite;
+
+    }
+
+
+    @keyframes spin {
+
+      to {
+
+        transform:
+          rotate(360deg);
+
+      }
+
+    }
+
+
+    .loadingText {
+
+      font-size: 13px;
+
+    }
+
+
+    /* =========================================
+       MOBILE
+    ========================================= */
+
+    @media(max-width:700px) {
+
+      #topBar {
+
+        padding: 16px;
+
+      }
+
+
+      .brandTitle {
+
+        font-size: 18px;
+
+      }
+
+
+      .brandSubtitle {
+
+        display: none;
+
+      }
+
+
+      .topButton:first-child {
+
+        display: none;
+
+      }
+
+
+      #rooms {
+
+        left: 10px;
+
+        right: 10px;
+
+        bottom: 70px;
+
+        top: auto;
+
+        width: auto;
+
+        transform: none;
+
+        display: flex;
+
+        overflow-x: auto;
+
+        padding: 7px;
+
+      }
+
+
+      .roomsTitle {
+
+        display: none;
+
+      }
+
+
+      .room {
+
+        min-width: 145px;
+
+      }
+
+
+      #bottom {
+
+        left: 10px;
+
+        right: 10px;
+
+        bottom: 10px;
+
+      }
+
+
+      #hint {
+
+        display: none;
+
+      }
+
+
+      #navigationArrows {
+
+        bottom: 65px;
+
+      }
+
+
+      .navArrow {
+
+        width: 44px;
+
+        height: 44px;
+
+      }
+
+    }
+
+  </style>
 
 </head>
 
 
 <body>
+
 
 <div id="app"></div>
 
@@ -581,18 +894,25 @@ canvas {
       Wirtualny spacer
     </div>
 
+
     <h1 class="startTitle">
       Mieszkanie
     </h1>
 
+
     <p class="startDescription">
+
       Zobacz układ mieszkania z góry,
       a następnie rozpocznij spacer
       i przejdź do jego wnętrza.
+
     </p>
 
+
     <button id="startButton">
+
       ROZPOCZNIJ SPACER
+
     </button>
 
   </div>
@@ -612,9 +932,11 @@ canvas {
       Wirtualny spacer
     </div>
 
+
     <div class="brandTitle">
       Mieszkanie
     </div>
+
 
     <div class="brandSubtitle">
       Interaktywna prezentacja wnętrza
@@ -622,20 +944,24 @@ canvas {
 
   </div>
 
+
   <div class="topButtons">
 
     <button
       class="topButton"
-      id="infoButton"
-    >
+      id="infoButton">
+
       O projekcie
+
     </button>
+
 
     <button
       class="topButton"
-      id="fullscreenButton"
-    >
+      id="fullscreenButton">
+
       ⛶
+
     </button>
 
   </div>
@@ -657,11 +983,50 @@ canvas {
 
 
 <!-- =========================================
-     LABEL
+     STRZAŁKI
 ========================================= -->
 
-<div id="navigationLabel">
-  Aktualny punkt
+<div id="navigationArrows">
+
+  <button
+    class="navArrow"
+    id="arrowLeft"
+    title="Poprzedni punkt">
+
+    ←
+
+  </button>
+
+
+  <button
+    class="navArrow"
+    id="arrowBack"
+    title="Cofnij">
+
+    ↓
+
+  </button>
+
+
+  <button
+    class="navArrow"
+    id="arrowForward"
+    title="Przejdź dalej">
+
+    ↑
+
+  </button>
+
+
+  <button
+    class="navArrow"
+    id="arrowRight"
+    title="Następny punkt">
+
+    →
+
+  </button>
+
 </div>
 
 
@@ -672,24 +1037,30 @@ canvas {
 <div id="bottom">
 
   <div id="hint">
+
     Przeciągnij, aby się rozglądać
     · WASD = poruszanie
+
   </div>
+
 
   <div id="controls">
 
     <button
       class="control"
-      id="resetButton"
-    >
+      id="resetButton">
+
       ↻
+
     </button>
+
 
     <button
       class="control"
-      id="fullscreenButton2"
-    >
+      id="fullscreenButton2">
+
       ⛶
+
     </button>
 
   </div>
@@ -705,8 +1076,10 @@ canvas {
 
 {
   "imports": {
+
     "three":
       "https://unpkg.com/three@0.160.0/build/three.module.js"
+
   }
 }
 
@@ -717,6 +1090,7 @@ canvas {
 
 import * as THREE
   from "three";
+
 
 import {
   GLTFLoader
@@ -731,6 +1105,7 @@ from
 
 const scene =
   new THREE.Scene();
+
 
 scene.background =
   new THREE.Color(
@@ -780,6 +1155,7 @@ renderer.setPixelRatio(
 
 );
 
+
 renderer.setSize(
 
   window.innerWidth,
@@ -788,14 +1164,18 @@ renderer.setSize(
 
 );
 
+
 renderer.outputColorSpace =
   THREE.SRGBColorSpace;
+
 
 renderer.toneMapping =
   THREE.ACESFilmicToneMapping;
 
+
 renderer.toneMappingExposure =
   1;
+
 
 renderer.localClippingEnabled =
   true;
@@ -882,48 +1262,108 @@ let scenes = [];
 const roomSettings = {
 
   "SPACER_KORYTARZ": {
+
     number: "01",
+
     name: "Korytarz",
+
     area: "11,48 m²"
+
   },
+
 
   "SPACER_SALON_KUCHNIA": {
+
     number: "02",
+
     name: "Salon + kuchnia",
+
     area: "30,77 m²"
+
   },
+
 
   "SPACER_LAZIENKA": {
+
     number: "03",
+
     name: "Łazienka",
+
     area: "4,96 m²"
+
   },
+
 
   "SPACER_SYPIALNIA_01": {
+
     number: "04",
+
     name: "Sypialnia 01",
+
     area: "11,83 m²"
+
   },
+
 
   "SPACER_WC": {
+
     number: "05",
+
     name: "WC",
+
     area: "1,65 m²"
+
   },
+
 
   "SPACER_GARDEROBA": {
+
     number: "06",
+
     name: "Garderoba",
+
     area: "2,35 m²"
+
   },
 
+
   "SPACER_SYPIALNIA_02": {
+
     number: "07",
+
     name: "Sypialnia 02",
+
     area: "12,63 m²"
+
   }
 
 };
+
+
+/* =====================================================
+   KOLEJNOŚĆ PUNKTÓW NAWIGACJI
+===================================================== */
+
+const navigationOrder = [
+
+  "SPACER_KORYTARZ",
+
+  "SPACER_SALON_KUCHNIA",
+
+  "SPACER_LAZIENKA",
+
+  "SPACER_SYPIALNIA_01",
+
+  "SPACER_WC",
+
+  "SPACER_GARDEROBA",
+
+  "SPACER_SYPIALNIA_02"
+
+];
+
+
+let currentNavigationIndex = 0;
 
 
 /* =====================================================
@@ -936,18 +1376,21 @@ const SKETCHUP_TO_THREE =
 
 function convertPoint(point) {
 
-  return new THREE.Vector3(
+  return {
 
-    point.x *
+    x:
+      point.x *
       SKETCHUP_TO_THREE,
 
-    point.z *
+    y:
+      point.z *
       SKETCHUP_TO_THREE,
 
-    -point.y *
+    z:
+      -point.y *
       SKETCHUP_TO_THREE
 
-  );
+  };
 
 }
 
@@ -1008,10 +1451,8 @@ async function loadScenePoints() {
 function getScene(name) {
 
   return scenes.find(
-
     item =>
       item.name === name
-
   );
 
 }
@@ -1055,7 +1496,7 @@ function createRoomButtons() {
     roomSettings
   ).forEach(
 
-    sceneName => {
+    (sceneName, index) => {
 
       const settings =
         roomSettings[
@@ -1091,10 +1532,7 @@ function createRoomButtons() {
         "room";
 
 
-      if (
-        sceneName ===
-        "SPACER_KORYTARZ"
-      ) {
+      if (index === 0) {
 
         button.classList.add(
           "active"
@@ -1153,22 +1591,16 @@ function createRoomButtons() {
         number
       );
 
+
       button.appendChild(
         name
       );
+
 
       button.appendChild(
         area
       );
 
-
-      /*
-        KLIKNIĘCIE POMIESZCZENIA
-
-        Pobieramy scenę z JSON
-        i ustawiamy dokładnie
-        jej eye / target / up / fov.
-      */
 
       button.addEventListener(
 
@@ -1176,23 +1608,37 @@ function createRoomButtons() {
 
         () => {
 
-          hideStartScreen();
+          const navIndex =
+            navigationOrder.indexOf(
+              sceneName
+            );
+
+
+          if (
+            navIndex >= 0
+          ) {
+
+            currentNavigationIndex =
+              navIndex;
+
+          }
+
 
           renderer.clippingPlanes =
             [];
 
-          cameraTransition =
-            null;
 
-          setCameraFromScene(
+          hideStartScreen();
+
+
+          smoothMoveTo(
             sceneData
           );
+
 
           updateRoomActive(
             sceneName
           );
-
-          updateNavigationLabel();
 
         }
 
@@ -1223,7 +1669,6 @@ function updateRoomActive(
       ".room"
     )
     .forEach(
-
       button => {
 
         button.classList.toggle(
@@ -1236,77 +1681,13 @@ function updateRoomActive(
         );
 
       }
-
     );
 
 }
 
 
 /* =====================================================
-   LABEL
-===================================================== */
-
-function updateNavigationLabel() {
-
-  const label =
-    document.getElementById(
-      "navigationLabel"
-    );
-
-
-  const active =
-    document.querySelector(
-      ".room.active"
-    );
-
-
-  if (!active) {
-
-    label.classList.remove(
-      "visible"
-    );
-
-    return;
-
-  }
-
-
-  const sceneName =
-    active.dataset.scene;
-
-
-  const settings =
-    roomSettings[
-      sceneName
-    ];
-
-
-  if (!settings) {
-
-    label.classList.remove(
-      "visible"
-    );
-
-    return;
-
-  }
-
-
-  label.textContent =
-    settings.number +
-    " · " +
-    settings.name;
-
-
-  label.classList.add(
-    "visible"
-  );
-
-}
-
-
-/* =====================================================
-   KAMERA — DOKŁADNY PUNKT
+   KAMERA
 ===================================================== */
 
 function setCameraFromScene(
@@ -1317,19 +1698,11 @@ function setCameraFromScene(
     return;
 
 
-  /*
-    DOKŁADNE EYE
-  */
-
   const position =
     convertPoint(
       sceneData.eye
     );
 
-
-  /*
-    DOKŁADNY TARGET
-  */
 
   const target =
     convertPoint(
@@ -1337,57 +1710,23 @@ function setCameraFromScene(
     );
 
 
-  /*
-    DOKŁADNA POZYCJA
-  */
+  camera.position.set(
 
-  camera.position.copy(
-    position
+    position.x,
+
+    position.y,
+
+    position.z
+
   );
 
 
-  /*
-    DOKŁADNY UP
+  camera.up.set(
+    0,
+    1,
+    0
+  );
 
-    Jeżeli JSON go zawiera,
-    wykorzystujemy go.
-
-    Jeżeli nie,
-    używamy standardowego
-    up Three.js.
-  */
-
-  if (sceneData.up) {
-
-    const up =
-      convertPoint(
-        sceneData.up
-      );
-
-
-    camera.up.copy(
-      up
-    );
-
-
-    camera.up.normalize();
-
-  }
-
-  else {
-
-    camera.up.set(
-      0,
-      1,
-      0
-    );
-
-  }
-
-
-  /*
-    DOKŁADNY FOV
-  */
 
   camera.fov =
     sceneData.fov ||
@@ -1397,19 +1736,16 @@ function setCameraFromScene(
   camera.updateProjectionMatrix();
 
 
-  /*
-    DOKŁADNY KIERUNEK
-  */
-
   camera.lookAt(
-    target
+
+    target.x,
+
+    target.y,
+
+    target.z
+
   );
 
-
-  /*
-    Aktualizacja sterowania
-    myszką.
-  */
 
   updateAnglesFromCamera(
 
@@ -1423,7 +1759,7 @@ function setCameraFromScene(
 
 
 /* =====================================================
-   WIDOK STARTOWY
+   WIDOK STARTOWY Z GÓRY
 ===================================================== */
 
 function showTopView() {
@@ -1465,15 +1801,25 @@ function showTopView() {
     );
 
 
-  camera.position.copy(
-    position
+  camera.position.set(
+
+    position.x,
+
+    position.y,
+
+    position.z
+
   );
 
 
   camera.up.set(
+
     0,
+
     0,
+
     -1
+
   );
 
 
@@ -1486,14 +1832,20 @@ function showTopView() {
 
 
   camera.lookAt(
-    target
+
+    target.x,
+
+    target.y,
+
+    target.z
+
   );
 
 }
 
 
 /* =====================================================
-   START SCREEN
+   UKRYWANIE EKRANU STARTOWEGO
 ===================================================== */
 
 function hideStartScreen() {
@@ -1522,6 +1874,10 @@ function startWalk() {
   hideStartScreen();
 
 
+  currentNavigationIndex =
+    0;
+
+
   const start =
     getScene(
       "SPACER_KORYTARZ"
@@ -1537,14 +1893,462 @@ function startWalk() {
   }
 
 
+  showNavigationArrows();
+
+
   updateRoomActive(
     "SPACER_KORYTARZ"
   );
 
+}
 
-  updateNavigationLabel();
+
+/* =====================================================
+   STRZAŁKI - POKAZYWANIE
+===================================================== */
+
+function showNavigationArrows() {
+
+  document
+    .getElementById(
+      "navigationArrows"
+    )
+    .classList.add(
+      "visible"
+    );
+
+
+  updateNavigationButtons();
 
 }
+
+
+/* =====================================================
+   STRZAŁKI - UKRYWANIE
+===================================================== */
+
+function hideNavigationArrows() {
+
+  document
+    .getElementById(
+      "navigationArrows"
+    )
+    .classList.remove(
+      "visible"
+    );
+
+}
+
+
+/* =====================================================
+   STAN STRZAŁEK
+===================================================== */
+
+function updateNavigationButtons() {
+
+  const left =
+    document.getElementById(
+      "arrowLeft"
+    );
+
+
+  const right =
+    document.getElementById(
+      "arrowRight"
+    );
+
+
+  const back =
+    document.getElementById(
+      "arrowBack"
+    );
+
+
+  const forward =
+    document.getElementById(
+      "arrowForward"
+    );
+
+
+  const atBeginning =
+    currentNavigationIndex <= 0;
+
+
+  const atEnd =
+    currentNavigationIndex >=
+    navigationOrder.length - 1;
+
+
+  left.classList.toggle(
+    "disabled",
+    atBeginning
+  );
+
+
+  back.classList.toggle(
+    "disabled",
+    atBeginning
+  );
+
+
+  right.classList.toggle(
+    "disabled",
+    atEnd
+  );
+
+
+  forward.classList.toggle(
+    "disabled",
+    atEnd
+  );
+
+}
+
+
+/* =====================================================
+   PŁYNNE PRZEJŚCIE KAMERY
+===================================================== */
+
+let cameraTransition = null;
+
+
+function smoothMoveTo(
+  sceneData
+) {
+
+  if (!sceneData)
+    return;
+
+
+  const position =
+    convertPoint(
+      sceneData.eye
+    );
+
+
+  const target =
+    convertPoint(
+      sceneData.target
+    );
+
+
+  const startPosition =
+    camera.position.clone();
+
+
+  const startDirection =
+    new THREE.Vector3();
+
+
+  camera.getWorldDirection(
+    startDirection
+  );
+
+
+  const endDirection =
+    new THREE.Vector3()
+      .subVectors(
+        target,
+        position
+      )
+      .normalize();
+
+
+  cameraTransition = {
+
+    startPosition,
+
+    endPosition:
+      new THREE.Vector3(
+
+        position.x,
+
+        1.65,
+
+        position.z
+
+      ),
+
+    startDirection,
+
+    endDirection,
+
+    startTime:
+      performance.now(),
+
+    duration:
+      900
+
+  };
+
+
+  camera.fov =
+    sceneData.fov ||
+    70;
+
+
+  camera.updateProjectionMatrix();
+
+}
+
+
+/* =====================================================
+   AKTUALIZACJA PRZEJŚCIA
+===================================================== */
+
+function updateCameraTransition() {
+
+  if (!cameraTransition)
+    return;
+
+
+  const now =
+    performance.now();
+
+
+  let progress =
+
+    (
+      now -
+      cameraTransition.startTime
+    ) /
+    cameraTransition.duration;
+
+
+  progress =
+    Math.min(
+      progress,
+      1
+    );
+
+
+  /*
+    Smoothstep
+  */
+
+  const eased =
+    progress *
+    progress *
+    (
+      3 -
+      2 *
+      progress
+    );
+
+
+  camera.position.lerpVectors(
+
+    cameraTransition.startPosition,
+
+    cameraTransition.endPosition,
+
+    eased
+
+  );
+
+
+  const direction =
+    new THREE.Vector3()
+      .lerpVectors(
+
+        cameraTransition.startDirection,
+
+        cameraTransition.endDirection,
+
+        eased
+
+      )
+      .normalize();
+
+
+  const lookTarget =
+    camera.position
+      .clone()
+      .add(
+        direction.multiplyScalar(2)
+      );
+
+
+  camera.lookAt(
+    lookTarget
+  );
+
+
+  if (
+    progress >= 1
+  ) {
+
+    camera.position.copy(
+      cameraTransition.endPosition
+    );
+
+
+    cameraTransition =
+      null;
+
+  }
+
+}
+
+
+/* =====================================================
+   PRZEJŚCIE DO PUNKTU
+===================================================== */
+
+function goToNavigationPoint(
+  index
+) {
+
+  if (
+    index < 0 ||
+    index >= navigationOrder.length
+  ) {
+
+    return;
+
+  }
+
+
+  const sceneName =
+    navigationOrder[
+      index
+    ];
+
+
+  const sceneData =
+    getScene(
+      sceneName
+    );
+
+
+  if (!sceneData)
+    return;
+
+
+  currentNavigationIndex =
+    index;
+
+
+  renderer.clippingPlanes =
+    [];
+
+
+  hideStartScreen();
+
+
+  smoothMoveTo(
+    sceneData
+  );
+
+
+  updateRoomActive(
+    sceneName
+  );
+
+
+  updateNavigationButtons();
+
+}
+
+
+/* =====================================================
+   STRZAŁKA LEWO
+===================================================== */
+
+document
+  .getElementById(
+    "arrowLeft"
+  )
+  .addEventListener(
+
+    "click",
+
+    () => {
+
+      goToNavigationPoint(
+
+        currentNavigationIndex - 1
+
+      );
+
+    }
+
+  );
+
+
+/* =====================================================
+   STRZAŁKA PRAWO
+===================================================== */
+
+document
+  .getElementById(
+    "arrowRight"
+  )
+  .addEventListener(
+
+    "click",
+
+    () => {
+
+      goToNavigationPoint(
+
+        currentNavigationIndex + 1
+
+      );
+
+    }
+
+  );
+
+
+/* =====================================================
+   STRZAŁKA GÓRA
+===================================================== */
+
+document
+  .getElementById(
+    "arrowForward"
+  )
+  .addEventListener(
+
+    "click",
+
+    () => {
+
+      goToNavigationPoint(
+
+        currentNavigationIndex + 1
+
+      );
+
+    }
+
+  );
+
+
+/* =====================================================
+   STRZAŁKA DÓŁ
+===================================================== */
+
+document
+  .getElementById(
+    "arrowBack"
+  )
+  .addEventListener(
+
+    "click",
+
+    () => {
+
+      goToNavigationPoint(
+
+        currentNavigationIndex - 1
+
+      );
+
+    }
+
+  );
 
 
 /* =====================================================
@@ -1700,6 +2504,11 @@ async function loadModel() {
             );
 
 
+            /*
+              Sufit zostaje ukryty
+              tylko w rzucie z góry.
+            */
+
             const cutY =
 
               modelBox.min.y +
@@ -1741,10 +2550,27 @@ async function loadModel() {
     );
 
 
+    /*
+      Pobieramy punkty.
+    */
+
     await loadScenePoints();
 
 
+    /*
+      Pokazujemy rzut z góry.
+    */
+
     showTopView();
+
+
+    /*
+      Strzałki są ukryte,
+      dopóki użytkownik nie
+      rozpocznie spaceru.
+    */
+
+    hideNavigationArrows();
 
 
     loading
@@ -1752,7 +2578,6 @@ async function loadModel() {
       .add(
         "hidden"
       );
-
 
   }
 
@@ -1818,10 +2643,6 @@ renderer.domElement.addEventListener(
       return;
 
     }
-
-
-    cameraTransition =
-      null;
 
 
     dragging = true;
@@ -1932,7 +2753,7 @@ renderer.domElement.addEventListener(
 
 
 /* =====================================================
-   KLAWIATURA
+   KLAWIATURA WASD
 ===================================================== */
 
 const keys = {};
@@ -1947,6 +2768,63 @@ window.addEventListener(
     keys[
       event.key.toLowerCase()
     ] = true;
+
+
+    /*
+      Strzałki klawiatury
+    */
+
+    if (
+
+      document
+        .getElementById(
+          "startScreen"
+        )
+        .classList
+        .contains(
+          "hidden"
+        )
+
+    ) {
+
+      if (
+        event.key ===
+        "ArrowRight" ||
+
+        event.key ===
+        "ArrowUp"
+      ) {
+
+        event.preventDefault();
+
+        goToNavigationPoint(
+
+          currentNavigationIndex + 1
+
+        );
+
+      }
+
+
+      if (
+        event.key ===
+        "ArrowLeft" ||
+
+        event.key ===
+        "ArrowDown"
+      ) {
+
+        event.preventDefault();
+
+        goToNavigationPoint(
+
+          currentNavigationIndex - 1
+
+        );
+
+      }
+
+    }
 
   }
 
@@ -1969,7 +2847,7 @@ window.addEventListener(
 
 
 /* =====================================================
-   RUCH WASD — BEZ KOLIZJI
+   RUCH WASD
 ===================================================== */
 
 const direction =
@@ -1998,6 +2876,19 @@ function updateMovement() {
       )
 
   ) {
+
+    return;
+
+  }
+
+
+  /*
+    Podczas płynnego przejścia
+    nie pozwalamy WASD zmieniać
+    pozycji kamery.
+  */
+
+  if (cameraTransition) {
 
     return;
 
@@ -2069,15 +2960,15 @@ function updateMovement() {
     );
 
 
-    /*
-      BRAK KOLIZJI.
-    */
-
     camera.position.add(
       move
     );
 
   }
+
+
+  camera.position.y =
+    1.65;
 
 }
 
@@ -2100,6 +2991,13 @@ function updateLook() {
       )
 
   ) {
+
+    return;
+
+  }
+
+
+  if (cameraTransition) {
 
     return;
 
@@ -2225,6 +3123,10 @@ document
         null;
 
 
+      currentNavigationIndex =
+        0;
+
+
       renderer.clippingPlanes =
         [];
 
@@ -2247,12 +3149,12 @@ document
       }
 
 
+      showNavigationArrows();
+
+
       updateRoomActive(
         "SPACER_KORYTARZ"
       );
-
-
-      updateNavigationLabel();
 
     }
 
@@ -2360,9 +3262,9 @@ document
 
         "Użyj W, A, S, D, aby się poruszać.\n\n" +
 
-        "Kliknij pomieszczenie po lewej, " +
+        "Możesz również korzystać ze strzałek " +
 
-        "aby przejść do zapisanego punktu widoku."
+        "nawigacyjnych."
 
       );
 
@@ -2412,6 +3314,9 @@ function animate() {
   requestAnimationFrame(
     animate
   );
+
+
+  updateCameraTransition();
 
 
   updateMovement();
