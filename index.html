@@ -56,12 +56,15 @@ canvas {
   display: flex;
   align-items: center;
   justify-content: center;
+
   background:
     linear-gradient(
       rgba(15,15,13,.55),
       rgba(15,15,13,.65)
     );
+
   backdrop-filter: blur(4px);
+
   transition:
     opacity .6s ease,
     visibility .6s ease;
@@ -90,6 +93,7 @@ canvas {
 .startTitle {
   font-size:
     clamp(42px, 7vw, 72px);
+
   font-weight: 300;
   letter-spacing: -.05em;
   margin: 0;
@@ -98,24 +102,34 @@ canvas {
 .startDescription {
   margin:
     22px auto 30px;
+
   max-width: 430px;
+
   font-size: 13px;
   line-height: 1.7;
+
   color:
     rgba(255,255,255,.65);
 }
 
 #startButton {
   border: 0;
+
   background: #eee9de;
   color: #171713;
+
   height: 50px;
+
   padding:
     0 28px;
+
   border-radius: 999px;
+
   font-size: 11px;
   letter-spacing: .08em;
+
   cursor: pointer;
+
   transition:
     transform .2s ease;
 }
@@ -132,19 +146,27 @@ canvas {
 
 #topBar {
   position: fixed;
+
   z-index: 20;
+
   top: 0;
   left: 0;
   right: 0;
+
   padding:
     25px 28px;
+
   display: flex;
+
   justify-content:
     space-between;
+
   align-items:
     flex-start;
+
   pointer-events:
     none;
+
   background:
     linear-gradient(
       rgba(12,12,10,.55),
@@ -158,9 +180,13 @@ canvas {
 
 .brandSmall {
   font-size: 9px;
+
   letter-spacing: .25em;
+
   text-transform: uppercase;
+
   opacity: .5;
+
   margin-bottom: 7px;
 }
 
@@ -177,24 +203,33 @@ canvas {
 
 .topButtons {
   display: flex;
+
   gap: 8px;
+
   pointer-events:
     auto;
 }
 
 .topButton {
   height: 40px;
+
   padding:
     0 15px;
+
   border-radius: 999px;
+
   border:
     1px solid
     rgba(255,255,255,.15);
+
   background:
     rgba(20,20,17,.65);
+
   color: white;
+
   backdrop-filter:
     blur(15px);
+
   cursor: pointer;
 }
 
@@ -205,49 +240,75 @@ canvas {
 
 #rooms {
   position: fixed;
+
   z-index: 20;
+
   left: 25px;
+
   top: 50%;
+
   transform:
     translateY(-50%);
+
   width: 235px;
+
   padding: 15px;
+
   border-radius: 18px;
+
   background:
     rgba(20,20,17,.76);
+
   border:
     1px solid
     rgba(255,255,255,.13);
+
   backdrop-filter:
     blur(20px);
+
   color: white;
 }
 
 .roomsTitle {
   font-size: 9px;
+
   letter-spacing: .2em;
+
   text-transform: uppercase;
+
   color:
     rgba(255,255,255,.45);
+
   padding:
     4px 8px 11px;
 }
 
 .room {
   width: 100%;
+
   display: grid;
+
   grid-template-columns:
     25px 1fr auto;
+
   gap: 7px;
+
   border: 0;
+
   background:
     transparent;
+
   color:
     rgba(255,255,255,.65);
+
   text-align: left;
+
   padding: 9px;
+
   border-radius: 10px;
+
   cursor: pointer;
+
   transition:
     background .2s ease,
     color .2s ease;
@@ -256,12 +317,14 @@ canvas {
 .room:hover {
   background:
     rgba(255,255,255,.07);
+
   color: white;
 }
 
 .room.active {
   background:
     rgba(255,255,255,.11);
+
   color: white;
 }
 
@@ -286,15 +349,22 @@ canvas {
 
 #bottom {
   position: fixed;
+
   z-index: 20;
+
   left: 25px;
   right: 25px;
+
   bottom: 20px;
+
   display: flex;
+
   justify-content:
     space-between;
+
   align-items:
     center;
+
   pointer-events:
     none;
 }
@@ -302,43 +372,62 @@ canvas {
 #hint {
   padding:
     10px 13px;
+
   border-radius: 11px;
+
   background:
     rgba(20,20,17,.7);
+
   border:
     1px solid
     rgba(255,255,255,.12);
+
   backdrop-filter:
     blur(15px);
+
   color:
     rgba(255,255,255,.5);
+
   font-size: 10px;
 }
 
 #controls {
   display: flex;
+
   gap: 4px;
+
   padding: 5px;
+
   border-radius: 999px;
+
   background:
     rgba(20,20,17,.75);
+
   border:
     1px solid
     rgba(255,255,255,.13);
+
   backdrop-filter:
     blur(15px);
+
   pointer-events:
     auto;
 }
 
 .control {
   width: 40px;
+
   height: 36px;
+
   border: 0;
+
   border-radius: 999px;
+
   background:
     transparent;
+
   color: white;
+
   cursor: pointer;
 }
 
@@ -349,99 +438,47 @@ canvas {
 
 
 /* =========================================
-   STRZAŁKI NAWIGACYJNE
-========================================= */
-
-#navigationArrows {
-  position: fixed;
-  z-index: 50;
-  left: 50%;
-  bottom: 82px;
-  transform:
-    translateX(-50%);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  pointer-events: auto;
-}
-
-#navigationArrows.visible {
-  display: flex;
-}
-
-.navArrow {
-  width: 58px;
-  height: 58px;
-  border-radius: 50%;
-  border:
-    1px solid
-    rgba(255,255,255,.25);
-  background:
-    rgba(20,20,17,.78);
-  color: white;
-  backdrop-filter:
-    blur(18px);
-  cursor: pointer;
-  font-size: 27px;
-  line-height: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition:
-    transform .2s ease,
-    background .2s ease,
-    opacity .2s ease;
-  box-shadow:
-    0 8px 30px
-    rgba(0,0,0,.25);
-}
-
-.navArrow:hover {
-  background:
-    rgba(255,255,255,.17);
-  transform:
-    scale(1.08);
-}
-
-.navArrow:active {
-  transform:
-    scale(.94);
-}
-
-.navArrow.disabled {
-  opacity: .22;
-  pointer-events: none;
-}
-
-
-/* =========================================
-   LABEL PUNKTU
+   NAZWA AKTUALNEGO POMIESZCZENIA
 ========================================= */
 
 #navigationLabel {
   position: fixed;
-  z-index: 45;
+
+  z-index: 15;
+
   left: 50%;
-  bottom: 150px;
+
+  bottom: 35px;
+
   transform:
     translateX(-50%);
+
   padding:
     8px 13px;
+
   border-radius: 999px;
+
   background:
     rgba(20,20,17,.65);
+
   border:
     1px solid
     rgba(255,255,255,.12);
+
   backdrop-filter:
     blur(15px);
+
   color:
     rgba(255,255,255,.75);
+
   font-size: 10px;
+
   letter-spacing: .04em;
+
   pointer-events: none;
+
   opacity: 0;
+
   transition:
     opacity .25s ease;
 }
@@ -457,13 +494,21 @@ canvas {
 
 #loading {
   position: fixed;
+
   inset: 0;
+
   z-index: 200;
+
   display: flex;
+
   align-items: center;
+
   justify-content: center;
+
   background: #161613;
+
   color: white;
+
   transition:
     opacity .5s ease;
 }
@@ -479,24 +524,34 @@ canvas {
 
 .spinner {
   width: 30px;
+
   height: 30px;
+
   margin:
     0 auto 15px;
+
   border-radius: 50%;
+
   border:
     2px solid
     rgba(255,255,255,.15);
+
   border-top-color:
     white;
+
   animation:
     spin 1s linear infinite;
 }
 
 @keyframes spin {
+
   to {
+
     transform:
       rotate(360deg);
+
   }
+
 }
 
 .loadingText {
@@ -511,64 +566,83 @@ canvas {
 @media(max-width:700px) {
 
   #topBar {
+
     padding: 16px;
+
   }
 
   .brandTitle {
+
     font-size: 18px;
+
   }
 
   .brandSubtitle {
+
     display: none;
+
   }
 
   .topButton:first-child {
+
     display: none;
+
   }
 
   #rooms {
+
     left: 10px;
+
     right: 10px;
+
     bottom: 70px;
+
     top: auto;
+
     width: auto;
+
     transform: none;
+
     display: flex;
+
     overflow-x: auto;
+
     padding: 7px;
+
   }
 
   .roomsTitle {
+
     display: none;
+
   }
 
   .room {
+
     min-width: 145px;
+
   }
 
   #bottom {
+
     left: 10px;
+
     right: 10px;
+
     bottom: 10px;
+
   }
 
   #hint {
+
     display: none;
-  }
 
-  #navigationArrows {
-    bottom: 65px;
-    gap: 10px;
-  }
-
-  .navArrow {
-    width: 50px;
-    height: 50px;
-    font-size: 24px;
   }
 
   #navigationLabel {
+
     bottom: 122px;
+
   }
 
 }
@@ -692,51 +766,11 @@ canvas {
 
 
 <!-- =========================================
-     NAWIGACJA
+     NAZWA AKTUALNEGO POMIESZCZENIA
 ========================================= -->
 
 <div id="navigationLabel">
   Korytarz
-</div>
-
-<div id="navigationArrows">
-
-  <button
-    class="navArrow"
-    id="arrowBack"
-    title="W lewo"
-    aria-label="W lewo"
-  >
-    ←
-  </button>
-
-  <button
-    class="navArrow"
-    id="arrowUp"
-    title="Do przodu"
-    aria-label="Do przodu"
-  >
-    ↑
-  </button>
-
-  <button
-    class="navArrow"
-    id="arrowDown"
-    title="Do tyłu"
-    aria-label="Do tyłu"
-  >
-    ↓
-  </button>
-
-  <button
-    class="navArrow"
-    id="arrowForward"
-    title="W prawo"
-    aria-label="W prawo"
-  >
-    →
-  </button>
-
 </div>
 
 
@@ -758,6 +792,7 @@ canvas {
     <button
       class="control"
       id="resetButton"
+      title="Wróć do korytarza"
     >
       ↻
     </button>
@@ -1035,32 +1070,6 @@ const roomSettings = {
 
 
 /* =====================================================
-   PUNKTY NAWIGACJI
-===================================================== */
-
-const navigationOrder = [
-
-  "SPACER_KORYTARZ",
-
-  "SPACER_SALON_KUCHNIA",
-
-  "SPACER_LAZIENKA",
-
-  "SPACER_SYPIALNIA_01",
-
-  "SPACER_WC",
-
-  "SPACER_GARDEROBA",
-
-  "SPACER_SYPIALNIA_02"
-
-];
-
-
-let currentNavigationIndex = 0;
-
-
-/* =====================================================
    KONWERSJA SKETCHUP → THREE
 ===================================================== */
 
@@ -1230,7 +1239,7 @@ function createRoomButtons() {
 
       if (
         sceneName ===
-        navigationOrder[0]
+        "SPACER_KORYTARZ"
       ) {
 
         button.classList.add(
@@ -1305,27 +1314,15 @@ function createRoomButtons() {
 
         () => {
 
-          const navIndex =
-            navigationOrder.indexOf(
-              sceneName
-            );
-
-
-          if (
-            navIndex >= 0
-          ) {
-
-            currentNavigationIndex =
-              navIndex;
-
-          }
-
-
           renderer.clippingPlanes =
             [];
 
 
           hideStartScreen();
+
+
+          cameraTransition =
+            null;
 
 
           smoothMoveTo(
@@ -1338,7 +1335,7 @@ function createRoomButtons() {
           );
 
 
-          showNavigationArrows();
+          updateNavigationLabel();
 
         }
 
@@ -1389,10 +1386,12 @@ function updateRoomActive(
 
 
 /* =====================================================
-   AKTUALIZACJA NAPISU
+   AKTUALIZACJA NAZWY
 ===================================================== */
 
-function updateNavigationLabel() {
+function updateNavigationLabel(
+  sceneName
+) {
 
   const label =
     document.getElementById(
@@ -1400,15 +1399,10 @@ function updateNavigationLabel() {
     );
 
 
-  const currentName =
-    navigationOrder[
-      currentNavigationIndex
-    ];
-
-
   const settings =
     roomSettings[
-      currentName
+      sceneName ||
+      "SPACER_KORYTARZ"
     ];
 
 
@@ -1624,10 +1618,6 @@ function startWalk() {
   hideStartScreen();
 
 
-  currentNavigationIndex =
-    0;
-
-
   const start =
     getScene(
       "SPACER_KORYTARZ"
@@ -1643,139 +1633,14 @@ function startWalk() {
   }
 
 
-  showNavigationArrows();
-
-
   updateRoomActive(
     "SPACER_KORYTARZ"
   );
 
 
-  updateNavigationButtons();
-
-
-  updateNavigationLabel();
-
-}
-
-
-/* =====================================================
-   STRZAŁKI - POKAZYWANIE
-===================================================== */
-
-function showNavigationArrows() {
-
-  document
-    .getElementById(
-      "navigationArrows"
-    )
-    .classList.add(
-      "visible"
-    );
-
-
-  updateNavigationButtons();
-
-}
-
-
-/* =====================================================
-   STRZAŁKI - UKRYWANIE
-===================================================== */
-
-function hideNavigationArrows() {
-
-  document
-    .getElementById(
-      "navigationArrows"
-    )
-    .classList.remove(
-      "visible"
-    );
-
-
-  document
-    .getElementById(
-      "navigationLabel"
-    )
-    .classList.remove(
-      "visible"
-    );
-
-}
-
-
-/* =====================================================
-   STAN STRZAŁEK
-===================================================== */
-
-function updateNavigationButtons() {
-
-  const back =
-    document.getElementById(
-      "arrowBack"
-    );
-
-
-  const up =
-    document.getElementById(
-      "arrowUp"
-    );
-
-
-  const down =
-    document.getElementById(
-      "arrowDown"
-    );
-
-
-  const forward =
-    document.getElementById(
-      "arrowForward"
-    );
-
-
-  /*
-    Lewo = poprzedni punkt
-    Góra = następny punkt
-    Dół = poprzedni punkt
-    Prawo = następny punkt
-  */
-
-  const atBeginning =
-    currentNavigationIndex <= 0;
-
-
-  const atEnd =
-    currentNavigationIndex >=
-    navigationOrder.length - 1;
-
-
-  back.classList.toggle(
-    "disabled",
-    atBeginning
+  updateNavigationLabel(
+    "SPACER_KORYTARZ"
   );
-
-
-  down.classList.toggle(
-    "disabled",
-    atBeginning
-  );
-
-
-  up.classList.toggle(
-    "disabled",
-    atEnd
-  );
-
-
-  forward.classList.toggle(
-    "disabled",
-    atEnd
-  );
-
-
-  updateNavigationLabel();
 
 }
 
@@ -1960,169 +1825,6 @@ function updateCameraTransition() {
   }
 
 }
-
-
-/* =====================================================
-   PRZEJŚCIE DO PUNKTU
-===================================================== */
-
-function goToNavigationPoint(
-  index
-) {
-
-  if (
-    index < 0 ||
-    index >= navigationOrder.length
-  ) {
-
-    return;
-
-  }
-
-
-  const sceneName =
-    navigationOrder[
-      index
-    ];
-
-
-  const sceneData =
-    getScene(
-      sceneName
-    );
-
-
-  if (!sceneData)
-    return;
-
-
-  currentNavigationIndex =
-    index;
-
-
-  renderer.clippingPlanes =
-    [];
-
-
-  hideStartScreen();
-
-
-  smoothMoveTo(
-    sceneData
-  );
-
-
-  updateRoomActive(
-    sceneName
-  );
-
-
-  updateNavigationButtons();
-
-
-  showNavigationArrows();
-
-}
-
-
-/* =====================================================
-   STRZAŁKA W LEWO
-===================================================== */
-
-document
-  .getElementById(
-    "arrowBack"
-  )
-  .addEventListener(
-
-    "click",
-
-    () => {
-
-      goToNavigationPoint(
-
-        currentNavigationIndex - 1
-
-      );
-
-    }
-
-  );
-
-
-/* =====================================================
-   STRZAŁKA W GÓRĘ
-===================================================== */
-
-document
-  .getElementById(
-    "arrowUp"
-  )
-  .addEventListener(
-
-    "click",
-
-    () => {
-
-      goToNavigationPoint(
-
-        currentNavigationIndex + 1
-
-      );
-
-    }
-
-  );
-
-
-/* =====================================================
-   STRZAŁKA W DÓŁ
-===================================================== */
-
-document
-  .getElementById(
-    "arrowDown"
-  )
-  .addEventListener(
-
-    "click",
-
-    () => {
-
-      goToNavigationPoint(
-
-        currentNavigationIndex - 1
-
-      );
-
-    }
-
-  );
-
-
-/* =====================================================
-   STRZAŁKA W PRAWO
-===================================================== */
-
-document
-  .getElementById(
-    "arrowForward"
-  )
-  .addEventListener(
-
-    "click",
-
-    () => {
-
-      goToNavigationPoint(
-
-        currentNavigationIndex + 1
-
-      );
-
-    }
-
-  );
 
 
 /* =====================================================
@@ -2325,9 +2027,6 @@ async function loadModel() {
     showTopView();
 
 
-    hideNavigationArrows();
-
-
     loading
       .classList
       .add(
@@ -2525,61 +2224,6 @@ window.addEventListener(
       event.key.toLowerCase()
     ] = true;
 
-
-    if (
-
-      document
-        .getElementById(
-          "startScreen"
-        )
-        .classList
-        .contains(
-          "hidden"
-        )
-
-    ) {
-
-      if (
-        event.key ===
-        "ArrowRight" ||
-
-        event.key ===
-        "ArrowUp"
-      ) {
-
-        event.preventDefault();
-
-
-        goToNavigationPoint(
-
-          currentNavigationIndex + 1
-
-        );
-
-      }
-
-
-      if (
-        event.key ===
-        "ArrowLeft" ||
-
-        event.key ===
-        "ArrowDown"
-      ) {
-
-        event.preventDefault();
-
-
-        goToNavigationPoint(
-
-          currentNavigationIndex - 1
-
-        );
-
-      }
-
-    }
-
   }
 
 );
@@ -2711,9 +2355,9 @@ function updateMovement() {
     /*
       BRAK KOLIZJI.
 
-      Kamera może swobodnie
-      przechodzić przez model,
-      meble i ściany.
+      Można przechodzić przez
+      ściany, meble i inne elementy
+      modelu.
     */
 
     camera.position.add(
@@ -2879,10 +2523,6 @@ document
         null;
 
 
-      currentNavigationIndex =
-        0;
-
-
       renderer.clippingPlanes =
         [];
 
@@ -2905,15 +2545,14 @@ document
       }
 
 
-      showNavigationArrows();
-
-
       updateRoomActive(
         "SPACER_KORYTARZ"
       );
 
 
-      updateNavigationButtons();
+      updateNavigationLabel(
+        "SPACER_KORYTARZ"
+      );
 
     }
 
@@ -3021,9 +2660,9 @@ document
 
         "Użyj W, A, S, D, aby się poruszać.\n\n" +
 
-        "Strzałki ← ↑ ↓ → pozwalają przechodzić " +
+        "Wybierz pomieszczenie z listy po lewej, " +
 
-        "między kolejnymi punktami spaceru."
+        "aby przejść bezpośrednio do jego widoku."
 
       );
 
