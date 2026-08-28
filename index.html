@@ -1,392 +1,534 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Wirtualny spacer — mieszkanie</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<style>
-*{box-sizing:border-box}
+  <title>Wirtualny spacer — mieszkanie</title>
 
-html,body{
-  margin:0;
-  width:100%;
-  height:100%;
-  overflow:hidden;
-  background:#11110f;
-  font-family:Arial,Helvetica,sans-serif;
-}
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-#app{
-  position:fixed;
-  inset:0;
-}
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #11110f;
+      font-family: Arial, Helvetica, sans-serif;
+    }
 
-canvas{
-  display:block;
-  width:100%;
-  height:100%;
-}
+    #app {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      background: #11110f;
+    }
 
-/* LOADING */
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
 
-#loading{
-  position:fixed;
-  inset:0;
-  z-index:200;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:#161613;
-  color:white;
-  transition:opacity .5s ease;
-}
+    /* =========================
+       START SCREEN
+    ========================= */
 
-#loading.hidden{
-  opacity:0;
-  pointer-events:none;
-}
+    #startScreen {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
 
-.loader{
-  text-align:center;
-}
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
-.spinner{
-  width:32px;
-  height:32px;
-  margin:0 auto 15px;
-  border:2px solid rgba(255,255,255,.15);
-  border-top-color:white;
-  border-radius:50%;
-  animation:spin 1s linear infinite;
-}
+      background:
+        linear-gradient(
+          rgba(15, 15, 13, .55),
+          rgba(15, 15, 13, .68)
+        );
 
-@keyframes spin{
-  to{transform:rotate(360deg)}
-}
+      backdrop-filter: blur(4px);
 
-/* START */
+      transition:
+        opacity .6s ease,
+        visibility .6s ease;
+    }
 
-#startScreen{
-  position:fixed;
-  inset:0;
-  z-index:100;
-  display:flex;
-  align-items:flex-end;
-  justify-content:center;
-  padding-bottom:8vh;
-  background:
-    linear-gradient(
-      180deg,
-      rgba(0,0,0,.02),
-      rgba(0,0,0,.72)
-    );
-  transition:opacity .6s ease,visibility .6s ease;
-}
+    #startScreen.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
 
-#startScreen.hidden{
-  opacity:0;
-  visibility:hidden;
-  pointer-events:none;
-}
+    .startBox {
+      text-align: center;
+      color: white;
+      width: min(520px, 90%);
+    }
 
-.startBox{
-  text-align:center;
-  color:white;
-  width:min(620px,90%);
-}
+    .startSmall {
+      font-size: 10px;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      opacity: .55;
+      margin-bottom: 20px;
+    }
 
-.startSmall{
-  font-size:10px;
-  letter-spacing:.3em;
-  text-transform:uppercase;
-  opacity:.7;
-  margin-bottom:14px;
-}
+    .startTitle {
+      font-size: clamp(42px, 7vw, 72px);
+      font-weight: 300;
+      letter-spacing: -.05em;
+      margin: 0;
+    }
 
-.startTitle{
-  font-size:clamp(40px,6vw,70px);
-  font-weight:300;
-  letter-spacing:-.05em;
-  margin:0;
-}
+    .startDescription {
+      margin: 22px auto 30px;
+      max-width: 430px;
 
-.startDescription{
-  margin:15px auto 26px;
-  max-width:500px;
-  font-size:13px;
-  line-height:1.7;
-  color:rgba(255,255,255,.72);
-}
+      font-size: 13px;
+      line-height: 1.7;
 
-#startButton{
-  border:0;
-  background:#eee9de;
-  color:#171713;
-  height:52px;
-  padding:0 32px;
-  border-radius:999px;
-  font-size:11px;
-  letter-spacing:.1em;
-  cursor:pointer;
-}
+      color: rgba(255,255,255,.65);
+    }
 
-/* TOP */
+    #startButton {
+      border: 0;
 
-#topBar{
-  position:fixed;
-  z-index:20;
-  top:0;
-  left:0;
-  right:0;
-  padding:25px 28px;
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  pointer-events:none;
-  background:linear-gradient(rgba(12,12,10,.6),transparent);
-}
+      background: #eee9de;
+      color: #171713;
 
-.brand{
-  color:white;
-}
+      height: 50px;
+      padding: 0 30px;
 
-.brandSmall{
-  font-size:9px;
-  letter-spacing:.25em;
-  text-transform:uppercase;
-  opacity:.5;
-  margin-bottom:7px;
-}
+      border-radius: 999px;
 
-.brandTitle{
-  font-size:21px;
-  font-weight:500;
-}
+      font-size: 11px;
+      letter-spacing: .08em;
 
-.brandSubtitle{
-  font-size:11px;
-  opacity:.45;
-  margin-top:5px;
-}
+      cursor: pointer;
 
-.topButtons{
-  display:flex;
-  gap:8px;
-  pointer-events:auto;
-}
+      transition:
+        transform .2s ease,
+        background .2s ease;
+    }
 
-.topButton{
-  height:40px;
-  padding:0 15px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.15);
-  background:rgba(20,20,17,.65);
-  color:white;
-  backdrop-filter:blur(15px);
-  cursor:pointer;
-}
+    #startButton:hover {
+      transform: translateY(-2px);
+      background: white;
+    }
 
-/* ROOMS */
 
-#rooms{
-  position:fixed;
-  z-index:20;
-  left:24px;
-  top:50%;
-  transform:translateY(-50%);
-  width:245px;
-  padding:15px;
-  border-radius:18px;
-  background:rgba(20,20,17,.78);
-  border:1px solid rgba(255,255,255,.13);
-  backdrop-filter:blur(20px);
-  color:white;
-}
+    /* =========================
+       TOP BAR
+    ========================= */
 
-.roomsTitle{
-  font-size:9px;
-  letter-spacing:.2em;
-  text-transform:uppercase;
-  color:rgba(255,255,255,.45);
-  padding:4px 8px 11px;
-}
+    #topBar {
+      position: fixed;
+      z-index: 20;
 
-.room{
-  width:100%;
-  display:grid;
-  grid-template-columns:28px 1fr;
-  border:0;
-  background:transparent;
-  color:rgba(255,255,255,.68);
-  text-align:left;
-  padding:9px;
-  border-radius:10px;
-  cursor:pointer;
-}
+      top: 0;
+      left: 0;
+      right: 0;
 
-.room:hover,
-.room.active{
-  background:rgba(255,255,255,.1);
-  color:white;
-}
+      padding: 25px 28px;
 
-.roomNumber{
-  font-size:9px;
-  opacity:.4;
-}
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
 
-.roomName{
-  display:block;
-  font-size:12px;
-}
+      pointer-events: none;
 
-.roomArea{
-  display:block;
-  font-size:9px;
-  opacity:.35;
-  margin-top:3px;
-}
+      background:
+        linear-gradient(
+          rgba(12,12,10,.58),
+          transparent
+        );
+    }
 
-/* BADGE */
+    .brand {
+      color: white;
+    }
 
-#modeBadge{
-  position:fixed;
-  z-index:21;
-  right:28px;
-  bottom:82px;
-  padding:9px 13px;
-  border-radius:999px;
-  background:rgba(20,20,17,.68);
-  border:1px solid rgba(255,255,255,.12);
-  color:rgba(255,255,255,.65);
-  font-size:10px;
-  letter-spacing:.08em;
-  text-transform:uppercase;
-  backdrop-filter:blur(15px);
-}
+    .brandSmall {
+      font-size: 9px;
+      letter-spacing: .25em;
+      text-transform: uppercase;
 
-/* BOTTOM */
+      opacity: .5;
 
-#bottom{
-  position:fixed;
-  z-index:20;
-  left:24px;
-  right:24px;
-  bottom:20px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  pointer-events:none;
-}
+      margin-bottom: 7px;
+    }
 
-#hint{
-  padding:10px 13px;
-  border-radius:11px;
-  background:rgba(20,20,17,.7);
-  border:1px solid rgba(255,255,255,.12);
-  backdrop-filter:blur(15px);
-  color:rgba(255,255,255,.55);
-  font-size:10px;
-}
+    .brandTitle {
+      font-size: 21px;
+      font-weight: 500;
+    }
 
-#controls{
-  display:flex;
-  gap:4px;
-  padding:5px;
-  border-radius:999px;
-  background:rgba(20,20,17,.75);
-  border:1px solid rgba(255,255,255,.13);
-  backdrop-filter:blur(15px);
-  pointer-events:auto;
-}
+    .brandSubtitle {
+      font-size: 11px;
+      opacity: .45;
+      margin-top: 5px;
+    }
 
-.control{
-  width:40px;
-  height:36px;
-  border:0;
-  border-radius:999px;
-  background:transparent;
-  color:white;
-  cursor:pointer;
-}
+    .topButtons {
+      display: flex;
+      gap: 8px;
+      pointer-events: auto;
+    }
 
-.control:hover{
-  background:rgba(255,255,255,.08);
-}
+    .topButton {
+      height: 40px;
+      padding: 0 15px;
 
-/* MOBILE */
+      border-radius: 999px;
 
-@media(max-width:700px){
+      border: 1px solid rgba(255,255,255,.15);
 
-  #topBar{
-    padding:15px;
-  }
+      background: rgba(20,20,17,.65);
 
-  .brandTitle{
-    font-size:18px;
-  }
+      color: white;
 
-  .brandSubtitle{
-    display:none;
-  }
+      backdrop-filter: blur(15px);
 
-  .topButton:first-child{
-    display:none;
-  }
+      cursor: pointer;
+    }
 
-  #rooms{
-    left:10px;
-    right:10px;
-    bottom:68px;
-    top:auto;
-    width:auto;
-    transform:none;
-    display:flex;
-    overflow-x:auto;
-    padding:7px;
-  }
 
-  .roomsTitle{
-    display:none;
-  }
+    /* =========================
+       ROOMS
+    ========================= */
 
-  .room{
-    min-width:145px;
-  }
+    #rooms {
+      position: fixed;
+      z-index: 20;
 
-  #bottom{
-    left:10px;
-    right:10px;
-    bottom:10px;
-  }
+      left: 25px;
+      top: 50%;
 
-  #hint{
-    display:none;
-  }
+      transform: translateY(-50%);
 
-  #modeBadge{
-    right:12px;
-    bottom:64px;
-  }
-}
-</style>
+      width: 235px;
+      max-height: 75vh;
+
+      padding: 15px;
+
+      border-radius: 18px;
+
+      background: rgba(20,20,17,.76);
+
+      border: 1px solid rgba(255,255,255,.13);
+
+      backdrop-filter: blur(20px);
+
+      color: white;
+
+      overflow-y: auto;
+    }
+
+    .roomsTitle {
+      font-size: 9px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+
+      color: rgba(255,255,255,.45);
+
+      padding: 4px 8px 11px;
+    }
+
+    .room {
+      width: 100%;
+
+      display: grid;
+      grid-template-columns: 25px 1fr auto;
+
+      gap: 7px;
+
+      border: 0;
+
+      background: transparent;
+
+      color: rgba(255,255,255,.65);
+
+      text-align: left;
+
+      padding: 9px;
+
+      border-radius: 10px;
+
+      cursor: pointer;
+
+      transition:
+        background .2s ease,
+        color .2s ease;
+    }
+
+    .room:hover {
+      background: rgba(255,255,255,.07);
+      color: white;
+    }
+
+    .room.active {
+      background: rgba(255,255,255,.11);
+      color: white;
+    }
+
+    .roomNumber {
+      font-size: 9px;
+      opacity: .4;
+    }
+
+    .roomName {
+      font-size: 12px;
+    }
+
+    .roomArea {
+      font-size: 9px;
+      opacity: .35;
+    }
+
+    .section {
+      margin-top: 10px;
+      padding-top: 10px;
+
+      border-top:
+        1px solid rgba(255,255,255,.08);
+    }
+
+
+    /* =========================
+       BOTTOM
+    ========================= */
+
+    #bottom {
+      position: fixed;
+      z-index: 20;
+
+      left: 25px;
+      right: 25px;
+      bottom: 20px;
+
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      pointer-events: none;
+    }
+
+    #hint {
+      padding: 10px 13px;
+
+      border-radius: 11px;
+
+      background: rgba(20,20,17,.7);
+
+      border: 1px solid rgba(255,255,255,.12);
+
+      backdrop-filter: blur(15px);
+
+      color: rgba(255,255,255,.5);
+
+      font-size: 10px;
+    }
+
+    #controls {
+      display: flex;
+      gap: 4px;
+
+      padding: 5px;
+
+      border-radius: 999px;
+
+      background: rgba(20,20,17,.75);
+
+      border: 1px solid rgba(255,255,255,.13);
+
+      backdrop-filter: blur(15px);
+
+      pointer-events: auto;
+    }
+
+    .control {
+      width: 40px;
+      height: 36px;
+
+      border: 0;
+      border-radius: 999px;
+
+      background: transparent;
+
+      color: white;
+
+      cursor: pointer;
+    }
+
+    .control:hover {
+      background: rgba(255,255,255,.08);
+    }
+
+
+    /* =========================
+       LOADING
+    ========================= */
+
+    #loading {
+      position: fixed;
+      inset: 0;
+
+      z-index: 200;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background: #161613;
+
+      color: white;
+
+      transition: opacity .5s ease;
+    }
+
+    #loading.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .loader {
+      text-align: center;
+    }
+
+    .spinner {
+      width: 30px;
+      height: 30px;
+
+      margin: 0 auto 15px;
+
+      border-radius: 50%;
+
+      border:
+        2px solid rgba(255,255,255,.15);
+
+      border-top-color: white;
+
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .loadingText {
+      font-size: 13px;
+    }
+
+
+    /* =========================
+       MOBILE
+    ========================= */
+
+    @media(max-width:700px) {
+
+      #topBar {
+        padding: 16px;
+      }
+
+      .brandTitle {
+        font-size: 18px;
+      }
+
+      .brandSubtitle {
+        display: none;
+      }
+
+      .topButton:first-child {
+        display: none;
+      }
+
+      #rooms {
+        left: 10px;
+        right: 10px;
+
+        bottom: 70px;
+        top: auto;
+
+        width: auto;
+        max-height: none;
+
+        transform: none;
+
+        display: flex;
+
+        overflow-x: auto;
+
+        padding: 7px;
+      }
+
+      .roomsTitle {
+        display: none;
+      }
+
+      .section {
+        display: flex;
+        margin: 0;
+        padding: 0;
+        border: 0;
+      }
+
+      .room {
+        min-width: 145px;
+      }
+
+      #bottom {
+        left: 10px;
+        right: 10px;
+        bottom: 10px;
+      }
+
+      #hint {
+        display: none;
+      }
+    }
+  </style>
 </head>
+
 
 <body>
 
 <div id="app"></div>
 
+
+<!-- =========================
+     LOADING
+========================= -->
+
 <div id="loading">
+
   <div class="loader">
+
     <div class="spinner"></div>
+
     <div class="loadingText">
       Ładowanie mieszkania…
     </div>
+
   </div>
+
 </div>
 
+
+<!-- =========================
+     START
+========================= -->
+
 <div id="startScreen">
+
   <div class="startBox">
 
     <div class="startSmall">
@@ -398,9 +540,9 @@ canvas{
     </h1>
 
     <p class="startDescription">
-      Obejrzyj układ mieszkania z góry,
-      a następnie wejdź do wnętrza
-      i rozglądaj się w 360°.
+      Zobacz projekt mieszkania w widoku 3D.
+      Następnie rozpocznij spacer i przejdź
+      pomiędzy przygotowanymi pomieszczeniami.
     </p>
 
     <button id="startButton">
@@ -408,7 +550,13 @@ canvas{
     </button>
 
   </div>
+
 </div>
+
+
+<!-- =========================
+     TOP
+========================= -->
 
 <header id="topBar">
 
@@ -428,12 +576,13 @@ canvas{
 
   </div>
 
+
   <div class="topButtons">
 
     <button
       class="topButton"
-      id="overviewButton">
-      Rzut 3D
+      id="infoButton">
+      O projekcie
     </button>
 
     <button
@@ -446,24 +595,32 @@ canvas{
 
 </header>
 
+
+<!-- =========================
+     ROOMS
+========================= -->
+
 <aside id="rooms">
 
   <div class="roomsTitle">
     Pomieszczenia
   </div>
 
-  <div id="roomList"></div>
+  <div id="roomList">
+    Ładowanie pomieszczeń…
+  </div>
 
 </aside>
 
-<div id="modeBadge">
-  Rzut 3D
-</div>
+
+<!-- =========================
+     BOTTOM
+========================= -->
 
 <div id="bottom">
 
   <div id="hint">
-    Przeciągnij, aby się rozglądać · kliknij pomieszczenie, aby przejść
+    Przeciągnij, aby się rozglądać · WASD = poruszanie
   </div>
 
   <div id="controls">
@@ -484,51 +641,64 @@ canvas{
 
 </div>
 
+
 <script type="module">
 
 import * as THREE from
-"https://unpkg.com/three@0.160.0/build/three.module.js";
+  "https://unpkg.com/three@0.160.0/build/three.module.js";
 
-import { GLTFLoader } from
-"https://unpkg.com/three@0.160.0/examples/jsm/loaders/GLTFLoader.js";
+import { GLTFLoader }
+  from
+  "https://unpkg.com/three@0.160.0/examples/jsm/loaders/GLTFLoader.js";
 
 
-/* --------------------------------
+/* =========================================================
    SCENA
--------------------------------- */
+========================================================= */
 
-const scene = new THREE.Scene();
+const scene =
+  new THREE.Scene();
 
 scene.background =
   new THREE.Color(0xd5d3cc);
 
 
-/* --------------------------------
+/* =========================================================
    KAMERA
--------------------------------- */
+========================================================= */
 
 const camera =
   new THREE.PerspectiveCamera(
-    70,
+    82,
     window.innerWidth /
-    window.innerHeight,
+      window.innerHeight,
     0.05,
     1000
   );
 
 
-/* --------------------------------
+/*
+   Szerszy kąt widzenia jest celowy.
+   Mieszkanie jest niewielkie, dlatego 82°
+   daje bardziej przestronny efekt.
+*/
+
+camera.fov = 82;
+camera.updateProjectionMatrix();
+
+
+/* =========================================================
    RENDERER
--------------------------------- */
+========================================================= */
 
 const renderer =
   new THREE.WebGLRenderer({
-    antialias:true,
-    logarithmicDepthBuffer:true
+    antialias: true,
+    logarithmicDepthBuffer: true
   });
 
 renderer.setPixelRatio(
-  Math.min(window.devicePixelRatio,2)
+  Math.min(window.devicePixelRatio, 2)
 );
 
 renderer.setSize(
@@ -542,16 +712,19 @@ renderer.outputColorSpace =
 renderer.toneMapping =
   THREE.ACESFilmicToneMapping;
 
-renderer.toneMappingExposure = 1;
+renderer.toneMappingExposure =
+  1.05;
+
+renderer.shadowMap.enabled = true;
 
 document
   .getElementById("app")
   .appendChild(renderer.domElement);
 
 
-/* --------------------------------
+/* =========================================================
    ŚWIATŁO
--------------------------------- */
+========================================================= */
 
 scene.add(
   new THREE.HemisphereLight(
@@ -560,6 +733,7 @@ scene.add(
     2
   )
 );
+
 
 const directional =
   new THREE.DirectionalLight(
@@ -573,198 +747,424 @@ directional.position.set(
   275
 );
 
+directional.castShadow = true;
+
 scene.add(directional);
 
 
-/* --------------------------------
-   DANE PUNKTÓW
--------------------------------- */
+/* =========================================================
+   ZMIENNE MODELU
+========================================================= */
 
-let points = [];
+let model = null;
 
-let currentPoint = null;
+let modelBox = null;
 
-let overview = true;
+let modelCenter =
+  new THREE.Vector3();
 
-let dragging = false;
+let modelSize =
+  new THREE.Vector3();
 
-let yaw = 0;
-let pitch = 0;
 
-let previousX = 0;
-let previousY = 0;
+/* =========================================================
+   PUNKTY SPACERU
+========================================================= */
+
+let scenesData = [];
 
 
 /*
-   SketchUp:
-   X -> X
-   Z -> Y
-   -Y -> Z
+   =========================================================
+   TUTAJ NIC NIE WPISUJESZ RĘCZNIE.
 
-   cale -> metry
+   Punkty są pobierane automatycznie z:
+
+   punkty_spaceru.json
+   =========================================================
 */
 
-function convertPoint(point){
+
+async function loadScenesData() {
+
+  try {
+
+    const response =
+      await fetch(
+        "punkty_spaceru.json"
+      );
+
+    if (!response.ok) {
+
+      throw new Error(
+        "Nie można wczytać punkty_spaceru.json"
+      );
+
+    }
+
+    scenesData =
+      await response.json();
+
+    console.log(
+      "Wczytane punkty spaceru:",
+      scenesData
+    );
+
+    buildRoomButtons();
+
+  }
+  catch(error) {
+
+    console.error(error);
+
+    document
+      .getElementById("roomList")
+      .innerHTML =
+      `
+        <div style="
+          padding:10px;
+          font-size:11px;
+          color:rgba(255,255,255,.55);
+        ">
+          Nie udało się wczytać punktów spaceru.
+        </div>
+      `;
+  }
+
+}
+
+
+/* =========================================================
+   FUNKCJA NORMALIZUJĄCA PUNKT
+========================================================= */
+
+
+/*
+   Obsługujemy strukturę JSON:
+
+   {
+      name: "...",
+      eye: {
+        x: ...,
+        y: ...,
+        z: ...
+      },
+      target: {
+        x: ...,
+        y: ...,
+        z: ...
+      },
+      fov: ...
+   }
+
+   oraz ewentualnie starszą strukturę
+   z x/y/z bezpośrednio.
+*/
+
+
+function normalizeScene(item) {
+
+  const eye =
+    item.eye || item.camera || {};
+
+  const target =
+    item.target || {};
 
   return {
 
-    name: point.name,
+    name:
+      item.name ||
+      "Pomieszczenie",
 
-    position:
-      new THREE.Vector3(
-        point.x * 0.0254,
-        point.z * 0.0254,
-        -point.y * 0.0254
+    eye: {
+
+      x: Number(
+        eye.x ?? item.x ?? 0
       ),
 
-    target:
-      new THREE.Vector3(
-        point.target_x * 0.0254,
-        point.target_z * 0.0254,
-        -point.target_y * 0.0254
+      y: Number(
+        eye.y ?? item.y ?? 1.65
       ),
+
+      z: Number(
+        eye.z ?? item.z ?? 0
+      )
+
+    },
+
+    target: {
+
+      x: Number(
+        target.x ??
+        item.target_x ??
+        item.tx ??
+        0
+      ),
+
+      y: Number(
+        target.y ??
+        item.target_y ??
+        item.ty ??
+        1.55
+      ),
+
+      z: Number(
+        target.z ??
+        item.target_z ??
+        item.tz ??
+        0
+      )
+
+    },
 
     fov:
-      point.fov || 90
+      Number(
+        item.fov || 82
+      )
 
   };
 
 }
 
 
-/* --------------------------------
-   ŁADOWANIE JSON
--------------------------------- */
+/* =========================================================
+   NAZWY POMIESZCZEŃ
+========================================================= */
 
-async function loadPoints(){
 
-  const response =
-    await fetch(
-      "punkty_spaceru.json",
-      {
-        cache:"no-store"
-      }
-    );
+/*
+   Nazwy odpowiadają rzutowi mieszkania.
 
-  if(!response.ok){
+   Jeśli nazwa sceny w SketchUpie jest np.
+   SPACER_KORYTARZ,
+   zostanie zamieniona na Korytarz.
+*/
 
-    throw new Error(
-      "Nie można wczytać punkty_spaceru.json"
-    );
+const roomInfo = [
+
+  {
+    match: "START",
+    number: "00",
+    name: "Rzut mieszkania",
+    area: ""
+  },
+
+  {
+    match: "KORYTARZ",
+    number: "01",
+    name: "Korytarz",
+    area: "11,48 m²"
+  },
+
+  {
+    match: "SALON",
+    number: "02",
+    name: "Pokój dzienny",
+    area: "18,71 m²"
+  },
+
+  {
+    match: "KUCHNIA",
+    number: "03",
+    name: "Kuchnia",
+    area: "12,06 m²"
+  },
+
+  {
+    match: "SPACER_POKOJ",
+    number: "04",
+    name: "Pokój",
+    area: "11,83 m²"
+  },
+
+  {
+    match: "GARAZ",
+    number: "05",
+    name: "Garderoba",
+    area: "2,35 m²"
+  },
+
+  {
+    match: "GARDEROBA_01",
+    number: "05",
+    name: "Garderoba",
+    area: "2,35 m²"
+  },
+
+  {
+    match: "GARDEROBA_02",
+    number: "06",
+    name: "Garderoba",
+    area: "1,40 m²"
+  },
+
+  {
+    match: "WC",
+    number: "07",
+    name: "WC",
+    area: "1,65 m²"
+  },
+
+  {
+    match: "LAZIENKA",
+    number: "08",
+    name: "Łazienka",
+    area: "4,96 m²"
+  },
+
+  {
+    match: "SYPIALNIA_02",
+    number: "09",
+    name: "Pokój",
+    area: "12,63 m²"
+  },
+
+  {
+    match: "BALKON_01",
+    number: "10",
+    name: "Balkon",
+    area: "7,44 m²"
+  },
+
+  {
+    match: "BALKON_02",
+    number: "11",
+    name: "Balkon",
+    area: "5,48 m²"
+  }
+
+];
+
+
+/* =========================================================
+   ODCZYT NAZWY POMIESZCZENIA
+========================================================= */
+
+function getRoomInfo(name) {
+
+  const upper =
+    String(name)
+      .toUpperCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+
+
+  for (
+    const info of roomInfo
+  ) {
+
+    if (
+      upper.includes(
+        info.match
+      )
+    ) {
+
+      return info;
+
+    }
 
   }
 
-  const data =
-    await response.json();
 
-  points =
-    data.map(convertPoint);
+  return {
+
+    number: String(
+      roomInfo.length + 1
+    ),
+
+    name: name,
+
+    area: ""
+
+  };
 
 }
 
 
-/* --------------------------------
-   NAZWY POMIESZCZEŃ
--------------------------------- */
+/* =========================================================
+   TWORZENIE LISTY POMIESZCZEŃ
+========================================================= */
 
-const roomMeta = {
+function buildRoomButtons() {
 
-  SPACER_KORYTARZ:
-    ["Korytarz","11,48 m²"],
-
-  SPACER_SALON_KUCHNIA:
-    ["Salon + kuchnia","30,77 m²"],
-
-  SPACER_LAZIENKA:
-    ["Łazienka","4,96 m²"],
-
-  SPACER_SYPIALNIA_01:
-    ["Sypialnia 01","11,83 m²"],
-
-  SPACER_WC:
-    ["WC","1,65 m²"],
-
-  SPACER_GARDEROBA:
-    ["Garderoba","3,75 m²"],
-
-  SPACER_SYPIALNIA_02:
-    ["Sypialnia 02","12,63 m²"]
-
-};
-
-
-/* --------------------------------
-   LISTA POMIESZCZEŃ
--------------------------------- */
-
-function buildRooms(){
-
-  const list =
+  const container =
     document.getElementById(
       "roomList"
     );
 
-  list.innerHTML = "";
+  container.innerHTML = "";
 
-  const interiorPoints =
-    points.filter(
-      point =>
-        point.name !== "SPACER_START"
+
+  const normalized =
+    scenesData.map(
+      normalizeScene
     );
 
-  interiorPoints.forEach(
-    (point,index)=>{
+
+  normalized.forEach(
+    (scenePoint, index) => {
+
+      const info =
+        getRoomInfo(
+          scenePoint.name
+        );
+
 
       const button =
         document.createElement(
           "button"
         );
 
+
       button.className =
         "room";
 
-      button.dataset.point =
-        point.name;
 
-      const meta =
-        roomMeta[point.name] ||
-        [
-          point.name
-            .replace("SPACER_","")
-            .replaceAll("_"," "),
-          ""
-        ];
+      if (index === 0) {
 
-      button.innerHTML = `
+        button.classList.add(
+          "active"
+        );
 
-        <span class="roomNumber">
-          ${String(index+1).padStart(2,"0")}
-        </span>
+      }
 
-        <span>
+
+      button.dataset.index =
+        index;
+
+
+      button.innerHTML =
+        `
+          <span class="roomNumber">
+            ${info.number}
+          </span>
+
           <span class="roomName">
-            ${meta[0]}
+            ${info.name}
           </span>
 
           <span class="roomArea">
-            ${meta[1]}
+            ${info.area}
           </span>
-        </span>
+        `;
 
-      `;
 
       button.addEventListener(
         "click",
         () => {
 
-          goToPoint(
-            point.name
+          goToScene(
+            scenePoint,
+            button
           );
 
         }
       );
 
-      list.appendChild(button);
+
+      container.appendChild(
+        button
+      );
 
     }
   );
@@ -772,36 +1172,119 @@ function buildRooms(){
 }
 
 
-/* --------------------------------
-   USTAWIENIE KAMERY
--------------------------------- */
+/* =========================================================
+   SPRAWDZENIE CZY PUNKT JEST STARTEM
+========================================================= */
+
+function findScene(
+  words
+) {
+
+  if (!scenesData.length)
+    return null;
+
+
+  const normalized =
+    scenesData.map(
+      normalizeScene
+    );
+
+
+  for (
+    const point of normalized
+  ) {
+
+    const name =
+      point.name
+        .toUpperCase()
+        .normalize("NFD")
+        .replace(
+          /[\u0300-\u036f]/g,
+          ""
+        );
+
+
+    for (
+      const word of words
+    ) {
+
+      if (
+        name.includes(
+          word
+        )
+      ) {
+
+        return point;
+
+      }
+
+    }
+
+  }
+
+
+  return null;
+
+}
+
+
+/* =========================================================
+   STARTOWY PUNKT SPACERU
+========================================================= */
+
+let corridorScene = null;
+
+
+/* =========================================================
+   RUCH KAMERY
+========================================================= */
+
+let yaw = 0;
+
+let pitch = 0;
+
+let dragging = false;
+
+let previousX = 0;
+
+let previousY = 0;
+
+
+/*
+   Czy użytkownik rozpoczął spacer?
+*/
+
+let walkingMode = false;
+
+
+/* =========================================================
+   USTAWIANIE KAMERY
+========================================================= */
 
 function setCamera(
-  point,
-  animate = true
-){
+  position,
+  target,
+  fov = 82
+) {
 
-  const from =
-    camera.position.clone();
-
-  const to =
-    point.position.clone();
-
-  const target =
-    point.target.clone();
-
-  const newFov =
-    point.fov || 90;
+  camera.position.set(
+    position.x,
+    position.y,
+    position.z
+  );
 
 
   const dx =
-    target.x - to.x;
+    target.x -
+    position.x;
 
   const dy =
-    target.y - to.y;
+    target.y -
+    position.y;
 
   const dz =
-    target.z - to.z;
+    target.z -
+    position.z;
 
 
   yaw =
@@ -815,114 +1298,35 @@ function setCamera(
     Math.atan2(
       dy,
       Math.sqrt(
-        dx*dx +
-        dz*dz
+        dx * dx +
+        dz * dz
       )
     );
 
 
-  if(!animate){
+  camera.fov =
+    fov;
 
-    camera.position.copy(to);
-
-    camera.fov =
-      newFov;
-
-    camera.updateProjectionMatrix();
-
-    camera.lookAt(target);
-
-    currentPoint =
-      point;
-
-    return;
-
-  }
+  camera.updateProjectionMatrix();
 
 
-  const start =
-    performance.now();
-
-  const duration =
-    750;
-
-
-  function animateCamera(now){
-
-    const t =
-      Math.min(
-        1,
-        (now-start) /
-        duration
-      );
-
-
-    const ease =
-      t*t*(3-2*t);
-
-
-    camera.position.lerpVectors(
-      from,
-      to,
-      ease
-    );
-
-
-    camera.fov =
-      THREE.MathUtils.lerp(
-        camera.fov,
-        newFov,
-        ease
-      );
-
-
-    camera.updateProjectionMatrix();
-
-    camera.lookAt(
-      target
-    );
-
-
-    if(t < 1){
-
-      requestAnimationFrame(
-        animateCamera
-      );
-
-    }else{
-
-      currentPoint =
-        point;
-
-    }
-
-  }
-
-
-  requestAnimationFrame(
-    animateCamera
-  );
+  updateLook();
 
 }
 
 
-/* --------------------------------
-   WIDOK 360
--------------------------------- */
+/* =========================================================
+   360° ROZGLĄDANIE
+========================================================= */
 
-function applyLook(){
+function updateLook() {
 
-  if(
-    overview ||
-    !currentPoint
-  ){
-
+  if (!walkingMode)
     return;
 
-  }
 
-
-  const distance = 2;
+  const lookDistance =
+    3;
 
 
   const target =
@@ -931,16 +1335,16 @@ function applyLook(){
       camera.position.x -
         Math.sin(yaw) *
         Math.cos(pitch) *
-        distance,
+        lookDistance,
 
       camera.position.y +
         Math.sin(pitch) *
-        distance,
+        lookDistance,
 
       camera.position.z -
         Math.cos(yaw) *
         Math.cos(pitch) *
-        distance
+        lookDistance
 
     );
 
@@ -952,114 +1356,569 @@ function applyLook(){
 }
 
 
-/* --------------------------------
-   PRZEJŚCIE DO PUNKTU
--------------------------------- */
+/* =========================================================
+   MYSZ
+========================================================= */
 
-function goToPoint(name){
+renderer.domElement.addEventListener(
+  "pointerdown",
+  event => {
 
-  const point =
-    points.find(
-      item =>
-        item.name === name
+    if (!walkingMode)
+      return;
+
+
+    dragging = true;
+
+
+    previousX =
+      event.clientX;
+
+    previousY =
+      event.clientY;
+
+
+    renderer.domElement.setPointerCapture(
+      event.pointerId
     );
 
-  if(!point){
+  }
+);
 
+
+renderer.domElement.addEventListener(
+  "pointermove",
+  event => {
+
+    if (!dragging)
+      return;
+
+
+    const dx =
+      event.clientX -
+      previousX;
+
+
+    const dy =
+      event.clientY -
+      previousY;
+
+
+    previousX =
+      event.clientX;
+
+    previousY =
+      event.clientY;
+
+
+    yaw -=
+      dx * 0.003;
+
+
+    pitch -=
+      dy * 0.0025;
+
+
+    const limit =
+      Math.PI / 2.05;
+
+
+    pitch =
+      Math.max(
+        -limit,
+        Math.min(
+          limit,
+          pitch
+        )
+      );
+
+  }
+);
+
+
+renderer.domElement.addEventListener(
+  "pointerup",
+  event => {
+
+    dragging = false;
+
+    try {
+
+      renderer.domElement.releasePointerCapture(
+        event.pointerId
+      );
+
+    } catch(e) {}
+
+  }
+);
+
+
+/* =========================================================
+   KLAWIATURA
+========================================================= */
+
+const keys = {};
+
+
+window.addEventListener(
+  "keydown",
+  event => {
+
+    keys[
+      event.key.toLowerCase()
+    ] = true;
+
+  }
+);
+
+
+window.addEventListener(
+  "keyup",
+  event => {
+
+    keys[
+      event.key.toLowerCase()
+    ] = false;
+
+  }
+);
+
+
+/* =========================================================
+   RUCH
+========================================================= */
+
+const direction =
+  new THREE.Vector3();
+
+const right =
+  new THREE.Vector3();
+
+const move =
+  new THREE.Vector3();
+
+
+function updateMovement() {
+
+  if (!walkingMode)
     return;
+
+
+  move.set(
+    0,
+    0,
+    0
+  );
+
+
+  direction.set(
+
+    -Math.sin(yaw),
+
+    0,
+
+    -Math.cos(yaw)
+
+  );
+
+
+  right.set(
+
+    Math.cos(yaw),
+
+    0,
+
+    -Math.sin(yaw)
+
+  );
+
+
+  if (
+    keys["w"] ||
+    keys["arrowup"]
+  ) {
+
+    move.add(
+      direction
+    );
 
   }
 
 
-  overview = false;
+  if (
+    keys["s"] ||
+    keys["arrowdown"]
+  ) {
+
+    move.sub(
+      direction
+    );
+
+  }
 
 
-  document
-    .getElementById(
-      "modeBadge"
-    )
-    .textContent =
-      roomMeta[name]?.[0] ||
-      name;
+  if (
+    keys["a"] ||
+    keys["arrowleft"]
+  ) {
+
+    move.sub(
+      right
+    );
+
+  }
 
 
-  document
-    .querySelectorAll(".room")
-    .forEach(
-      button => {
+  if (
+    keys["d"] ||
+    keys["arrowright"]
+  ) {
 
-        button.classList.toggle(
-          "active",
-          button.dataset.point === name
-        );
+    move.add(
+      right
+    );
 
-      }
+  }
+
+
+  if (
+    move.lengthSq() > 0
+  ) {
+
+    move.normalize();
+
+
+    /*
+       Prędkość spaceru.
+    */
+
+    move.multiplyScalar(
+      0.035
     );
 
 
-  setCamera(
-    point,
-    true
-  );
+    camera.position.add(
+      move
+    );
+
+  }
+
+
+  /*
+     Stała wysokość oczu.
+  */
+
+  camera.position.y =
+    1.65;
 
 }
 
 
-/* --------------------------------
-   RZUT 3D
--------------------------------- */
+/* =========================================================
+   PRZEJŚCIE DO PUNKTU
+========================================================= */
 
-function goOverview(){
+function goToScene(
+  scenePoint,
+  clickedButton = null
+) {
 
   const point =
-    points.find(
-      item =>
-        item.name ===
-        "SPACER_START"
+    normalizeScene(
+      scenePoint
     );
 
-  if(!point){
 
-    return;
-
-  }
+  walkingMode = true;
 
 
-  overview = true;
-
-  currentPoint =
-    point;
+  setCamera(
+    point.eye,
+    point.target,
+    point.fov || 82
+  );
 
 
   document
-    .getElementById(
-      "modeBadge"
+    .querySelectorAll(
+      ".room"
     )
-    .textContent =
-      "Rzut 3D";
-
-
-  document
-    .querySelectorAll(".room")
     .forEach(
-      button =>
-        button.classList.remove(
+      item =>
+        item.classList.remove(
           "active"
         )
     );
 
 
-  setCamera(
-    point,
-    false
-  );
+  if (clickedButton) {
+
+    clickedButton.classList.add(
+      "active"
+    );
+
+  }
 
 }
 
 
-/* --------------------------------
+/* =========================================================
+   PIERWSZY WIDOK — RZUT 3D Z GÓRY
+========================================================= */
+
+function showTopView() {
+
+  if (!model)
+    return;
+
+
+  walkingMode = false;
+
+
+  modelBox =
+    new THREE.Box3()
+      .setFromObject(
+        model
+      );
+
+
+  modelBox.getCenter(
+    modelCenter
+  );
+
+
+  modelBox.getSize(
+    modelSize
+  );
+
+
+  /*
+     Wysokość rzutu dobierana
+     automatycznie do rozmiaru mieszkania.
+  */
+
+  const maxSize =
+    Math.max(
+      modelSize.x,
+      modelSize.z
+    );
+
+
+  const cameraHeight =
+    Math.max(
+      maxSize * 1.15,
+      12
+    );
+
+
+  camera.position.set(
+
+    modelCenter.x,
+
+    cameraHeight,
+
+    modelCenter.z
+
+  );
+
+
+  camera.lookAt(
+    modelCenter
+  );
+
+
+  camera.fov =
+    45;
+
+  camera.updateProjectionMatrix();
+
+}
+
+
+/* =========================================================
+   ŁADOWANIE MODELU
+========================================================= */
+
+const loading =
+  document.getElementById(
+    "loading"
+  );
+
+
+const loader =
+  new GLTFLoader();
+
+
+async function loadModel() {
+
+  try {
+
+    const files = [
+
+      "mieszkanie.part1",
+
+      "mieszkanie.part2"
+
+    ];
+
+
+    const buffers =
+      await Promise.all(
+
+        files.map(
+          async file => {
+
+            const response =
+              await fetch(
+                file
+              );
+
+
+            if (
+              !response.ok
+            ) {
+
+              throw new Error(
+                "Nie można wczytać " +
+                file
+              );
+
+            }
+
+
+            return response.arrayBuffer();
+
+          }
+        )
+
+      );
+
+
+    /*
+       Łączymy części modelu.
+    */
+
+    const total =
+      buffers[0].byteLength +
+      buffers[1].byteLength;
+
+
+    const combined =
+      new Uint8Array(
+        total
+      );
+
+
+    combined.set(
+
+      new Uint8Array(
+        buffers[0]
+      ),
+
+      0
+
+    );
+
+
+    combined.set(
+
+      new Uint8Array(
+        buffers[1]
+      ),
+
+      buffers[0].byteLength
+
+    );
+
+
+    loader.parse(
+
+      combined.buffer,
+
+      "",
+
+      gltf => {
+
+        model =
+          gltf.scene;
+
+
+        scene.add(
+          model
+        );
+
+
+        /*
+           Model gotowy.
+        */
+
+        showTopView();
+
+
+        loading.classList.add(
+          "hidden"
+        );
+
+
+        /*
+           Znajdujemy Korytarz
+           w JSON.
+        */
+
+        corridorScene =
+          findScene([
+            "KORYTARZ",
+            "SPACER_KORYTARZ"
+          ]);
+
+
+        /*
+           Wczytujemy punkty.
+        */
+
+        loadScenesData();
+
+      },
+
+
+      error => {
+
+        console.error(
+          error
+        );
+
+
+        loading.querySelector(
+          ".loadingText"
+        ).textContent =
+          "Błąd ładowania modelu";
+
+      }
+
+    );
+
+  }
+  catch(error) {
+
+    console.error(
+      error
+    );
+
+
+    loading.querySelector(
+      ".loadingText"
+    ).textContent =
+      "Błąd ładowania modelu";
+
+  }
+
+}
+
+
+/* =========================================================
    START
--------------------------------- */
+========================================================= */
 
 document
   .getElementById(
@@ -1069,6 +1928,50 @@ document
     "click",
     () => {
 
+      walkingMode = true;
+
+
+      /*
+         Najpierw próbujemy znaleźć
+         scenę Korytarza z JSON.
+      */
+
+      if (
+        corridorScene
+      ) {
+
+        goToScene(
+          corridorScene
+        );
+
+      }
+      else {
+
+        /*
+           Jeżeli JSON jeszcze się
+           nie wczytał, próbujemy
+           znaleźć go ponownie.
+        */
+
+        const point =
+          findScene([
+            "KORYTARZ"
+          ]);
+
+
+        if (point) {
+
+          corridorScene =
+            point;
+
+          goToScene(
+            point
+          );
+
+        }
+      }
+
+
       document
         .getElementById(
           "startScreen"
@@ -1077,44 +1980,13 @@ document
           "hidden"
         );
 
-
-      const first =
-        points.find(
-          point =>
-            point.name ===
-            "SPACER_KORYTARZ"
-        );
-
-
-      if(first){
-
-        goToPoint(
-          first.name
-        );
-
-      }
-
     }
   );
 
 
-/* --------------------------------
-   RZUT 3D
--------------------------------- */
-
-document
-  .getElementById(
-    "overviewButton"
-  )
-  .addEventListener(
-    "click",
-    goOverview
-  );
-
-
-/* --------------------------------
+/* =========================================================
    RESET
--------------------------------- */
+========================================================= */
 
 document
   .getElementById(
@@ -1124,161 +1996,52 @@ document
     "click",
     () => {
 
-      if(overview){
-
-        goOverview();
-
-      }else if(currentPoint){
-
-        setCamera(
-          currentPoint,
-          false
-        );
-
-      }
-
-    }
-  );
+      showTopView();
 
 
-/* --------------------------------
-   MYSZ
--------------------------------- */
-
-renderer.domElement
-  .addEventListener(
-    "pointerdown",
-    event => {
-
-      if(overview){
-
-        return;
-
-      }
-
-
-      dragging = true;
-
-      previousX =
-        event.clientX;
-
-      previousY =
-        event.clientY;
-
-
-      renderer.domElement
-        .setPointerCapture(
-          event.pointerId
+      document
+        .querySelectorAll(
+          ".room"
+        )
+        .forEach(
+          item =>
+            item.classList.remove(
+              "active"
+            )
         );
 
     }
   );
 
 
-renderer.domElement
-  .addEventListener(
-    "pointermove",
-    event => {
-
-      if(
-        !dragging ||
-        overview
-      ){
-
-        return;
-
-      }
-
-
-      const dx =
-        event.clientX -
-        previousX;
-
-      const dy =
-        event.clientY -
-        previousY;
-
-
-      previousX =
-        event.clientX;
-
-      previousY =
-        event.clientY;
-
-
-      yaw -=
-        dx * 0.003;
-
-
-      pitch -=
-        dy * 0.0025;
-
-
-      const limit =
-        Math.PI / 2.05;
-
-
-      pitch =
-        Math.max(
-          -limit,
-          Math.min(
-            limit,
-            pitch
-          )
-        );
-
-    }
-  );
-
-
-renderer.domElement
-  .addEventListener(
-    "pointerup",
-    () => {
-
-      dragging = false;
-
-    }
-  );
-
-
-renderer.domElement
-  .addEventListener(
-    "pointercancel",
-    () => {
-
-      dragging = false;
-
-    }
-  );
-
-
-/* --------------------------------
+/* =========================================================
    FULLSCREEN
--------------------------------- */
+========================================================= */
 
-async function fullscreen(){
+async function fullscreen() {
 
-  try{
+  try {
 
-    if(
+    if (
       !document.fullscreenElement
-    ){
+    ) {
 
       await document
         .documentElement
         .requestFullscreen();
 
-    }else{
+    }
+    else {
 
       await document
         .exitFullscreen();
 
     }
 
-  }catch(error){
+  }
+  catch(e) {
 
-    console.error(error);
+    console.error(e);
 
   }
 
@@ -1305,154 +2068,39 @@ document
   );
 
 
-/* --------------------------------
-   ŁADOWANIE MODELU
--------------------------------- */
+/* =========================================================
+   INFO
+========================================================= */
 
-const loader =
-  new GLTFLoader();
+document
+  .getElementById(
+    "infoButton"
+  )
+  .addEventListener(
+    "click",
+    () => {
 
+      alert(
 
-async function loadModel(){
+        "Wirtualny spacer po mieszkaniu.\n\n" +
 
-  try{
+        "Przeciągnij myszką, aby się rozglądać.\n" +
 
-    await loadPoints();
+        "Użyj W, A, S, D, aby się poruszać.\n\n" +
 
-    buildRooms();
+        "Możesz również wybrać pomieszczenie " +
 
-
-    const files = [
-
-      "mieszkanie.part1",
-      "mieszkanie.part2"
-
-    ];
-
-
-    const buffers =
-      await Promise.all(
-
-        files.map(
-          async file => {
-
-            const response =
-              await fetch(file);
-
-            if(!response.ok){
-
-              throw new Error(
-                "Nie można wczytać " +
-                file
-              );
-
-            }
-
-            return response
-              .arrayBuffer();
-
-          }
-        )
+        "z listy po lewej stronie."
 
       );
 
-
-    const total =
-      buffers[0].byteLength +
-      buffers[1].byteLength;
+    }
+  );
 
 
-    const combined =
-      new Uint8Array(
-        total
-      );
-
-
-    combined.set(
-      new Uint8Array(
-        buffers[0]
-      ),
-      0
-    );
-
-
-    combined.set(
-      new Uint8Array(
-        buffers[1]
-      ),
-      buffers[0].byteLength
-    );
-
-
-    loader.parse(
-
-      combined.buffer,
-
-      "",
-
-      gltf => {
-
-        scene.add(
-          gltf.scene
-        );
-
-
-        loading
-          .classList
-          .add(
-            "hidden"
-          );
-
-
-        goOverview();
-
-      },
-
-      error => {
-
-        console.error(
-          error
-        );
-
-
-        document
-          .querySelector(
-            ".loadingText"
-          )
-          .textContent =
-            "Błąd ładowania modelu";
-
-      }
-
-    );
-
-
-  }catch(error){
-
-    console.error(
-      error
-    );
-
-
-    document
-      .querySelector(
-        ".loadingText"
-      )
-      .textContent =
-        "Błąd: " +
-        error.message;
-
-  }
-
-}
-
-
-loadModel();
-
-
-/* --------------------------------
+/* =========================================================
    RESIZE
--------------------------------- */
+========================================================= */
 
 window.addEventListener(
   "resize",
@@ -1475,22 +2123,21 @@ window.addEventListener(
 );
 
 
-/* --------------------------------
+/* =========================================================
    ANIMACJA
--------------------------------- */
+========================================================= */
 
-function animate(){
+function animate() {
 
   requestAnimationFrame(
     animate
   );
 
 
-  if(!overview){
+  updateMovement();
 
-    applyLook();
 
-  }
+  updateLook();
 
 
   renderer.render(
@@ -1502,6 +2149,13 @@ function animate(){
 
 
 animate();
+
+
+/* =========================================================
+   START ŁADOWANIA
+========================================================= */
+
+loadModel();
 
 </script>
 
