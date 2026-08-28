@@ -53,6 +53,7 @@ canvas {
 
   width: 100%;
   height: 100%;
+
 }
 
 
@@ -71,6 +72,7 @@ canvas {
   display: flex;
 
   align-items: center;
+
   justify-content: center;
 
   background:
@@ -500,7 +502,7 @@ canvas {
 
 
 /* =========================================
-   STRZAŁKI 3D
+   STRZAŁKI NAWIGACYJNE
 ========================================= */
 
 #navigationArrows {
@@ -509,32 +511,54 @@ canvas {
 
   z-index: 50;
 
-  inset: 0;
+  left: 50%;
 
-  pointer-events: none;
-}
-
-.navArrow3D {
-
-  position: absolute;
-
-  width: 90px;
-
-  height: 90px;
+  bottom: 82px;
 
   transform:
-    translate(-50%, -50%);
+    translateX(-50%);
 
-  border: 0;
+  display: none;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 12px;
+
+  pointer-events: auto;
+}
+
+#navigationArrows.visible {
+
+  display: flex;
+}
+
+.navArrow {
+
+  width: 58px;
+
+  height: 58px;
 
   border-radius: 50%;
 
+  border:
+    1px solid
+    rgba(255,255,255,.25);
+
   background:
-    rgba(20,20,17,.72);
+    rgba(20,20,17,.78);
 
   color: white;
 
-  font-size: 38px;
+  backdrop-filter:
+    blur(18px);
+
+  cursor: pointer;
+
+  font-size: 27px;
+
+  line-height: 1;
 
   display: flex;
 
@@ -542,56 +566,89 @@ canvas {
 
   justify-content: center;
 
-  cursor: pointer;
-
-  pointer-events: auto;
-
-  backdrop-filter:
-    blur(10px);
-
-  border:
-    2px solid
-    rgba(255,255,255,.45);
+  transition:
+    transform .2s ease,
+    background .2s ease,
+    opacity .2s ease;
 
   box-shadow:
     0 8px 30px
-    rgba(0,0,0,.35);
+    rgba(0,0,0,.25);
+}
+
+.navArrow:hover {
+
+  background:
+    rgba(255,255,255,.17);
+
+  transform:
+    scale(1.08);
+}
+
+.navArrow:active {
+
+  transform:
+    scale(.94);
+}
+
+.navArrow.disabled {
+
+  opacity: .22;
+
+  pointer-events: none;
+}
+
+
+/* =========================================
+   LABEL PUNKTU
+========================================= */
+
+#navigationLabel {
+
+  position: fixed;
+
+  z-index: 45;
+
+  left: 50%;
+
+  bottom: 150px;
+
+  transform:
+    translateX(-50%);
+
+  padding:
+    8px 13px;
+
+  border-radius: 999px;
+
+  background:
+    rgba(20,20,17,.65);
+
+  border:
+    1px solid
+    rgba(255,255,255,.12);
+
+  backdrop-filter:
+    blur(15px);
+
+  color:
+    rgba(255,255,255,.75);
+
+  font-size: 10px;
+
+  letter-spacing: .04em;
+
+  pointer-events: none;
 
   opacity: 0;
 
   transition:
-    opacity .25s ease,
-    transform .2s ease,
-    background .2s ease;
+    opacity .25s ease;
 }
 
-.navArrow3D.visible {
+#navigationLabel.visible {
 
   opacity: 1;
-}
-
-.navArrow3D:hover {
-
-  background:
-    rgba(255,255,255,.20);
-
-  transform:
-    translate(-50%, -50%)
-    scale(1.12);
-}
-
-.navArrow3D:active {
-
-  transform:
-    translate(-50%, -50%)
-    scale(.94);
-}
-
-.navArrow3D.hidden {
-
-  opacity: 0;
-
-  pointer-events: none;
 }
 
 
@@ -741,13 +798,25 @@ canvas {
     display: none;
   }
 
-  .navArrow3D {
+  #navigationArrows {
 
-    width: 68px;
+    bottom: 65px;
 
-    height: 68px;
+    gap: 10px;
+  }
 
-    font-size: 30px;
+  .navArrow {
+
+    width: 50px;
+
+    height: 50px;
+
+    font-size: 24px;
+  }
+
+  #navigationLabel {
+
+    bottom: 122px;
   }
 
 }
@@ -758,7 +827,6 @@ canvas {
 
 
 <body>
-
 
 <div id="app"></div>
 
@@ -837,23 +905,20 @@ canvas {
 
   </div>
 
-
   <div class="topButtons">
 
     <button
       class="topButton"
-      id="infoButton">
-
+      id="infoButton"
+    >
       O projekcie
-
     </button>
 
     <button
       class="topButton"
-      id="fullscreenButton">
-
+      id="fullscreenButton"
+    >
       ⛶
-
     </button>
 
   </div>
@@ -875,27 +940,31 @@ canvas {
 
 
 <!-- =========================================
-     STRZAŁKI 3D
+     NAWIGACJA
 ========================================= -->
+
+<div id="navigationLabel">
+  Następny punkt
+</div>
 
 <div id="navigationArrows">
 
   <button
-    class="navArrow3D"
+    class="navArrow"
     id="arrowBack"
-    title="Poprzedni punkt">
-
+    title="Poprzedni punkt"
+    aria-label="Poprzedni punkt"
+  >
     ←
-
   </button>
 
   <button
-    class="navArrow3D"
+    class="navArrow"
     id="arrowForward"
-    title="Przejdź do następnego punktu">
-
+    title="Następny punkt"
+    aria-label="Następny punkt"
+  >
     →
-
   </button>
 
 </div>
@@ -918,18 +987,16 @@ canvas {
 
     <button
       class="control"
-      id="resetButton">
-
+      id="resetButton"
+    >
       ↻
-
     </button>
 
     <button
       class="control"
-      id="fullscreenButton2">
-
+      id="fullscreenButton2"
+    >
       ⛶
-
     </button>
 
   </div>
@@ -959,6 +1026,7 @@ canvas {
 
 import * as THREE
   from "three";
+
 
 import {
   GLTFLoader
@@ -1012,6 +1080,7 @@ const renderer =
 
   });
 
+
 renderer.setPixelRatio(
 
   Math.min(
@@ -1041,6 +1110,7 @@ renderer.toneMappingExposure =
 renderer.localClippingEnabled =
   true;
 
+
 document
   .getElementById("app")
   .appendChild(
@@ -1066,6 +1136,7 @@ scene.add(
 
 );
 
+
 const directional =
   new THREE.DirectionalLight(
 
@@ -1074,6 +1145,7 @@ const directional =
     2
 
   );
+
 
 directional.position.set(
 
@@ -1084,6 +1156,7 @@ directional.position.set(
   275
 
 );
+
 
 scene.add(
   directional
@@ -1213,6 +1286,7 @@ const navigationOrder = [
 
 ];
 
+
 let currentNavigationIndex = 0;
 
 
@@ -1257,6 +1331,7 @@ async function loadScenePoints() {
       Date.now()
     );
 
+
   if (!response.ok) {
 
     throw new Error(
@@ -1265,8 +1340,10 @@ async function loadScenePoints() {
 
   }
 
+
   const data =
     await response.json();
+
 
   if (!Array.isArray(data)) {
 
@@ -1276,12 +1353,15 @@ async function loadScenePoints() {
 
   }
 
+
   scenes = data;
+
 
   console.log(
     "Pobrano punkty:",
     scenes
   );
+
 
   createRoomButtons();
 
@@ -1295,8 +1375,10 @@ async function loadScenePoints() {
 function getScene(name) {
 
   return scenes.find(
+
     item =>
       item.name === name
+
   );
 
 }
@@ -1313,38 +1395,46 @@ function createRoomButtons() {
       "rooms"
     );
 
+
   rooms.innerHTML = "";
+
 
   const title =
     document.createElement(
       "div"
     );
 
+
   title.className =
     "roomsTitle";
 
+
   title.textContent =
     "Pomieszczenia";
+
 
   rooms.appendChild(
     title
   );
 
+
   Object.keys(
     roomSettings
   ).forEach(
 
-    (sceneName, index) => {
+    (sceneName) => {
 
       const settings =
         roomSettings[
           sceneName
         ];
 
+
       const sceneData =
         getScene(
           sceneName
         );
+
 
       if (!sceneData) {
 
@@ -1357,15 +1447,21 @@ function createRoomButtons() {
 
       }
 
+
       const button =
         document.createElement(
           "button"
         );
 
+
       button.className =
         "room";
 
-      if (index === 0) {
+
+      if (
+        sceneName ===
+        navigationOrder[0]
+      ) {
 
         button.classList.add(
           "active"
@@ -1373,41 +1469,52 @@ function createRoomButtons() {
 
       }
 
+
       button.dataset.scene =
         sceneName;
+
 
       const number =
         document.createElement(
           "span"
         );
 
+
       number.className =
         "roomNumber";
 
+
       number.textContent =
         settings.number;
+
 
       const name =
         document.createElement(
           "span"
         );
 
+
       name.className =
         "roomName";
 
+
       name.textContent =
         settings.name;
+
 
       const area =
         document.createElement(
           "span"
         );
 
+
       area.className =
         "roomArea";
 
+
       area.textContent =
         settings.area;
+
 
       button.appendChild(
         number
@@ -1421,6 +1528,7 @@ function createRoomButtons() {
         area
       );
 
+
       button.addEventListener(
 
         "click",
@@ -1432,6 +1540,7 @@ function createRoomButtons() {
               sceneName
             );
 
+
           if (
             navIndex >= 0
           ) {
@@ -1441,27 +1550,30 @@ function createRoomButtons() {
 
           }
 
+
           renderer.clippingPlanes =
             [];
 
+
           hideStartScreen();
 
-          cameraTransition =
-            null;
 
-          setCameraFromScene(
+          smoothMoveTo(
             sceneData
           );
+
 
           updateRoomActive(
             sceneName
           );
 
-          updateFloorArrows();
+
+          showNavigationArrows();
 
         }
 
       );
+
 
       rooms.appendChild(
         button
@@ -1487,6 +1599,7 @@ function updateRoomActive(
       ".room"
     )
     .forEach(
+
       button => {
 
         button.classList.toggle(
@@ -1499,7 +1612,56 @@ function updateRoomActive(
         );
 
       }
+
     );
+
+}
+
+
+/* =====================================================
+   AKTUALIZACJA NAPISU
+===================================================== */
+
+function updateNavigationLabel() {
+
+  const label =
+    document.getElementById(
+      "navigationLabel"
+    );
+
+
+  const currentName =
+    navigationOrder[
+      currentNavigationIndex
+    ];
+
+
+  const settings =
+    roomSettings[
+      currentName
+    ];
+
+
+  if (!settings) {
+
+    label.classList.remove(
+      "visible"
+    );
+
+    return;
+
+  }
+
+
+  label.textContent =
+    settings.number +
+    " · " +
+    settings.name;
+
+
+  label.classList.add(
+    "visible"
+  );
 
 }
 
@@ -1515,15 +1677,18 @@ function setCameraFromScene(
   if (!sceneData)
     return;
 
+
   const position =
     convertPoint(
       sceneData.eye
     );
 
+
   const target =
     convertPoint(
       sceneData.target
     );
+
 
   camera.position.set(
 
@@ -1535,17 +1700,21 @@ function setCameraFromScene(
 
   );
 
+
   camera.up.set(
     0,
     1,
     0
   );
 
+
   camera.fov =
     sceneData.fov ||
     70;
 
+
   camera.updateProjectionMatrix();
+
 
   camera.lookAt(
 
@@ -1556,6 +1725,7 @@ function setCameraFromScene(
     target.z
 
   );
+
 
   updateAnglesFromCamera(
 
@@ -1579,6 +1749,7 @@ function showTopView() {
       "SPACER_START"
     );
 
+
   if (!start) {
 
     console.warn(
@@ -1589,6 +1760,7 @@ function showTopView() {
 
   }
 
+
   if (topCutPlane) {
 
     renderer.clippingPlanes =
@@ -1596,15 +1768,18 @@ function showTopView() {
 
   }
 
+
   const position =
     convertPoint(
       start.eye
     );
 
+
   const target =
     convertPoint(
       start.target
     );
+
 
   camera.position.set(
 
@@ -1616,6 +1791,7 @@ function showTopView() {
 
   );
 
+
   camera.up.set(
 
     0,
@@ -1626,11 +1802,14 @@ function showTopView() {
 
   );
 
+
   camera.fov =
     start.fov ||
     35;
 
+
   camera.updateProjectionMatrix();
+
 
   camera.lookAt(
 
@@ -1646,7 +1825,7 @@ function showTopView() {
 
 
 /* =====================================================
-   START
+   START SCREEN
 ===================================================== */
 
 function hideStartScreen() {
@@ -1662,20 +1841,28 @@ function hideStartScreen() {
 }
 
 
+/* =====================================================
+   START SPACERU
+===================================================== */
+
 function startWalk() {
 
   renderer.clippingPlanes =
     [];
 
+
   hideStartScreen();
+
 
   currentNavigationIndex =
     0;
+
 
   const start =
     getScene(
       "SPACER_KORYTARZ"
     );
+
 
   if (start) {
 
@@ -1685,330 +1872,109 @@ function startWalk() {
 
   }
 
+
+  showNavigationArrows();
+
+
   updateRoomActive(
     "SPACER_KORYTARZ"
   );
 
-  updateFloorArrows();
+
+  updateNavigationButtons();
+
+
+  updateNavigationLabel();
 
 }
 
 
 /* =====================================================
-   STRZAŁKI NA PODŁODZE
+   STRZAŁKI - POKAZYWANIE
 ===================================================== */
 
-const arrowForward =
-  document.getElementById(
-    "arrowForward"
-  );
+function showNavigationArrows() {
 
-const arrowBack =
-  document.getElementById(
-    "arrowBack"
-  );
+  document
+    .getElementById(
+      "navigationArrows"
+    )
+    .classList.add(
+      "visible"
+    );
 
 
-/*
-  Umieszczamy element HTML
-  w odpowiednim miejscu ekranu,
-  obliczonym z pozycji 3D.
-*/
-
-function worldToScreen(
-  position
-) {
-
-  const vector =
-    position.clone();
-
-  vector.project(camera);
-
-  return {
-
-    x:
-      (vector.x + 1) *
-      0.5 *
-      window.innerWidth,
-
-    y:
-      (-vector.y + 1) *
-      0.5 *
-      window.innerHeight,
-
-    visible:
-      vector.z > -1 &&
-      vector.z < 1
-
-  };
+  updateNavigationButtons();
 
 }
 
 
-/*
-  Ustawienie strzałki
-  w kierunku kolejnego punktu.
-*/
+/* =====================================================
+   STRZAŁKI - UKRYWANIE
+===================================================== */
 
-function positionFloorArrow(
-  element,
-  fromPosition,
-  toPosition,
-  visible
-) {
+function hideNavigationArrows() {
 
-  if (!element)
-    return;
-
-  if (!visible) {
-
-    element.classList.add(
-      "hidden"
+  document
+    .getElementById(
+      "navigationArrows"
+    )
+    .classList.remove(
+      "visible"
     );
 
-    return;
 
-  }
-
-  const direction =
-    new THREE.Vector3()
-      .subVectors(
-        toPosition,
-        fromPosition
-      );
-
-  direction.y = 0;
-
-  if (
-    direction.lengthSq() < 0.000001
-  ) {
-
-    element.classList.add(
-      "hidden"
+  document
+    .getElementById(
+      "navigationLabel"
+    )
+    .classList.remove(
+      "visible"
     );
-
-    return;
-
-  }
-
-  direction.normalize();
-
-
-  /*
-    Strzałka jest umieszczona
-    kawałek przed kamerą,
-    w stronę kolejnego punktu.
-  */
-
-  const distance =
-    1.15;
-
-  const arrowPosition =
-    fromPosition.clone()
-      .add(
-        direction.multiplyScalar(
-          distance
-        )
-      );
-
-  /*
-    Podnosimy ją minimalnie
-    nad podłogę.
-  */
-
-  arrowPosition.y =
-    0.035;
-
-
-  const screen =
-    worldToScreen(
-      arrowPosition
-    );
-
-  if (!screen.visible) {
-
-    element.classList.add(
-      "hidden"
-    );
-
-    return;
-
-  }
-
-  element.style.left =
-    screen.x + "px";
-
-  element.style.top =
-    screen.y + "px";
-
-
-  /*
-    Obrót strzałki na ekranie.
-  */
-
-  const angle =
-    Math.atan2(
-      direction.x,
-      -direction.z
-    );
-
-  element.style.transform =
-    "translate(-50%, -50%) rotate(" +
-    angle +
-    "rad)";
-
-  element.classList.remove(
-    "hidden"
-  );
-
-  element.classList.add(
-    "visible"
-  );
 
 }
 
 
-/*
-  Aktualizujemy obie strzałki.
-*/
+/* =====================================================
+   STAN STRZAŁEK
+===================================================== */
 
-function updateFloorArrows() {
+function updateNavigationButtons() {
 
-  if (
-    document
-      .getElementById(
-        "startScreen"
-      )
-      .classList
-      .contains(
-        "hidden"
-      ) === false
-  ) {
-
-    arrowForward.classList.add(
-      "hidden"
-    );
-
-    arrowBack.classList.add(
-      "hidden"
-    );
-
-    return;
-
-  }
-
-
-  const currentName =
-    navigationOrder[
-      currentNavigationIndex
-    ];
-
-  const currentScene =
-    getScene(
-      currentName
-    );
-
-  if (!currentScene)
-    return;
-
-
-  const currentPosition =
-    convertPoint(
-      currentScene.eye
+  const back =
+    document.getElementById(
+      "arrowBack"
     );
 
 
-  /*
-    NASTĘPNY PUNKT
-  */
-
-  if (
-    currentNavigationIndex <
-    navigationOrder.length - 1
-  ) {
-
-    const nextScene =
-      getScene(
-        navigationOrder[
-          currentNavigationIndex + 1
-        ]
-      );
-
-    if (nextScene) {
-
-      const nextPosition =
-        convertPoint(
-          nextScene.eye
-        );
-
-      positionFloorArrow(
-
-        arrowForward,
-
-        currentPosition,
-
-        nextPosition,
-
-        true
-
-      );
-
-    }
-
-  }
-  else {
-
-    arrowForward.classList.add(
-      "hidden"
+  const forward =
+    document.getElementById(
+      "arrowForward"
     );
 
-  }
+
+  const atBeginning =
+    currentNavigationIndex <= 0;
 
 
-  /*
-    POPRZEDNI PUNKT
-  */
+  const atEnd =
+    currentNavigationIndex >=
+    navigationOrder.length - 1;
 
-  if (
-    currentNavigationIndex > 0
-  ) {
 
-    const previousScene =
-      getScene(
-        navigationOrder[
-          currentNavigationIndex - 1
-        ]
-      );
+  back.classList.toggle(
+    "disabled",
+    atBeginning
+  );
 
-    if (previousScene) {
 
-      const previousPosition =
-        convertPoint(
-          previousScene.eye
-        );
+  forward.classList.toggle(
+    "disabled",
+    atEnd
+  );
 
-      positionFloorArrow(
 
-        arrowBack,
-
-        currentPosition,
-
-        previousPosition,
-
-        true
-
-      );
-
-    }
-
-  }
-  else {
-
-    arrowBack.classList.add(
-      "hidden"
-    );
-
-  }
+  updateNavigationLabel();
 
 }
 
@@ -2027,25 +1993,31 @@ function smoothMoveTo(
   if (!sceneData)
     return;
 
+
   const position =
     convertPoint(
       sceneData.eye
     );
+
 
   const target =
     convertPoint(
       sceneData.target
     );
 
+
   const startPosition =
     camera.position.clone();
+
 
   const startDirection =
     new THREE.Vector3();
 
+
   camera.getWorldDirection(
     startDirection
   );
+
 
   const endDirection =
     new THREE.Vector3()
@@ -2054,6 +2026,7 @@ function smoothMoveTo(
         position
       )
       .normalize();
+
 
   cameraTransition = {
 
@@ -2082,9 +2055,11 @@ function smoothMoveTo(
 
   };
 
+
   camera.fov =
     sceneData.fov ||
     70;
+
 
   camera.updateProjectionMatrix();
 
@@ -2100,8 +2075,10 @@ function updateCameraTransition() {
   if (!cameraTransition)
     return;
 
+
   const now =
     performance.now();
+
 
   let progress =
 
@@ -2111,11 +2088,13 @@ function updateCameraTransition() {
     ) /
     cameraTransition.duration;
 
+
   progress =
     Math.min(
       progress,
       1
     );
+
 
   const eased =
     progress *
@@ -2126,6 +2105,7 @@ function updateCameraTransition() {
       progress
     );
 
+
   camera.position.lerpVectors(
 
     cameraTransition.startPosition,
@@ -2135,6 +2115,7 @@ function updateCameraTransition() {
     eased
 
   );
+
 
   const direction =
     new THREE.Vector3()
@@ -2149,6 +2130,7 @@ function updateCameraTransition() {
       )
       .normalize();
 
+
   const lookTarget =
     camera.position
       .clone()
@@ -2156,9 +2138,11 @@ function updateCameraTransition() {
         direction.multiplyScalar(2)
       );
 
+
   camera.lookAt(
     lookTarget
   );
+
 
   if (
     progress >= 1
@@ -2168,15 +2152,9 @@ function updateCameraTransition() {
       cameraTransition.endPosition
     );
 
+
     cameraTransition =
       null;
-
-    /*
-      Po zakończeniu przejścia
-      odświeżamy pozycję strzałek.
-    */
-
-    updateFloorArrows();
 
   }
 
@@ -2200,80 +2178,100 @@ function goToNavigationPoint(
 
   }
 
+
   const sceneName =
     navigationOrder[
       index
     ];
+
 
   const sceneData =
     getScene(
       sceneName
     );
 
+
   if (!sceneData)
     return;
+
 
   currentNavigationIndex =
     index;
 
+
   renderer.clippingPlanes =
     [];
 
+
   hideStartScreen();
+
 
   smoothMoveTo(
     sceneData
   );
 
+
   updateRoomActive(
     sceneName
   );
 
-  updateFloorArrows();
+
+  updateNavigationButtons();
+
+
+  showNavigationArrows();
 
 }
 
 
 /* =====================================================
-   KLIKANIE STRZAŁEK
+   STRZAŁKA W LEWO
 ===================================================== */
 
-arrowForward.addEventListener(
+document
+  .getElementById(
+    "arrowBack"
+  )
+  .addEventListener(
 
-  "click",
+    "click",
 
-  event => {
+    () => {
 
-    event.stopPropagation();
+      goToNavigationPoint(
 
-    goToNavigationPoint(
+        currentNavigationIndex - 1
 
-      currentNavigationIndex + 1
+      );
 
-    );
+    }
 
-  }
-
-);
+  );
 
 
-arrowBack.addEventListener(
+/* =====================================================
+   STRZAŁKA W PRAWO
+===================================================== */
 
-  "click",
+document
+  .getElementById(
+    "arrowForward"
+  )
+  .addEventListener(
 
-  event => {
+    "click",
 
-    event.stopPropagation();
+    () => {
 
-    goToNavigationPoint(
+      goToNavigationPoint(
 
-      currentNavigationIndex - 1
+        currentNavigationIndex + 1
 
-    );
+      );
 
-  }
+    }
 
-);
+  );
 
 
 /* =====================================================
@@ -2284,6 +2282,7 @@ const loading =
   document.getElementById(
     "loading"
   );
+
 
 const loader =
   new GLTFLoader();
@@ -2318,6 +2317,7 @@ async function loadModel() {
 
               );
 
+
             if (!response.ok) {
 
               throw new Error(
@@ -2328,6 +2328,7 @@ async function loadModel() {
               );
 
             }
+
 
             return response
               .arrayBuffer();
@@ -2388,6 +2389,7 @@ async function loadModel() {
 
             model =
               gltf.scene;
+
 
             scene.add(
               model
@@ -2472,6 +2474,9 @@ async function loadModel() {
     showTopView();
 
 
+    hideNavigationArrows();
+
+
     loading
       .classList
       .add(
@@ -2487,6 +2492,7 @@ async function loadModel() {
       "BŁĄD:",
       error
     );
+
 
     loading
       .querySelector(
@@ -2546,8 +2552,10 @@ renderer.domElement.addEventListener(
 
     dragging = true;
 
+
     previousX =
       event.clientX;
+
 
     previousY =
       event.clientY;
@@ -2587,6 +2595,7 @@ renderer.domElement.addEventListener(
 
     previousX =
       event.clientX;
+
 
     previousY =
       event.clientY;
@@ -2649,7 +2658,7 @@ renderer.domElement.addEventListener(
 
 
 /* =====================================================
-   KLAWIATURA WASD
+   KLAWIATURA
 ===================================================== */
 
 const keys = {};
@@ -2689,6 +2698,7 @@ window.addEventListener(
 
         event.preventDefault();
 
+
         goToNavigationPoint(
 
           currentNavigationIndex + 1
@@ -2707,6 +2717,7 @@ window.addEventListener(
       ) {
 
         event.preventDefault();
+
 
         goToNavigationPoint(
 
@@ -2740,14 +2751,15 @@ window.addEventListener(
 
 /* =====================================================
    RUCH WASD
-   BEZ KOLIZJI
 ===================================================== */
 
 const direction =
   new THREE.Vector3();
 
+
 const right =
   new THREE.Vector3();
+
 
 const move =
   new THREE.Vector3();
@@ -2847,8 +2859,10 @@ function updateMovement() {
 
     /*
       BRAK KOLIZJI.
+
       Kamera może swobodnie
-      przechodzić przez model.
+      przechodzić przez model,
+      meble i ściany.
     */
 
     camera.position.add(
@@ -3040,12 +3054,15 @@ document
       }
 
 
+      showNavigationArrows();
+
+
       updateRoomActive(
         "SPACER_KORYTARZ"
       );
 
 
-      updateFloorArrows();
+      updateNavigationButtons();
 
     }
 
@@ -3153,9 +3170,9 @@ document
 
         "Użyj W, A, S, D, aby się poruszać.\n\n" +
 
-        "Możesz również korzystać ze strzałek " +
+        "Strzałki ← → pozwalają przechodzić " +
 
-        "na podłodze, aby przechodzić między punktami."
+        "między kolejnymi punktami spaceru."
 
       );
 
@@ -3191,9 +3208,6 @@ window.addEventListener(
 
     );
 
-
-    updateFloorArrows();
-
   }
 
 );
@@ -3217,14 +3231,6 @@ function animate() {
 
 
   updateLook();
-
-
-  /*
-    Strzałki są cały czas
-    przeliczane względem kamery.
-  */
-
-  updateFloorArrows();
 
 
   renderer.render(
