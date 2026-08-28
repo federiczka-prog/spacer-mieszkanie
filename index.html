@@ -502,6 +502,59 @@ canvas {
 
 
 /* =========================================
+   LABEL PUNKTU
+========================================= */
+
+#navigationLabel {
+
+  position: fixed;
+
+  z-index: 45;
+
+  left: 50%;
+
+  bottom: 95px;
+
+  transform:
+    translateX(-50%);
+
+  padding:
+    8px 13px;
+
+  border-radius: 999px;
+
+  background:
+    rgba(20,20,17,.65);
+
+  border:
+    1px solid
+    rgba(255,255,255,.12);
+
+  backdrop-filter:
+    blur(15px);
+
+  color:
+    rgba(255,255,255,.75);
+
+  font-size: 10px;
+
+  letter-spacing: .04em;
+
+  pointer-events: none;
+
+  opacity: 0;
+
+  transition:
+    opacity .25s ease;
+}
+
+#navigationLabel.visible {
+
+  opacity: 1;
+}
+
+
+/* =========================================
    LOADING
 ========================================= */
 
@@ -647,6 +700,11 @@ canvas {
     display: none;
   }
 
+  #navigationLabel {
+
+    bottom: 65px;
+  }
+
 }
 
 </style>
@@ -765,6 +823,15 @@ canvas {
   </div>
 
 </aside>
+
+
+<!-- =========================================
+     LABEL
+========================================= -->
+
+<div id="navigationLabel">
+  Aktualny punkt
+</div>
 
 
 <!-- =========================================
@@ -1062,6 +1129,32 @@ const roomSettings = {
 
 
 /* =====================================================
+   KOLEJNOŚĆ PUNKTÓW
+===================================================== */
+
+const navigationOrder = [
+
+  "SPACER_KORYTARZ",
+
+  "SPACER_SALON_KUCHNIA",
+
+  "SPACER_LAZIENKA",
+
+  "SPACER_SYPIALNIA_01",
+
+  "SPACER_WC",
+
+  "SPACER_GARDEROBA",
+
+  "SPACER_SYPIALNIA_02"
+
+];
+
+
+let currentNavigationIndex = 0;
+
+
+/* =====================================================
    KONWERSJA SKETCHUP → THREE
 ===================================================== */
 
@@ -1129,7 +1222,7 @@ async function loadScenePoints() {
 
 
   console.log(
-    "Pobrano punkty spaceru:",
+    "Pobrano punkty:",
     scenes
   );
 
@@ -1229,6 +1322,18 @@ function createRoomButtons() {
         "room";
 
 
+      if (
+        sceneName ===
+        navigationOrder[0]
+      ) {
+
+        button.classList.add(
+          "active"
+        );
+
+      }
+
+
       button.dataset.scene =
         sceneName;
 
@@ -1294,12 +1399,34 @@ function createRoomButtons() {
 
         () => {
 
+          const navIndex =
+            navigationOrder.indexOf(
+              sceneName
+            );
+
+
+          if (
+            navIndex >= 0
+          ) {
+
+            currentNavigationIndex =
+              navIndex;
+
+          }
+
+
           renderer.clippingPlanes =
             [];
 
 
           hideStartScreen();
 
+
+          /*
+            Przejście korzysta
+            z dokładnych danych
+            zapisanych w JSON.
+          */
 
           smoothMoveTo(
             sceneData
@@ -1309,6 +1436,9 @@ function createRoomButtons() {
           updateRoomActive(
             sceneName
           );
+
+
+          updateNavigationLabel();
 
         }
 
@@ -1359,7 +1489,55 @@ function updateRoomActive(
 
 
 /* =====================================================
-   KAMERA Z PUNKTU JSON
+   AKTUALIZACJA NAPISU
+===================================================== */
+
+function updateNavigationLabel() {
+
+  const label =
+    document.getElementById(
+      "navigationLabel"
+    );
+
+
+  const currentName =
+    navigationOrder[
+      currentNavigationIndex
+    ];
+
+
+  const settings =
+    roomSettings[
+      currentName
+    ];
+
+
+  if (!settings) {
+
+    label.classList.remove(
+      "visible"
+    );
+
+    return;
+
+  }
+
+
+  label.textContent =
+    settings.number +
+    " · " +
+    settings.name;
+
+
+  label.classList.add(
+    "visible"
+  );
+
+}
+
+
+/* =====================================================
+   KAMERA — DOKŁADNIE Z JSON
 ===================================================== */
 
 function setCameraFromScene(
@@ -1370,17 +1548,29 @@ function setCameraFromScene(
     return;
 
 
+  /*
+    POZYCJA "eye"
+  */
+
   const position =
     convertPoint(
       sceneData.eye
     );
 
 
+  /*
+    CEL "target"
+  */
+
   const target =
     convertPoint(
       sceneData.target
     );
 
+
+  /*
+    Dokładna pozycja kamery.
+  */
 
   camera.position.set(
 
@@ -1393,12 +1583,55 @@ function setCameraFromScene(
   );
 
 
-  camera.up.set(
-    0,
-    1,
-    0
-  );
+  /*
+    Dokładny UP z JSON.
 
+    Uwaga:
+    convertPoint zmienia układ
+    współrzędnych SketchUp → Three.js.
+  */
+
+  if (sceneData.up) {
+
+    const up =
+      convertPoint(
+        sceneData.up
+      );
+
+
+    camera.up.set(
+
+      up.x,
+
+      up.y,
+
+      up.z
+
+    );
+
+
+    camera.up.normalize();
+
+  }
+
+  else {
+
+    camera.up.set(
+
+      0,
+
+      1,
+
+      0
+
+    );
+
+  }
+
+
+  /*
+    Dokładny FOV.
+  */
 
   camera.fov =
     sceneData.fov ||
@@ -1407,6 +1640,10 @@ function setCameraFromScene(
 
   camera.updateProjectionMatrix();
 
+
+  /*
+    Dokładny kierunek.
+  */
 
   camera.lookAt(
 
@@ -1418,6 +1655,11 @@ function setCameraFromScene(
 
   );
 
+
+  /*
+    Synchronizacja sterowania
+    myszką z punktem.
+  */
 
   updateAnglesFromCamera(
 
@@ -1546,6 +1788,10 @@ function startWalk() {
   hideStartScreen();
 
 
+  currentNavigationIndex =
+    0;
+
+
   const start =
     getScene(
       "SPACER_KORYTARZ"
@@ -1554,15 +1800,24 @@ function startWalk() {
 
   if (start) {
 
+    /*
+      Tutaj również używamy
+      dokładnie punktu JSON.
+    */
+
     setCameraFromScene(
       start
     );
 
-    updateRoomActive(
-      "SPACER_KORYTARZ"
-    );
-
   }
+
+
+  updateRoomActive(
+    "SPACER_KORYTARZ"
+  );
+
+
+  updateNavigationLabel();
 
 }
 
@@ -1582,11 +1837,19 @@ function smoothMoveTo(
     return;
 
 
+  /*
+    Dokładne eye z JSON.
+  */
+
   const position =
     convertPoint(
       sceneData.eye
     );
 
+
+  /*
+    Dokładne target z JSON.
+  */
 
   const target =
     convertPoint(
@@ -1594,9 +1857,17 @@ function smoothMoveTo(
     );
 
 
+  /*
+    Aktualna pozycja.
+  */
+
   const startPosition =
     camera.position.clone();
 
+
+  /*
+    Aktualny kierunek.
+  */
 
   const startDirection =
     new THREE.Vector3();
@@ -1607,6 +1878,10 @@ function smoothMoveTo(
   );
 
 
+  /*
+    Końcowy kierunek.
+  */
+
   const endDirection =
     new THREE.Vector3()
       .subVectors(
@@ -1616,33 +1891,77 @@ function smoothMoveTo(
       .normalize();
 
 
+  /*
+    Dokładny UP z JSON.
+  */
+
+  let endUp =
+    new THREE.Vector3(
+      0,
+      1,
+      0
+    );
+
+
+  if (sceneData.up) {
+
+    endUp =
+      convertPoint(
+        sceneData.up
+      );
+
+
+    endUp.normalize();
+
+  }
+
+
   cameraTransition = {
 
-    startPosition,
+    startPosition:
+
+      startPosition,
 
     endPosition:
-      new THREE.Vector3(
 
-        position.x,
+      position.clone(),
 
-        1.65,
+    startDirection:
 
-        position.z
+      startDirection,
 
-      ),
+    endDirection:
 
-    startDirection,
+      endDirection,
 
-    endDirection,
+    startUp:
+
+      camera.up.clone(),
+
+    endUp:
+
+      endUp,
+
+    sceneData:
+
+      sceneData,
 
     startTime:
+
       performance.now(),
 
     duration:
+
       900
 
   };
 
+
+  /*
+    FOV również przechodzi
+    do wartości zapisanej
+    w punkcie.
+  */
 
   camera.fov =
     sceneData.fov ||
@@ -1684,6 +2003,10 @@ function updateCameraTransition() {
     );
 
 
+  /*
+    Smoothstep
+  */
+
   const eased =
     progress *
     progress *
@@ -1693,6 +2016,10 @@ function updateCameraTransition() {
       progress
     );
 
+
+  /*
+    POZYCJA
+  */
 
   camera.position.lerpVectors(
 
@@ -1704,6 +2031,10 @@ function updateCameraTransition() {
 
   );
 
+
+  /*
+    KIERUNEK
+  */
 
   const direction =
     new THREE.Vector3()
@@ -1732,12 +2063,46 @@ function updateCameraTransition() {
   );
 
 
+  /*
+    UP
+  */
+
+  camera.up.lerpVectors(
+
+    cameraTransition.startUp,
+
+    cameraTransition.endUp,
+
+    eased
+
+  );
+
+
+  camera.up.normalize();
+
+
+  /*
+    KONIEC PRZEJŚCIA
+  */
+
   if (
     progress >= 1
   ) {
 
-    camera.position.copy(
-      cameraTransition.endPosition
+    /*
+      Najważniejsze:
+      na samym końcu ustawiamy
+      kamerę JESZCZE RAZ bezpośrednio
+      z JSON.
+
+      Dzięki temu nie zostaje
+      żaden błąd interpolacji.
+    */
+
+    setCameraFromScene(
+
+      cameraTransition.sceneData
+
     );
 
 
@@ -2022,6 +2387,15 @@ renderer.domElement.addEventListener(
     }
 
 
+    /*
+      Kliknięcie na model
+      przerywa ewentualne przejście.
+    */
+
+    cameraTransition =
+      null;
+
+
     dragging = true;
 
 
@@ -2168,7 +2542,6 @@ window.addEventListener(
 
 /* =====================================================
    RUCH WASD
-   BRAK KOLIZJI
 ===================================================== */
 
 const direction =
@@ -2275,9 +2648,13 @@ function updateMovement() {
     );
 
 
-    // BRAK KOLIZJI
-    // Można przechodzić przez
-    // meble, ściany i model.
+    /*
+      BRAK KOLIZJI.
+
+      Kamera może swobodnie
+      przechodzić przez model,
+      meble i ściany.
+    */
 
     camera.position.add(
       move
@@ -2286,8 +2663,14 @@ function updateMovement() {
   }
 
 
-  camera.position.y =
-    1.65;
+  /*
+    NIE wymuszamy tutaj
+    wysokości 1.65.
+
+    Dzięki temu nie niszczymy
+    dokładnej pozycji punktu
+    zapisanej w JSON.
+  */
 
 }
 
@@ -2442,6 +2825,10 @@ document
         null;
 
 
+      currentNavigationIndex =
+        0;
+
+
       renderer.clippingPlanes =
         [];
 
@@ -2461,12 +2848,15 @@ document
           start
         );
 
-
-        updateRoomActive(
-          "SPACER_KORYTARZ"
-        );
-
       }
+
+
+      updateRoomActive(
+        "SPACER_KORYTARZ"
+      );
+
+
+      updateNavigationLabel();
 
     }
 
@@ -2574,11 +2964,9 @@ document
 
         "Użyj W, A, S, D, aby się poruszać.\n\n" +
 
-        "Wybierz pomieszczenie z listy, " +
+        "Kliknij pomieszczenie po lewej, " +
 
-        "aby przenieść się bezpośrednio " +
-
-        "do jego punktu spaceru."
+        "aby przejść do zapisanego punktu widoku."
 
       );
 
