@@ -20,16 +20,11 @@
 
 html,
 body {
-
   margin: 0;
-
   width: 100%;
   height: 100%;
-
   overflow: hidden;
-
   background: #11110f;
-
   font-family:
     Arial,
     Helvetica,
@@ -37,23 +32,16 @@ body {
 }
 
 #app {
-
   position: fixed;
-
   inset: 0;
-
   overflow: hidden;
-
   background: #11110f;
 }
 
 canvas {
-
   display: block;
-
   width: 100%;
   height: 100%;
-
 }
 
 
@@ -62,117 +50,77 @@ canvas {
 ========================================= */
 
 #startScreen {
-
   position: fixed;
-
   inset: 0;
-
   z-index: 100;
-
   display: flex;
-
   align-items: center;
-
   justify-content: center;
-
   background:
     linear-gradient(
       rgba(15,15,13,.55),
       rgba(15,15,13,.65)
     );
-
   backdrop-filter: blur(4px);
-
   transition:
     opacity .6s ease,
     visibility .6s ease;
 }
 
 #startScreen.hidden {
-
   opacity: 0;
-
   visibility: hidden;
-
   pointer-events: none;
 }
 
 .startBox {
-
   text-align: center;
-
   color: white;
-
   width: min(520px, 90%);
 }
 
 .startSmall {
-
   font-size: 10px;
-
   letter-spacing: .3em;
-
   text-transform: uppercase;
-
   opacity: .55;
-
   margin-bottom: 20px;
 }
 
 .startTitle {
-
   font-size:
     clamp(42px, 7vw, 72px);
-
   font-weight: 300;
-
   letter-spacing: -.05em;
-
   margin: 0;
 }
 
 .startDescription {
-
   margin:
     22px auto 30px;
-
   max-width: 430px;
-
   font-size: 13px;
-
   line-height: 1.7;
-
   color:
     rgba(255,255,255,.65);
 }
 
 #startButton {
-
   border: 0;
-
   background: #eee9de;
-
   color: #171713;
-
   height: 50px;
-
   padding:
     0 28px;
-
   border-radius: 999px;
-
   font-size: 11px;
-
   letter-spacing: .08em;
-
   cursor: pointer;
-
   transition:
     transform .2s ease;
 }
 
 #startButton:hover {
-
   transform:
     scale(1.03);
 }
@@ -183,29 +131,20 @@ canvas {
 ========================================= */
 
 #topBar {
-
   position: fixed;
-
   z-index: 20;
-
   top: 0;
   left: 0;
   right: 0;
-
   padding:
     25px 28px;
-
   display: flex;
-
   justify-content:
     space-between;
-
   align-items:
     flex-start;
-
   pointer-events:
     none;
-
   background:
     linear-gradient(
       rgba(12,12,10,.55),
@@ -214,70 +153,48 @@ canvas {
 }
 
 .brand {
-
   color: white;
 }
 
 .brandSmall {
-
   font-size: 9px;
-
   letter-spacing: .25em;
-
   text-transform: uppercase;
-
   opacity: .5;
-
   margin-bottom: 7px;
 }
 
 .brandTitle {
-
   font-size: 21px;
-
   font-weight: 500;
 }
 
 .brandSubtitle {
-
   font-size: 11px;
-
   opacity: .45;
-
   margin-top: 5px;
 }
 
 .topButtons {
-
   display: flex;
-
   gap: 8px;
-
   pointer-events:
     auto;
 }
 
 .topButton {
-
   height: 40px;
-
   padding:
     0 15px;
-
   border-radius: 999px;
-
   border:
     1px solid
     rgba(255,255,255,.15);
-
   background:
     rgba(20,20,17,.65);
-
   color: white;
-
   backdrop-filter:
     blur(15px);
-
   cursor: pointer;
 }
 
@@ -287,116 +204,78 @@ canvas {
 ========================================= */
 
 #rooms {
-
   position: fixed;
-
   z-index: 20;
-
   left: 25px;
-
   top: 50%;
-
   transform:
     translateY(-50%);
-
   width: 235px;
-
   padding: 15px;
-
   border-radius: 18px;
-
   background:
     rgba(20,20,17,.76);
-
   border:
     1px solid
     rgba(255,255,255,.13);
-
   backdrop-filter:
     blur(20px);
-
   color: white;
 }
 
 .roomsTitle {
-
   font-size: 9px;
-
   letter-spacing: .2em;
-
   text-transform: uppercase;
-
   color:
     rgba(255,255,255,.45);
-
   padding:
     4px 8px 11px;
 }
 
 .room {
-
   width: 100%;
-
   display: grid;
-
   grid-template-columns:
     25px 1fr auto;
-
   gap: 7px;
-
   border: 0;
-
   background:
     transparent;
-
   color:
     rgba(255,255,255,.65);
-
   text-align: left;
-
   padding: 9px;
-
   border-radius: 10px;
-
   cursor: pointer;
-
   transition:
     background .2s ease,
     color .2s ease;
 }
 
 .room:hover {
-
   background:
     rgba(255,255,255,.07);
-
   color: white;
 }
 
 .room.active {
-
   background:
     rgba(255,255,255,.11);
-
   color: white;
 }
 
 .roomNumber {
-
   font-size: 9px;
-
   opacity: .4;
 }
 
 .roomName {
-
   font-size: 12px;
 }
 
 .roomArea {
-
   font-size: 9px;
-
   opacity: .35;
 }
 
@@ -406,96 +285,64 @@ canvas {
 ========================================= */
 
 #bottom {
-
   position: fixed;
-
   z-index: 20;
-
   left: 25px;
-
   right: 25px;
-
   bottom: 20px;
-
   display: flex;
-
   justify-content:
     space-between;
-
   align-items:
     center;
-
   pointer-events:
     none;
 }
 
 #hint {
-
   padding:
     10px 13px;
-
   border-radius: 11px;
-
   background:
     rgba(20,20,17,.7);
-
   border:
     1px solid
     rgba(255,255,255,.12);
-
   backdrop-filter:
     blur(15px);
-
   color:
     rgba(255,255,255,.5);
-
   font-size: 10px;
 }
 
 #controls {
-
   display: flex;
-
   gap: 4px;
-
   padding: 5px;
-
   border-radius: 999px;
-
   background:
     rgba(20,20,17,.75);
-
   border:
     1px solid
     rgba(255,255,255,.13);
-
   backdrop-filter:
     blur(15px);
-
   pointer-events:
     auto;
 }
 
 .control {
-
   width: 40px;
-
   height: 36px;
-
   border: 0;
-
   border-radius: 999px;
-
   background:
     transparent;
-
   color: white;
-
   cursor: pointer;
 }
 
 .control:hover {
-
   background:
     rgba(255,255,255,.08);
 }
@@ -506,95 +353,64 @@ canvas {
 ========================================= */
 
 #navigationArrows {
-
   position: fixed;
-
   z-index: 50;
-
   left: 50%;
-
   bottom: 82px;
-
   transform:
     translateX(-50%);
-
   display: none;
-
   align-items: center;
-
   justify-content: center;
-
   gap: 12px;
-
   pointer-events: auto;
 }
 
 #navigationArrows.visible {
-
   display: flex;
 }
 
 .navArrow {
-
   width: 58px;
-
   height: 58px;
-
   border-radius: 50%;
-
   border:
     1px solid
     rgba(255,255,255,.25);
-
   background:
     rgba(20,20,17,.78);
-
   color: white;
-
   backdrop-filter:
     blur(18px);
-
   cursor: pointer;
-
   font-size: 27px;
-
   line-height: 1;
-
   display: flex;
-
   align-items: center;
-
   justify-content: center;
-
   transition:
     transform .2s ease,
     background .2s ease,
     opacity .2s ease;
-
   box-shadow:
     0 8px 30px
     rgba(0,0,0,.25);
 }
 
 .navArrow:hover {
-
   background:
     rgba(255,255,255,.17);
-
   transform:
     scale(1.08);
 }
 
 .navArrow:active {
-
   transform:
     scale(.94);
 }
 
 .navArrow.disabled {
-
   opacity: .22;
-
   pointer-events: none;
 }
 
@@ -604,50 +420,33 @@ canvas {
 ========================================= */
 
 #navigationLabel {
-
   position: fixed;
-
   z-index: 45;
-
   left: 50%;
-
   bottom: 150px;
-
   transform:
     translateX(-50%);
-
   padding:
     8px 13px;
-
   border-radius: 999px;
-
   background:
     rgba(20,20,17,.65);
-
   border:
     1px solid
     rgba(255,255,255,.12);
-
   backdrop-filter:
     blur(15px);
-
   color:
     rgba(255,255,255,.75);
-
   font-size: 10px;
-
   letter-spacing: .04em;
-
   pointer-events: none;
-
   opacity: 0;
-
   transition:
     opacity .25s ease;
 }
 
 #navigationLabel.visible {
-
   opacity: 1;
 }
 
@@ -657,72 +456,50 @@ canvas {
 ========================================= */
 
 #loading {
-
   position: fixed;
-
   inset: 0;
-
   z-index: 200;
-
   display: flex;
-
   align-items: center;
-
   justify-content: center;
-
   background: #161613;
-
   color: white;
-
   transition:
     opacity .5s ease;
 }
 
 #loading.hidden {
-
   opacity: 0;
-
   pointer-events: none;
 }
 
 .loader {
-
   text-align: center;
 }
 
 .spinner {
-
   width: 30px;
-
   height: 30px;
-
   margin:
     0 auto 15px;
-
   border-radius: 50%;
-
   border:
     2px solid
     rgba(255,255,255,.15);
-
   border-top-color:
     white;
-
   animation:
     spin 1s linear infinite;
 }
 
 @keyframes spin {
-
   to {
-
     transform:
       rotate(360deg);
   }
 }
 
 .loadingText {
-
   font-size: 13px;
 }
 
@@ -734,88 +511,63 @@ canvas {
 @media(max-width:700px) {
 
   #topBar {
-
     padding: 16px;
   }
 
   .brandTitle {
-
     font-size: 18px;
   }
 
   .brandSubtitle {
-
     display: none;
   }
 
   .topButton:first-child {
-
     display: none;
   }
 
   #rooms {
-
     left: 10px;
-
     right: 10px;
-
     bottom: 70px;
-
     top: auto;
-
     width: auto;
-
     transform: none;
-
     display: flex;
-
     overflow-x: auto;
-
     padding: 7px;
   }
 
   .roomsTitle {
-
     display: none;
   }
 
   .room {
-
     min-width: 145px;
   }
 
   #bottom {
-
     left: 10px;
-
     right: 10px;
-
     bottom: 10px;
   }
 
   #hint {
-
     display: none;
   }
 
   #navigationArrows {
-
     bottom: 65px;
-
     gap: 10px;
   }
 
   .navArrow {
-
     width: 50px;
-
     height: 50px;
-
     font-size: 24px;
   }
 
   #navigationLabel {
-
     bottom: 122px;
   }
 
@@ -944,7 +696,7 @@ canvas {
 ========================================= -->
 
 <div id="navigationLabel">
-  Następny punkt
+  Korytarz
 </div>
 
 <div id="navigationArrows">
@@ -952,17 +704,35 @@ canvas {
   <button
     class="navArrow"
     id="arrowBack"
-    title="Poprzedni punkt"
-    aria-label="Poprzedni punkt"
+    title="W lewo"
+    aria-label="W lewo"
   >
     ←
   </button>
 
   <button
     class="navArrow"
+    id="arrowUp"
+    title="Do przodu"
+    aria-label="Do przodu"
+  >
+    ↑
+  </button>
+
+  <button
+    class="navArrow"
+    id="arrowDown"
+    title="Do tyłu"
+    aria-label="Do tyłu"
+  >
+    ↓
+  </button>
+
+  <button
+    class="navArrow"
     id="arrowForward"
-    title="Następny punkt"
-    aria-label="Następny punkt"
+    title="W prawo"
+    aria-label="W prawo"
   >
     →
   </button>
@@ -1265,7 +1035,7 @@ const roomSettings = {
 
 
 /* =====================================================
-   KOLEJNOŚĆ PUNKTÓW
+   PUNKTY NAWIGACJI
 ===================================================== */
 
 const navigationOrder = [
@@ -1947,11 +1717,30 @@ function updateNavigationButtons() {
     );
 
 
+  const up =
+    document.getElementById(
+      "arrowUp"
+    );
+
+
+  const down =
+    document.getElementById(
+      "arrowDown"
+    );
+
+
   const forward =
     document.getElementById(
       "arrowForward"
     );
 
+
+  /*
+    Lewo = poprzedni punkt
+    Góra = następny punkt
+    Dół = poprzedni punkt
+    Prawo = następny punkt
+  */
 
   const atBeginning =
     currentNavigationIndex <= 0;
@@ -1965,6 +1754,18 @@ function updateNavigationButtons() {
   back.classList.toggle(
     "disabled",
     atBeginning
+  );
+
+
+  down.classList.toggle(
+    "disabled",
+    atBeginning
+  );
+
+
+  up.classList.toggle(
+    "disabled",
+    atEnd
   );
 
 
@@ -2231,6 +2032,56 @@ function goToNavigationPoint(
 document
   .getElementById(
     "arrowBack"
+  )
+  .addEventListener(
+
+    "click",
+
+    () => {
+
+      goToNavigationPoint(
+
+        currentNavigationIndex - 1
+
+      );
+
+    }
+
+  );
+
+
+/* =====================================================
+   STRZAŁKA W GÓRĘ
+===================================================== */
+
+document
+  .getElementById(
+    "arrowUp"
+  )
+  .addEventListener(
+
+    "click",
+
+    () => {
+
+      goToNavigationPoint(
+
+        currentNavigationIndex + 1
+
+      );
+
+    }
+
+  );
+
+
+/* =====================================================
+   STRZAŁKA W DÓŁ
+===================================================== */
+
+document
+  .getElementById(
+    "arrowDown"
   )
   .addEventListener(
 
@@ -3170,7 +3021,7 @@ document
 
         "Użyj W, A, S, D, aby się poruszać.\n\n" +
 
-        "Strzałki ← → pozwalają przechodzić " +
+        "Strzałki ← ↑ ↓ → pozwalają przechodzić " +
 
         "między kolejnymi punktami spaceru."
 
