@@ -3,858 +3,756 @@
 
 <head>
 
-  <meta charset="UTF-8">
+<meta charset="UTF-8">
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+>
 
-  <title>Wirtualny spacer — mieszkanie</title>
+<title>Wirtualny spacer — mieszkanie</title>
 
+<style>
 
-  <style>
+* {
+  box-sizing: border-box;
+}
 
-    * {
-      box-sizing: border-box;
-    }
+html,
+body {
 
+  margin: 0;
 
-    html,
-    body {
+  width: 100%;
+  height: 100%;
 
-      margin: 0;
+  overflow: hidden;
 
-      width: 100%;
-      height: 100%;
+  background: #11110f;
 
-      overflow: hidden;
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+}
 
-      background: #11110f;
+#app {
 
-      font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
+  position: fixed;
 
-    }
+  inset: 0;
 
+  overflow: hidden;
 
-    #app {
+  background: #11110f;
+}
 
-      position: fixed;
+canvas {
 
-      inset: 0;
+  display: block;
 
-      overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
 
-      background: #11110f;
 
-    }
+/* =========================================
+   START SCREEN
+========================================= */
 
+#startScreen {
 
-    canvas {
+  position: fixed;
 
-      display: block;
+  inset: 0;
 
-      width: 100%;
-      height: 100%;
+  z-index: 100;
 
-      touch-action: none;
+  display: flex;
 
-    }
+  align-items: center;
+  justify-content: center;
 
+  background:
+    linear-gradient(
+      rgba(15,15,13,.55),
+      rgba(15,15,13,.65)
+    );
 
-    /* =========================================
-       START SCREEN
-    ========================================= */
+  backdrop-filter: blur(4px);
 
-    #startScreen {
+  transition:
+    opacity .6s ease,
+    visibility .6s ease;
+}
 
-      position: fixed;
+#startScreen.hidden {
 
-      inset: 0;
+  opacity: 0;
 
-      z-index: 100;
+  visibility: hidden;
 
-      display: flex;
+  pointer-events: none;
+}
 
-      align-items: center;
-      justify-content: center;
+.startBox {
 
-      background:
-        linear-gradient(
-          rgba(15,15,13,.55),
-          rgba(15,15,13,.65)
-        );
+  text-align: center;
 
-      backdrop-filter: blur(4px);
+  color: white;
 
-      transition:
-        opacity .6s ease,
-        visibility .6s ease;
+  width: min(520px, 90%);
+}
 
-    }
+.startSmall {
 
+  font-size: 10px;
 
-    #startScreen.hidden {
+  letter-spacing: .3em;
 
-      opacity: 0;
+  text-transform: uppercase;
 
-      visibility: hidden;
+  opacity: .55;
 
-      pointer-events: none;
+  margin-bottom: 20px;
+}
 
-    }
+.startTitle {
 
+  font-size:
+    clamp(42px, 7vw, 72px);
 
-    .startBox {
+  font-weight: 300;
 
-      text-align: center;
+  letter-spacing: -.05em;
 
-      color: white;
+  margin: 0;
+}
 
-      width: min(520px, 90%);
+.startDescription {
 
-    }
+  margin:
+    22px auto 30px;
 
+  max-width: 430px;
 
-    .startSmall {
+  font-size: 13px;
 
-      font-size: 10px;
+  line-height: 1.7;
 
-      letter-spacing: .3em;
+  color:
+    rgba(255,255,255,.65);
+}
 
-      text-transform: uppercase;
+#startButton {
 
-      opacity: .55;
+  border: 0;
 
-      margin-bottom: 20px;
+  background: #eee9de;
 
-    }
+  color: #171713;
 
+  height: 50px;
 
-    .startTitle {
+  padding:
+    0 28px;
 
-      font-size:
-        clamp(42px, 7vw, 72px);
+  border-radius: 999px;
 
-      font-weight: 300;
+  font-size: 11px;
 
-      letter-spacing: -.05em;
+  letter-spacing: .08em;
 
-      margin: 0;
+  cursor: pointer;
 
-    }
+  transition:
+    transform .2s ease;
+}
 
+#startButton:hover {
 
-    .startDescription {
+  transform:
+    scale(1.03);
+}
 
-      margin:
-        22px auto 30px;
 
-      max-width: 430px;
+/* =========================================
+   TOP BAR
+========================================= */
 
-      font-size: 13px;
+#topBar {
 
-      line-height: 1.7;
+  position: fixed;
 
-      color:
-        rgba(255,255,255,.65);
+  z-index: 20;
 
-    }
+  top: 0;
+  left: 0;
+  right: 0;
 
+  padding:
+    25px 28px;
 
-    #startButton {
+  display: flex;
 
-      border: 0;
+  justify-content:
+    space-between;
 
-      background: #eee9de;
+  align-items:
+    flex-start;
 
-      color: #171713;
+  pointer-events:
+    none;
 
-      height: 50px;
+  background:
+    linear-gradient(
+      rgba(12,12,10,.55),
+      transparent
+    );
+}
 
-      padding:
-        0 28px;
+.brand {
 
-      border-radius: 999px;
+  color: white;
+}
 
-      font-size: 11px;
+.brandSmall {
 
-      letter-spacing: .08em;
+  font-size: 9px;
 
-      cursor: pointer;
+  letter-spacing: .25em;
 
-      transition:
-        transform .2s ease;
+  text-transform: uppercase;
 
-    }
+  opacity: .5;
 
+  margin-bottom: 7px;
+}
 
-    #startButton:hover {
+.brandTitle {
 
-      transform:
-        scale(1.03);
+  font-size: 21px;
 
-    }
+  font-weight: 500;
+}
 
+.brandSubtitle {
 
-    /* =========================================
-       TOP BAR
-    ========================================= */
+  font-size: 11px;
 
-    #topBar {
+  opacity: .45;
 
-      position: fixed;
+  margin-top: 5px;
+}
 
-      z-index: 20;
+.topButtons {
 
-      top: 0;
-      left: 0;
-      right: 0;
+  display: flex;
 
-      padding:
-        25px 28px;
+  gap: 8px;
 
-      display: flex;
+  pointer-events:
+    auto;
+}
 
-      justify-content:
-        space-between;
+.topButton {
 
-      align-items:
-        flex-start;
+  height: 40px;
 
-      pointer-events:
-        none;
+  padding:
+    0 15px;
 
-      background:
-        linear-gradient(
-          rgba(12,12,10,.55),
-          transparent
-        );
+  border-radius: 999px;
 
-    }
+  border:
+    1px solid
+    rgba(255,255,255,.15);
 
+  background:
+    rgba(20,20,17,.65);
 
-    .brand {
+  color: white;
 
-      color: white;
+  backdrop-filter:
+    blur(15px);
 
-    }
+  cursor: pointer;
+}
 
 
-    .brandSmall {
+/* =========================================
+   ROOMS
+========================================= */
 
-      font-size: 9px;
+#rooms {
 
-      letter-spacing: .25em;
+  position: fixed;
 
-      text-transform: uppercase;
+  z-index: 20;
 
-      opacity: .5;
+  left: 25px;
 
-      margin-bottom: 7px;
+  top: 50%;
 
-    }
+  transform:
+    translateY(-50%);
 
+  width: 235px;
 
-    .brandTitle {
+  padding: 15px;
 
-      font-size: 21px;
+  border-radius: 18px;
 
-      font-weight: 500;
+  background:
+    rgba(20,20,17,.76);
 
-    }
+  border:
+    1px solid
+    rgba(255,255,255,.13);
 
+  backdrop-filter:
+    blur(20px);
 
-    .brandSubtitle {
+  color: white;
+}
 
-      font-size: 11px;
+.roomsTitle {
 
-      opacity: .45;
+  font-size: 9px;
 
-      margin-top: 5px;
+  letter-spacing: .2em;
 
-    }
+  text-transform: uppercase;
 
+  color:
+    rgba(255,255,255,.45);
 
-    .topButtons {
+  padding:
+    4px 8px 11px;
+}
 
-      display: flex;
+.room {
 
-      gap: 8px;
+  width: 100%;
 
-      pointer-events:
-        auto;
+  display: grid;
 
-    }
+  grid-template-columns:
+    25px 1fr auto;
 
+  gap: 7px;
 
-    .topButton {
+  border: 0;
 
-      height: 40px;
+  background:
+    transparent;
 
-      padding:
-        0 15px;
+  color:
+    rgba(255,255,255,.65);
 
-      border-radius: 999px;
+  text-align: left;
 
-      border:
-        1px solid
-        rgba(255,255,255,.15);
+  padding: 9px;
 
-      background:
-        rgba(20,20,17,.65);
+  border-radius: 10px;
 
-      color: white;
+  cursor: pointer;
 
-      backdrop-filter:
-        blur(15px);
+  transition:
+    background .2s ease,
+    color .2s ease;
+}
 
-      cursor: pointer;
+.room:hover {
 
-    }
+  background:
+    rgba(255,255,255,.07);
 
+  color: white;
+}
 
-    /* =========================================
-       ROOMS
-    ========================================= */
+.room.active {
 
-    #rooms {
+  background:
+    rgba(255,255,255,.11);
 
-      position: fixed;
+  color: white;
+}
 
-      z-index: 20;
+.roomNumber {
 
-      left: 25px;
+  font-size: 9px;
 
-      top: 50%;
+  opacity: .4;
+}
 
-      transform:
-        translateY(-50%);
+.roomName {
 
-      width: 235px;
+  font-size: 12px;
+}
 
-      padding: 15px;
+.roomArea {
 
-      border-radius: 18px;
+  font-size: 9px;
 
-      background:
-        rgba(20,20,17,.76);
+  opacity: .35;
+}
 
-      border:
-        1px solid
-        rgba(255,255,255,.13);
 
-      backdrop-filter:
-        blur(20px);
+/* =========================================
+   BOTTOM
+========================================= */
 
-      color: white;
+#bottom {
 
-    }
+  position: fixed;
 
+  z-index: 20;
 
-    .roomsTitle {
+  left: 25px;
 
-      font-size: 9px;
+  right: 25px;
 
-      letter-spacing: .2em;
+  bottom: 20px;
 
-      text-transform: uppercase;
+  display: flex;
 
-      color:
-        rgba(255,255,255,.45);
+  justify-content:
+    space-between;
 
-      padding:
-        4px 8px 11px;
+  align-items:
+    center;
 
-    }
+  pointer-events:
+    none;
+}
 
+#hint {
 
-    .room {
+  padding:
+    10px 13px;
 
-      width: 100%;
+  border-radius: 11px;
 
-      display: grid;
+  background:
+    rgba(20,20,17,.7);
 
-      grid-template-columns:
-        25px 1fr auto;
+  border:
+    1px solid
+    rgba(255,255,255,.12);
 
-      gap: 7px;
+  backdrop-filter:
+    blur(15px);
 
-      border: 0;
+  color:
+    rgba(255,255,255,.5);
 
-      background:
-        transparent;
+  font-size: 10px;
+}
 
-      color:
-        rgba(255,255,255,.65);
+#controls {
 
-      text-align: left;
+  display: flex;
 
-      padding: 9px;
+  gap: 4px;
 
-      border-radius: 10px;
+  padding: 5px;
 
-      cursor: pointer;
+  border-radius: 999px;
 
-      transition:
-        background .2s ease,
-        color .2s ease;
+  background:
+    rgba(20,20,17,.75);
 
-    }
+  border:
+    1px solid
+    rgba(255,255,255,.13);
 
+  backdrop-filter:
+    blur(15px);
 
-    .room:hover {
+  pointer-events:
+    auto;
+}
 
-      background:
-        rgba(255,255,255,.07);
+.control {
 
-      color: white;
+  width: 40px;
 
-    }
+  height: 36px;
 
+  border: 0;
 
-    .room.active {
+  border-radius: 999px;
 
-      background:
-        rgba(255,255,255,.11);
+  background:
+    transparent;
 
-      color: white;
+  color: white;
 
-    }
+  cursor: pointer;
+}
 
+.control:hover {
 
-    .roomNumber {
+  background:
+    rgba(255,255,255,.08);
+}
 
-      font-size: 9px;
 
-      opacity: .4;
+/* =========================================
+   STRZAŁKI 3D
+========================================= */
 
-    }
+#navigationArrows {
 
+  position: fixed;
 
-    .roomName {
+  z-index: 50;
 
-      font-size: 12px;
+  inset: 0;
 
-    }
+  pointer-events: none;
+}
 
+.navArrow3D {
 
-    .roomArea {
+  position: absolute;
 
-      font-size: 9px;
+  width: 90px;
 
-      opacity: .35;
+  height: 90px;
 
-    }
+  transform:
+    translate(-50%, -50%);
 
+  border: 0;
 
-    /* =========================================
-       BOTTOM
-    ========================================= */
+  border-radius: 50%;
 
-    #bottom {
+  background:
+    rgba(20,20,17,.72);
 
-      position: fixed;
+  color: white;
 
-      z-index: 20;
+  font-size: 38px;
 
-      left: 25px;
+  display: flex;
 
-      right: 25px;
+  align-items: center;
 
-      bottom: 20px;
+  justify-content: center;
 
-      display: flex;
+  cursor: pointer;
 
-      justify-content:
-        space-between;
+  pointer-events: auto;
 
-      align-items:
-        center;
+  backdrop-filter:
+    blur(10px);
 
-      pointer-events:
-        none;
+  border:
+    2px solid
+    rgba(255,255,255,.45);
 
-    }
+  box-shadow:
+    0 8px 30px
+    rgba(0,0,0,.35);
 
+  opacity: 0;
 
-    #hint {
+  transition:
+    opacity .25s ease,
+    transform .2s ease,
+    background .2s ease;
+}
 
-      padding:
-        10px 13px;
+.navArrow3D.visible {
 
-      border-radius: 11px;
+  opacity: 1;
+}
 
-      background:
-        rgba(20,20,17,.7);
+.navArrow3D:hover {
 
-      border:
-        1px solid
-        rgba(255,255,255,.12);
+  background:
+    rgba(255,255,255,.20);
 
-      backdrop-filter:
-        blur(15px);
+  transform:
+    translate(-50%, -50%)
+    scale(1.12);
+}
 
-      color:
-        rgba(255,255,255,.5);
+.navArrow3D:active {
 
-      font-size: 10px;
+  transform:
+    translate(-50%, -50%)
+    scale(.94);
+}
 
-    }
+.navArrow3D.hidden {
 
+  opacity: 0;
 
-    #controls {
+  pointer-events: none;
+}
 
-      display: flex;
 
-      gap: 4px;
+/* =========================================
+   LOADING
+========================================= */
 
-      padding: 5px;
+#loading {
 
-      border-radius: 999px;
+  position: fixed;
 
-      background:
-        rgba(20,20,17,.75);
+  inset: 0;
 
-      border:
-        1px solid
-        rgba(255,255,255,.13);
+  z-index: 200;
 
-      backdrop-filter:
-        blur(15px);
+  display: flex;
 
-      pointer-events:
-        auto;
+  align-items: center;
 
-    }
+  justify-content: center;
 
+  background: #161613;
 
-    .control {
+  color: white;
 
-      width: 40px;
+  transition:
+    opacity .5s ease;
+}
 
-      height: 36px;
+#loading.hidden {
 
-      border: 0;
+  opacity: 0;
 
-      border-radius: 999px;
+  pointer-events: none;
+}
 
-      background:
-        transparent;
+.loader {
 
-      color: white;
+  text-align: center;
+}
 
-      cursor: pointer;
+.spinner {
 
-    }
+  width: 30px;
 
+  height: 30px;
 
-    .control:hover {
+  margin:
+    0 auto 15px;
 
-      background:
-        rgba(255,255,255,.08);
+  border-radius: 50%;
 
-    }
+  border:
+    2px solid
+    rgba(255,255,255,.15);
 
+  border-top-color:
+    white;
 
-    /* =========================================
-       STRZAŁKI NA PODŁODZE
-    ========================================= */
+  animation:
+    spin 1s linear infinite;
+}
 
-    .floorNavigation {
+@keyframes spin {
 
-      position: relative;
+  to {
 
-      width: 0;
+    transform:
+      rotate(360deg);
+  }
+}
 
-      height: 0;
+.loadingText {
 
-    }
+  font-size: 13px;
+}
 
 
-    .floorNavigationArrow {
+/* =========================================
+   MOBILE
+========================================= */
 
-      width: 56px;
+@media(max-width:700px) {
 
-      height: 56px;
+  #topBar {
 
-      border-radius: 50%;
+    padding: 16px;
+  }
 
-      border:
-        1px solid
-        rgba(255,255,255,.75);
+  .brandTitle {
 
-      background:
-        rgba(20,20,17,.62);
+    font-size: 18px;
+  }
 
-      backdrop-filter:
-        blur(10px);
+  .brandSubtitle {
 
-      box-shadow:
-        0 5px 25px rgba(0,0,0,.35),
-        inset 0 0 0 1px
-        rgba(255,255,255,.08);
+    display: none;
+  }
 
-      display: flex;
+  .topButton:first-child {
 
-      align-items: center;
+    display: none;
+  }
 
-      justify-content: center;
+  #rooms {
 
-      color: white;
+    left: 10px;
 
-      font-size: 25px;
+    right: 10px;
 
-      cursor: pointer;
+    bottom: 70px;
 
-      transition:
-        transform .2s ease,
-        background .2s ease;
+    top: auto;
 
-    }
+    width: auto;
 
+    transform: none;
 
-    .floorNavigationArrow:hover {
+    display: flex;
 
-      transform:
-        scale(1.12);
+    overflow-x: auto;
 
-      background:
-        rgba(255,255,255,.18);
+    padding: 7px;
+  }
 
-    }
+  .roomsTitle {
 
+    display: none;
+  }
 
-    .floorNavigationLabel {
+  .room {
 
-      position: absolute;
+    min-width: 145px;
+  }
 
-      left: 50%;
+  #bottom {
 
-      top: 63px;
+    left: 10px;
 
-      transform:
-        translateX(-50%);
+    right: 10px;
 
-      white-space: nowrap;
+    bottom: 10px;
+  }
 
-      padding:
-        5px 9px;
+  #hint {
 
-      border-radius: 7px;
+    display: none;
+  }
 
-      background:
-        rgba(20,20,17,.75);
+  .navArrow3D {
 
-      border:
-        1px solid
-        rgba(255,255,255,.12);
+    width: 68px;
 
-      color:
-        rgba(255,255,255,.85);
+    height: 68px;
 
-      font-size: 9px;
+    font-size: 30px;
+  }
 
-      letter-spacing: .05em;
+}
 
-      pointer-events:
-        none;
-
-    }
-
-
-    /* =========================================
-       LOADING
-    ========================================= */
-
-    #loading {
-
-      position: fixed;
-
-      inset: 0;
-
-      z-index: 200;
-
-      display: flex;
-
-      align-items: center;
-
-      justify-content: center;
-
-      background: #161613;
-
-      color: white;
-
-      transition:
-        opacity .5s ease;
-
-    }
-
-
-    #loading.hidden {
-
-      opacity: 0;
-
-      pointer-events: none;
-
-    }
-
-
-    .loader {
-
-      text-align: center;
-
-    }
-
-
-    .spinner {
-
-      width: 30px;
-
-      height: 30px;
-
-      margin:
-        0 auto 15px;
-
-      border-radius: 50%;
-
-      border:
-        2px solid
-        rgba(255,255,255,.15);
-
-      border-top-color:
-        white;
-
-      animation:
-        spin 1s linear infinite;
-
-    }
-
-
-    @keyframes spin {
-
-      to {
-
-        transform:
-          rotate(360deg);
-
-      }
-
-    }
-
-
-    .loadingText {
-
-      font-size: 13px;
-
-    }
-
-
-    /* =========================================
-       MOBILE
-    ========================================= */
-
-    @media(max-width:700px) {
-
-      #topBar {
-
-        padding: 16px;
-
-      }
-
-
-      .brandTitle {
-
-        font-size: 18px;
-
-      }
-
-
-      .brandSubtitle {
-
-        display: none;
-
-      }
-
-
-      .topButton:first-child {
-
-        display: none;
-
-      }
-
-
-      #rooms {
-
-        left: 10px;
-
-        right: 10px;
-
-        bottom: 70px;
-
-        top: auto;
-
-        width: auto;
-
-        transform: none;
-
-        display: flex;
-
-        overflow-x: auto;
-
-        padding: 7px;
-
-      }
-
-
-      .roomsTitle {
-
-        display: none;
-
-      }
-
-
-      .room {
-
-        min-width: 145px;
-
-      }
-
-
-      #bottom {
-
-        left: 10px;
-
-        right: 10px;
-
-        bottom: 10px;
-
-      }
-
-
-      #hint {
-
-        display: none;
-
-      }
-
-
-      .floorNavigationArrow {
-
-        width: 48px;
-
-        height: 48px;
-
-        font-size: 21px;
-
-      }
-
-    }
-
-  </style>
+</style>
 
 </head>
 
@@ -896,11 +794,9 @@
       Wirtualny spacer
     </div>
 
-
     <h1 class="startTitle">
       Mieszkanie
     </h1>
-
 
     <p class="startDescription">
 
@@ -910,11 +806,8 @@
 
     </p>
 
-
     <button id="startButton">
-
       ROZPOCZNIJ SPACER
-
     </button>
 
   </div>
@@ -934,11 +827,9 @@
       Wirtualny spacer
     </div>
 
-
     <div class="brandTitle">
       Mieszkanie
     </div>
-
 
     <div class="brandSubtitle">
       Interaktywna prezentacja wnętrza
@@ -956,7 +847,6 @@
       O projekcie
 
     </button>
-
 
     <button
       class="topButton"
@@ -985,6 +875,33 @@
 
 
 <!-- =========================================
+     STRZAŁKI 3D
+========================================= -->
+
+<div id="navigationArrows">
+
+  <button
+    class="navArrow3D"
+    id="arrowBack"
+    title="Poprzedni punkt">
+
+    ←
+
+  </button>
+
+  <button
+    class="navArrow3D"
+    id="arrowForward"
+    title="Przejdź do następnego punktu">
+
+    →
+
+  </button>
+
+</div>
+
+
+<!-- =========================================
      BOTTOM
 ========================================= -->
 
@@ -994,10 +911,8 @@
 
     Przeciągnij, aby się rozglądać
     · WASD = poruszanie
-    · Kliknij strzałkę na podłodze
 
   </div>
-
 
   <div id="controls">
 
@@ -1008,7 +923,6 @@
       ↻
 
     </button>
-
 
     <button
       class="control"
@@ -1046,7 +960,6 @@
 import * as THREE
   from "three";
 
-
 import {
   GLTFLoader
 }
@@ -1060,7 +973,6 @@ from
 
 const scene =
   new THREE.Scene();
-
 
 scene.background =
   new THREE.Color(
@@ -1100,7 +1012,6 @@ const renderer =
 
   });
 
-
 renderer.setPixelRatio(
 
   Math.min(
@@ -1110,7 +1021,6 @@ renderer.setPixelRatio(
 
 );
 
-
 renderer.setSize(
 
   window.innerWidth,
@@ -1119,22 +1029,17 @@ renderer.setSize(
 
 );
 
-
 renderer.outputColorSpace =
   THREE.SRGBColorSpace;
-
 
 renderer.toneMapping =
   THREE.ACESFilmicToneMapping;
 
-
 renderer.toneMappingExposure =
   1;
 
-
 renderer.localClippingEnabled =
   true;
-
 
 document
   .getElementById("app")
@@ -1161,7 +1066,6 @@ scene.add(
 
 );
 
-
 const directional =
   new THREE.DirectionalLight(
 
@@ -1170,7 +1074,6 @@ const directional =
     2
 
   );
-
 
 directional.position.set(
 
@@ -1181,7 +1084,6 @@ directional.position.set(
   275
 
 );
-
 
 scene.add(
   directional
@@ -1201,24 +1103,6 @@ let modelCenter = null;
 let modelSize = null;
 
 let topCutPlane = null;
-
-
-/* =====================================================
-   NAWIGACJA 3D
-===================================================== */
-
-let floorNavigationGroup = null;
-
-const navigationHotspots = [];
-
-const navigationRaycaster =
-  new THREE.Raycaster();
-
-const collisionDistance =
-  0.30;
-
-const movementSpeed =
-  0.035;
 
 
 /* =====================================================
@@ -1244,7 +1128,6 @@ const roomSettings = {
 
   },
 
-
   "SPACER_SALON_KUCHNIA": {
 
     number: "02",
@@ -1254,7 +1137,6 @@ const roomSettings = {
     area: "30,77 m²"
 
   },
-
 
   "SPACER_LAZIENKA": {
 
@@ -1266,7 +1148,6 @@ const roomSettings = {
 
   },
 
-
   "SPACER_SYPIALNIA_01": {
 
     number: "04",
@@ -1276,7 +1157,6 @@ const roomSettings = {
     area: "11,83 m²"
 
   },
-
 
   "SPACER_WC": {
 
@@ -1288,7 +1168,6 @@ const roomSettings = {
 
   },
 
-
   "SPACER_GARDEROBA": {
 
     number: "06",
@@ -1298,7 +1177,6 @@ const roomSettings = {
     area: "2,35 m²"
 
   },
-
 
   "SPACER_SYPIALNIA_02": {
 
@@ -1314,7 +1192,7 @@ const roomSettings = {
 
 
 /* =====================================================
-   KOLEJNOŚĆ PUNKTÓW NAWIGACJI
+   KOLEJNOŚĆ PUNKTÓW
 ===================================================== */
 
 const navigationOrder = [
@@ -1334,7 +1212,6 @@ const navigationOrder = [
   "SPACER_SYPIALNIA_02"
 
 ];
-
 
 let currentNavigationIndex = 0;
 
@@ -1380,7 +1257,6 @@ async function loadScenePoints() {
       Date.now()
     );
 
-
   if (!response.ok) {
 
     throw new Error(
@@ -1389,10 +1265,8 @@ async function loadScenePoints() {
 
   }
 
-
   const data =
     await response.json();
-
 
   if (!Array.isArray(data)) {
 
@@ -1402,15 +1276,12 @@ async function loadScenePoints() {
 
   }
 
-
   scenes = data;
-
 
   console.log(
     "Pobrano punkty:",
     scenes
   );
-
 
   createRoomButtons();
 
@@ -1442,28 +1313,22 @@ function createRoomButtons() {
       "rooms"
     );
 
-
   rooms.innerHTML = "";
-
 
   const title =
     document.createElement(
       "div"
     );
 
-
   title.className =
     "roomsTitle";
-
 
   title.textContent =
     "Pomieszczenia";
 
-
   rooms.appendChild(
     title
   );
-
 
   Object.keys(
     roomSettings
@@ -1476,12 +1341,10 @@ function createRoomButtons() {
           sceneName
         ];
 
-
       const sceneData =
         getScene(
           sceneName
         );
-
 
       if (!sceneData) {
 
@@ -1494,16 +1357,13 @@ function createRoomButtons() {
 
       }
 
-
       const button =
         document.createElement(
           "button"
         );
 
-
       button.className =
         "room";
-
 
       if (index === 0) {
 
@@ -1513,67 +1373,53 @@ function createRoomButtons() {
 
       }
 
-
       button.dataset.scene =
         sceneName;
-
 
       const number =
         document.createElement(
           "span"
         );
 
-
       number.className =
         "roomNumber";
 
-
       number.textContent =
         settings.number;
-
 
       const name =
         document.createElement(
           "span"
         );
 
-
       name.className =
         "roomName";
 
-
       name.textContent =
         settings.name;
-
 
       const area =
         document.createElement(
           "span"
         );
 
-
       area.className =
         "roomArea";
 
-
       area.textContent =
         settings.area;
-
 
       button.appendChild(
         number
       );
 
-
       button.appendChild(
         name
       );
 
-
       button.appendChild(
         area
       );
-
 
       button.addEventListener(
 
@@ -1586,7 +1432,6 @@ function createRoomButtons() {
               sceneName
             );
 
-
           if (
             navIndex >= 0
           ) {
@@ -1596,35 +1441,27 @@ function createRoomButtons() {
 
           }
 
-
           renderer.clippingPlanes =
             [];
 
-
           hideStartScreen();
 
+          cameraTransition =
+            null;
 
-          smoothMoveTo(
+          setCameraFromScene(
             sceneData
           );
-
 
           updateRoomActive(
             sceneName
           );
 
-
-          setTimeout(
-            () => {
-              updateFloorNavigation();
-            },
-            950
-          );
+          updateFloorArrows();
 
         }
 
       );
-
 
       rooms.appendChild(
         button
@@ -1678,18 +1515,15 @@ function setCameraFromScene(
   if (!sceneData)
     return;
 
-
   const position =
     convertPoint(
       sceneData.eye
     );
 
-
   const target =
     convertPoint(
       sceneData.target
     );
-
 
   camera.position.set(
 
@@ -1701,21 +1535,17 @@ function setCameraFromScene(
 
   );
 
-
   camera.up.set(
     0,
     1,
     0
   );
 
-
   camera.fov =
     sceneData.fov ||
     70;
 
-
   camera.updateProjectionMatrix();
-
 
   camera.lookAt(
 
@@ -1726,7 +1556,6 @@ function setCameraFromScene(
     target.z
 
   );
-
 
   updateAnglesFromCamera(
 
@@ -1750,7 +1579,6 @@ function showTopView() {
       "SPACER_START"
     );
 
-
   if (!start) {
 
     console.warn(
@@ -1761,7 +1589,6 @@ function showTopView() {
 
   }
 
-
   if (topCutPlane) {
 
     renderer.clippingPlanes =
@@ -1769,18 +1596,15 @@ function showTopView() {
 
   }
 
-
   const position =
     convertPoint(
       start.eye
     );
 
-
   const target =
     convertPoint(
       start.target
     );
-
 
   camera.position.set(
 
@@ -1792,7 +1616,6 @@ function showTopView() {
 
   );
 
-
   camera.up.set(
 
     0,
@@ -1803,14 +1626,11 @@ function showTopView() {
 
   );
 
-
   camera.fov =
     start.fov ||
     35;
 
-
   camera.updateProjectionMatrix();
-
 
   camera.lookAt(
 
@@ -1826,7 +1646,7 @@ function showTopView() {
 
 
 /* =====================================================
-   UKRYWANIE EKRANU STARTOWEGO
+   START
 ===================================================== */
 
 function hideStartScreen() {
@@ -1842,28 +1662,20 @@ function hideStartScreen() {
 }
 
 
-/* =====================================================
-   START SPACERU
-===================================================== */
-
 function startWalk() {
 
   renderer.clippingPlanes =
     [];
 
-
   hideStartScreen();
-
 
   currentNavigationIndex =
     0;
-
 
   const start =
     getScene(
       "SPACER_KORYTARZ"
     );
-
 
   if (start) {
 
@@ -1873,364 +1685,213 @@ function startWalk() {
 
   }
 
-
   updateRoomActive(
     "SPACER_KORYTARZ"
   );
 
-
-  updateFloorNavigation();
-
-}
-
-
-/* =====================================================
-   USUWANIE STRZAŁEK
-===================================================== */
-
-function clearFloorNavigation() {
-
-  if (!floorNavigationGroup)
-    return;
-
-
-  while (
-    floorNavigationGroup.children.length
-  ) {
-
-    const child =
-      floorNavigationGroup
-        .children[0];
-
-    floorNavigationGroup
-      .remove(child);
-
-
-    child.traverse(
-      object => {
-
-        if (object.geometry) {
-
-          object.geometry.dispose();
-
-        }
-
-
-        if (
-          object.material
-        ) {
-
-          if (
-            Array.isArray(
-              object.material
-            )
-          ) {
-
-            object.material.forEach(
-              material =>
-                material.dispose()
-            );
-
-          }
-          else {
-
-            object.material.dispose();
-
-          }
-
-        }
-
-      }
-    );
-
-  }
-
-
-  navigationHotspots.length = 0;
+  updateFloorArrows();
 
 }
 
 
 /* =====================================================
-   TWORZENIE STRZAŁKI NA PODŁODZE
+   STRZAŁKI NA PODŁODZE
 ===================================================== */
 
-function createFloorArrow(
-  fromScene,
-  toScene,
-  toIndex,
-  label,
-  arrowDirection
+const arrowForward =
+  document.getElementById(
+    "arrowForward"
+  );
+
+const arrowBack =
+  document.getElementById(
+    "arrowBack"
+  );
+
+
+/*
+  Umieszczamy element HTML
+  w odpowiednim miejscu ekranu,
+  obliczonym z pozycji 3D.
+*/
+
+function worldToScreen(
+  position
 ) {
 
-  if (
-    !fromScene ||
-    !toScene ||
-    !floorNavigationGroup
-  ) {
+  const vector =
+    position.clone();
+
+  vector.project(camera);
+
+  return {
+
+    x:
+      (vector.x + 1) *
+      0.5 *
+      window.innerWidth,
+
+    y:
+      (-vector.y + 1) *
+      0.5 *
+      window.innerHeight,
+
+    visible:
+      vector.z > -1 &&
+      vector.z < 1
+
+  };
+
+}
+
+
+/*
+  Ustawienie strzałki
+  w kierunku kolejnego punktu.
+*/
+
+function positionFloorArrow(
+  element,
+  fromPosition,
+  toPosition,
+  visible
+) {
+
+  if (!element)
+    return;
+
+  if (!visible) {
+
+    element.classList.add(
+      "hidden"
+    );
 
     return;
 
   }
-
-
-  const from =
-    convertPoint(
-      fromScene.eye
-    );
-
-
-  const to =
-    convertPoint(
-      toScene.eye
-    );
-
-
-  /*
-    Punkt pomiędzy kamerami.
-  */
-
-  const position =
-    new THREE.Vector3(
-
-      from.x +
-        (to.x - from.x) *
-        0.42,
-
-      modelBox
-        ? modelBox.min.y + 0.035
-        : 0.035,
-
-      from.z +
-        (to.z - from.z) *
-        0.42
-
-    );
-
-
-  /*
-    Kierunek następnego punktu.
-  */
 
   const direction =
-    new THREE.Vector3(
+    new THREE.Vector3()
+      .subVectors(
+        toPosition,
+        fromPosition
+      );
 
-      to.x - from.x,
-
-      0,
-
-      to.z - from.z
-
-    );
-
+  direction.y = 0;
 
   if (
-    direction.lengthSq() === 0
+    direction.lengthSq() < 0.000001
   ) {
+
+    element.classList.add(
+      "hidden"
+    );
 
     return;
 
   }
-
 
   direction.normalize();
 
 
   /*
-    Grupa.
+    Strzałka jest umieszczona
+    kawałek przed kamerą,
+    w stronę kolejnego punktu.
   */
 
-  const group =
-    new THREE.Group();
+  const distance =
+    1.15;
 
-
-  group.position.copy(
-    position
-  );
-
+  const arrowPosition =
+    fromPosition.clone()
+      .add(
+        direction.multiplyScalar(
+          distance
+        )
+      );
 
   /*
-    Obracamy całość płasko
-    na podłodze.
+    Podnosimy ją minimalnie
+    nad podłogę.
   */
 
-  group.rotation.x =
-    -Math.PI / 2;
+  arrowPosition.y =
+    0.035;
 
 
-  /*
-    Okrąg.
-  */
-
-  const circle =
-    new THREE.Mesh(
-
-      new THREE.CircleGeometry(
-        0.28,
-        32
-      ),
-
-      new THREE.MeshBasicMaterial({
-
-        color: 0xffffff,
-
-        transparent: true,
-
-        opacity: 0.72,
-
-        depthWrite: false,
-
-        side: THREE.DoubleSide
-
-      })
-
+  const screen =
+    worldToScreen(
+      arrowPosition
     );
 
+  if (!screen.visible) {
 
-  group.add(
-    circle
-  );
-
-
-  /*
-    Strzałka.
-  */
-
-  const arrowShape =
-    new THREE.Shape();
-
-
-  arrowShape.moveTo(
-    0,
-    0.22
-  );
-
-
-  arrowShape.lineTo(
-    -0.13,
-    0.02
-  );
-
-
-  arrowShape.lineTo(
-    -0.055,
-    0.02
-  );
-
-
-  arrowShape.lineTo(
-    -0.055,
-    -0.20
-  );
-
-
-  arrowShape.lineTo(
-    0.055,
-    -0.20
-  );
-
-
-  arrowShape.lineTo(
-    0.055,
-    0.02
-  );
-
-
-  arrowShape.lineTo(
-    0.13,
-    0.02
-  );
-
-
-  arrowShape.closePath();
-
-
-  const arrow =
-    new THREE.Mesh(
-
-      new THREE.ShapeGeometry(
-        arrowShape
-      ),
-
-      new THREE.MeshBasicMaterial({
-
-        color: 0x171713,
-
-        transparent: true,
-
-        opacity: 0.9,
-
-        depthWrite: false,
-
-        side: THREE.DoubleSide
-
-      })
-
+    element.classList.add(
+      "hidden"
     );
 
+    return;
 
-  arrow.position.z =
-    0.01;
+  }
 
+  element.style.left =
+    screen.x + "px";
 
-  group.add(
-    arrow
-  );
+  element.style.top =
+    screen.y + "px";
 
 
   /*
-    Obrót strzałki w stronę
-    następnego/poprzedniego punktu.
+    Obrót strzałki na ekranie.
   */
 
-  group.rotation.z =
-    -Math.atan2(
+  const angle =
+    Math.atan2(
       direction.x,
-      direction.z
+      -direction.z
     );
 
+  element.style.transform =
+    "translate(-50%, -50%) rotate(" +
+    angle +
+    "rad)";
 
-  group.userData.navigationIndex =
-    toIndex;
-
-
-  group.userData.target =
-    toScene.name;
-
-
-  group.userData.label =
-    label;
-
-
-  group.userData.arrowDirection =
-    arrowDirection;
-
-
-  floorNavigationGroup.add(
-    group
+  element.classList.remove(
+    "hidden"
   );
 
-
-  navigationHotspots.push(
-    group
+  element.classList.add(
+    "visible"
   );
 
 }
 
 
-/* =====================================================
-   AKTUALIZACJA STRZAŁEK
-===================================================== */
+/*
+  Aktualizujemy obie strzałki.
+*/
 
-function updateFloorNavigation() {
-
-  clearFloorNavigation();
-
+function updateFloorArrows() {
 
   if (
-    !floorNavigationGroup ||
-    !scenes.length
+    document
+      .getElementById(
+        "startScreen"
+      )
+      .classList
+      .contains(
+        "hidden"
+      ) === false
   ) {
+
+    arrowForward.classList.add(
+      "hidden"
+    );
+
+    arrowBack.classList.add(
+      "hidden"
+    );
 
     return;
 
@@ -2242,62 +1903,23 @@ function updateFloorNavigation() {
       currentNavigationIndex
     ];
 
-
   const currentScene =
     getScene(
       currentName
     );
 
-
   if (!currentScene)
     return;
 
 
-  /*
-    Poprzednie pomieszczenie.
-  */
-
-  if (
-    currentNavigationIndex > 0
-  ) {
-
-    const previousName =
-      navigationOrder[
-        currentNavigationIndex - 1
-      ];
-
-
-    const previousScene =
-      getScene(
-        previousName
-      );
-
-
-    if (previousScene) {
-
-      createFloorArrow(
-
-        currentScene,
-
-        previousScene,
-
-        currentNavigationIndex - 1,
-
-        roomSettings[
-          previousName
-        ]?.name || "Wróć",
-
-        "back"
-
-      );
-
-    }
-
-  }
+  const currentPosition =
+    convertPoint(
+      currentScene.eye
+    );
 
 
   /*
-    Następne pomieszczenie.
+    NASTĘPNY PUNKT
   */
 
   if (
@@ -2305,37 +1927,86 @@ function updateFloorNavigation() {
     navigationOrder.length - 1
   ) {
 
-    const nextName =
-      navigationOrder[
-        currentNavigationIndex + 1
-      ];
-
-
     const nextScene =
       getScene(
-        nextName
+        navigationOrder[
+          currentNavigationIndex + 1
+        ]
       );
-
 
     if (nextScene) {
 
-      createFloorArrow(
+      const nextPosition =
+        convertPoint(
+          nextScene.eye
+        );
 
-        currentScene,
+      positionFloorArrow(
 
-        nextScene,
+        arrowForward,
 
-        currentNavigationIndex + 1,
+        currentPosition,
 
-        roomSettings[
-          nextName
-        ]?.name || "Dalej",
+        nextPosition,
 
-        "forward"
+        true
 
       );
 
     }
+
+  }
+  else {
+
+    arrowForward.classList.add(
+      "hidden"
+    );
+
+  }
+
+
+  /*
+    POPRZEDNI PUNKT
+  */
+
+  if (
+    currentNavigationIndex > 0
+  ) {
+
+    const previousScene =
+      getScene(
+        navigationOrder[
+          currentNavigationIndex - 1
+        ]
+      );
+
+    if (previousScene) {
+
+      const previousPosition =
+        convertPoint(
+          previousScene.eye
+        );
+
+      positionFloorArrow(
+
+        arrowBack,
+
+        currentPosition,
+
+        previousPosition,
+
+        true
+
+      );
+
+    }
+
+  }
+  else {
+
+    arrowBack.classList.add(
+      "hidden"
+    );
 
   }
 
@@ -2343,134 +2014,7 @@ function updateFloorNavigation() {
 
 
 /* =====================================================
-   KLIKANIE STRZAŁEK
-===================================================== */
-
-renderer.domElement.addEventListener(
-
-  "pointerdown",
-
-  event => {
-
-    if (
-      !floorNavigationGroup
-    ) {
-
-      return;
-
-    }
-
-
-    if (
-      !document
-        .getElementById(
-          "startScreen"
-        )
-        .classList
-        .contains(
-          "hidden"
-        )
-    ) {
-
-      return;
-
-    }
-
-
-    const rect =
-      renderer.domElement
-        .getBoundingClientRect();
-
-
-    const mouse =
-      new THREE.Vector2(
-
-        (
-          (
-            event.clientX -
-            rect.left
-          ) /
-          rect.width
-        ) * 2 - 1,
-
-        -(
-          (
-            event.clientY -
-            rect.top
-          ) /
-          rect.height
-        ) * 2 + 1
-
-      );
-
-
-    navigationRaycaster.setFromCamera(
-
-      mouse,
-
-      camera
-
-    );
-
-
-    const intersections =
-      navigationRaycaster
-        .intersectObjects(
-          navigationHotspots,
-          true
-        );
-
-
-    if (
-      intersections.length === 0
-    ) {
-
-      return;
-
-    }
-
-
-    let hotspot =
-      intersections[0].object;
-
-
-    while (
-      hotspot &&
-      !hotspot.userData.navigationIndex &&
-      hotspot !== floorNavigationGroup
-    ) {
-
-      hotspot =
-        hotspot.parent;
-
-    }
-
-
-    if (
-      !hotspot ||
-      hotspot === floorNavigationGroup
-    ) {
-
-      return;
-
-    }
-
-
-    const targetIndex =
-      hotspot.userData.navigationIndex;
-
-
-    goToNavigationPoint(
-      targetIndex
-    );
-
-  }
-
-);
-
-
-/* =====================================================
-   KAMERA — PRZEJŚCIE
+   PŁYNNE PRZEJŚCIE
 ===================================================== */
 
 let cameraTransition = null;
@@ -2483,31 +2027,25 @@ function smoothMoveTo(
   if (!sceneData)
     return;
 
-
   const position =
     convertPoint(
       sceneData.eye
     );
-
 
   const target =
     convertPoint(
       sceneData.target
     );
 
-
   const startPosition =
     camera.position.clone();
-
 
   const startDirection =
     new THREE.Vector3();
 
-
   camera.getWorldDirection(
     startDirection
   );
-
 
   const endDirection =
     new THREE.Vector3()
@@ -2516,7 +2054,6 @@ function smoothMoveTo(
         position
       )
       .normalize();
-
 
   cameraTransition = {
 
@@ -2545,11 +2082,9 @@ function smoothMoveTo(
 
   };
 
-
   camera.fov =
     sceneData.fov ||
     70;
-
 
   camera.updateProjectionMatrix();
 
@@ -2565,10 +2100,8 @@ function updateCameraTransition() {
   if (!cameraTransition)
     return;
 
-
   const now =
     performance.now();
-
 
   let progress =
 
@@ -2578,13 +2111,11 @@ function updateCameraTransition() {
     ) /
     cameraTransition.duration;
 
-
   progress =
     Math.min(
       progress,
       1
     );
-
 
   const eased =
     progress *
@@ -2595,7 +2126,6 @@ function updateCameraTransition() {
       progress
     );
 
-
   camera.position.lerpVectors(
 
     cameraTransition.startPosition,
@@ -2605,7 +2135,6 @@ function updateCameraTransition() {
     eased
 
   );
-
 
   const direction =
     new THREE.Vector3()
@@ -2620,7 +2149,6 @@ function updateCameraTransition() {
       )
       .normalize();
 
-
   const lookTarget =
     camera.position
       .clone()
@@ -2628,11 +2156,9 @@ function updateCameraTransition() {
         direction.multiplyScalar(2)
       );
 
-
   camera.lookAt(
     lookTarget
   );
-
 
   if (
     progress >= 1
@@ -2642,12 +2168,15 @@ function updateCameraTransition() {
       cameraTransition.endPosition
     );
 
-
     cameraTransition =
       null;
 
+    /*
+      Po zakończeniu przejścia
+      odświeżamy pozycję strzałek.
+    */
 
-    updateFloorNavigation();
+    updateFloorArrows();
 
   }
 
@@ -2671,44 +2200,80 @@ function goToNavigationPoint(
 
   }
 
-
   const sceneName =
     navigationOrder[
       index
     ];
-
 
   const sceneData =
     getScene(
       sceneName
     );
 
-
   if (!sceneData)
     return;
-
 
   currentNavigationIndex =
     index;
 
-
   renderer.clippingPlanes =
     [];
 
-
   hideStartScreen();
-
 
   smoothMoveTo(
     sceneData
   );
 
-
   updateRoomActive(
     sceneName
   );
 
+  updateFloorArrows();
+
 }
+
+
+/* =====================================================
+   KLIKANIE STRZAŁEK
+===================================================== */
+
+arrowForward.addEventListener(
+
+  "click",
+
+  event => {
+
+    event.stopPropagation();
+
+    goToNavigationPoint(
+
+      currentNavigationIndex + 1
+
+    );
+
+  }
+
+);
+
+
+arrowBack.addEventListener(
+
+  "click",
+
+  event => {
+
+    event.stopPropagation();
+
+    goToNavigationPoint(
+
+      currentNavigationIndex - 1
+
+    );
+
+  }
+
+);
 
 
 /* =====================================================
@@ -2719,7 +2284,6 @@ const loading =
   document.getElementById(
     "loading"
   );
-
 
 const loader =
   new GLTFLoader();
@@ -2754,7 +2318,6 @@ async function loadModel() {
 
               );
 
-
             if (!response.ok) {
 
               throw new Error(
@@ -2765,7 +2328,6 @@ async function loadModel() {
               );
 
             }
-
 
             return response
               .arrayBuffer();
@@ -2827,22 +2389,8 @@ async function loadModel() {
             model =
               gltf.scene;
 
-
             scene.add(
               model
-            );
-
-
-            /*
-              Grupa dla strzałek.
-            */
-
-            floorNavigationGroup =
-              new THREE.Group();
-
-
-            scene.add(
-              floorNavigationGroup
             );
 
 
@@ -2876,11 +2424,6 @@ async function loadModel() {
               modelSize
             );
 
-
-            /*
-              Sufit zostaje ukryty
-              tylko w rzucie z góry.
-            */
 
             const cutY =
 
@@ -2923,16 +2466,8 @@ async function loadModel() {
     );
 
 
-    /*
-      Pobieramy punkty.
-    */
-
     await loadScenePoints();
 
-
-    /*
-      Pokazujemy rzut z góry.
-    */
 
     showTopView();
 
@@ -2943,6 +2478,7 @@ async function loadModel() {
         "hidden"
       );
 
+
   }
 
   catch(error) {
@@ -2951,7 +2487,6 @@ async function loadModel() {
       "BŁĄD:",
       error
     );
-
 
     loading
       .querySelector(
@@ -2992,15 +2527,6 @@ renderer.domElement.addEventListener(
   event => {
 
     if (
-      event.button !== 0
-    ) {
-
-      return;
-
-    }
-
-
-    if (
 
       !document
         .getElementById(
@@ -3018,70 +2544,10 @@ renderer.domElement.addEventListener(
     }
 
 
-    /*
-      Najpierw sprawdzamy,
-      czy kliknięto hotspot.
-    */
-
-    const rect =
-      renderer.domElement
-        .getBoundingClientRect();
-
-
-    const mouse =
-      new THREE.Vector2(
-
-        (
-          (
-            event.clientX -
-            rect.left
-          ) /
-          rect.width
-        ) * 2 - 1,
-
-        -(
-          (
-            event.clientY -
-            rect.top
-          ) /
-          rect.height
-        ) * 2 + 1
-
-      );
-
-
-    navigationRaycaster.setFromCamera(
-
-      mouse,
-
-      camera
-
-    );
-
-
-    const hotspotHits =
-      navigationRaycaster
-        .intersectObjects(
-          navigationHotspots,
-          true
-        );
-
-
-    if (
-      hotspotHits.length > 0
-    ) {
-
-      return;
-
-    }
-
-
     dragging = true;
-
 
     previousX =
       event.clientX;
-
 
     previousY =
       event.clientY;
@@ -3122,7 +2588,6 @@ renderer.domElement.addEventListener(
     previousX =
       event.clientX;
 
-
     previousY =
       event.clientY;
 
@@ -3161,24 +2626,9 @@ renderer.domElement.addEventListener(
 
   "pointerup",
 
-  event => {
+  () => {
 
     dragging = false;
-
-
-    if (
-      renderer.domElement
-        .hasPointerCapture(
-          event.pointerId
-        )
-    ) {
-
-      renderer.domElement
-        .releasePointerCapture(
-          event.pointerId
-        );
-
-    }
 
   }
 
@@ -3229,12 +2679,6 @@ window.addEventListener(
 
     ) {
 
-      /*
-        Strzałki klawiatury
-        przechodzą pomiędzy
-        punktami nawigacji.
-      */
-
       if (
         event.key ===
         "ArrowRight" ||
@@ -3244,7 +2688,6 @@ window.addEventListener(
       ) {
 
         event.preventDefault();
-
 
         goToNavigationPoint(
 
@@ -3264,7 +2707,6 @@ window.addEventListener(
       ) {
 
         event.preventDefault();
-
 
         goToNavigationPoint(
 
@@ -3297,183 +2739,18 @@ window.addEventListener(
 
 
 /* =====================================================
-   RUCH WASD Z KOLIZJĄ
+   RUCH WASD
+   BEZ KOLIZJI
 ===================================================== */
 
 const direction =
   new THREE.Vector3();
 
-
 const right =
   new THREE.Vector3();
 
-
 const move =
   new THREE.Vector3();
-
-
-const testPosition =
-  new THREE.Vector3();
-
-
-function canMoveTo(
-  newPosition
-) {
-
-  if (!model)
-    return true;
-
-
-  /*
-    Kilka promieni dookoła kamery.
-    Dzięki temu nie można przejść
-    bezpośrednio przez ścianę.
-  */
-
-  const offsets = [
-
-    new THREE.Vector3(
-      0,
-      0,
-      0
-    ),
-
-    new THREE.Vector3(
-      0.18,
-      0,
-      0
-    ),
-
-    new THREE.Vector3(
-      -0.18,
-      0,
-      0
-    ),
-
-    new THREE.Vector3(
-      0,
-      0,
-      0.18
-    ),
-
-    new THREE.Vector3(
-      0,
-      0,
-      -0.18
-    )
-
-  ];
-
-
-  for (
-    const offset
-    of offsets
-  ) {
-
-    testPosition
-      .copy(
-        newPosition
-      )
-      .add(
-        offset
-      );
-
-
-    const travel =
-      testPosition
-        .clone()
-        .sub(
-          camera.position
-        );
-
-
-    const distance =
-      travel.length();
-
-
-    if (
-      distance <= 0
-    ) {
-
-      continue;
-
-    }
-
-
-    travel.normalize();
-
-
-    navigationRaycaster.set(
-
-      camera.position,
-
-      travel
-
-    );
-
-
-    const intersections =
-      navigationRaycaster
-        .intersectObject(
-          model,
-          true
-        );
-
-
-    for (
-      const hit
-      of intersections
-    ) {
-
-      if (
-        hit.distance >
-        0.01 &&
-        hit.distance <
-        Math.max(
-          collisionDistance,
-          distance
-        )
-      ) {
-
-        if (
-          hit.face
-        ) {
-
-          const normal =
-            hit.face.normal
-              .clone()
-              .transformDirection(
-                hit.object.matrixWorld
-              );
-
-
-          /*
-            Blokujemy przede wszystkim
-            ściany i pionowe przeszkody.
-          */
-
-          if (
-            Math.abs(
-              normal.y
-            ) < 0.7
-          ) {
-
-            return false;
-
-          }
-
-        }
-
-      }
-
-    }
-
-  }
-
-
-  return true;
-
-}
 
 
 function updateMovement() {
@@ -3557,53 +2834,32 @@ function updateMovement() {
 
 
   if (
-    move.lengthSq() === 0
+    move.lengthSq() > 0
   ) {
 
-    return;
-
-  }
+    move.normalize();
 
 
-  move.normalize();
+    move.multiplyScalar(
+      0.035
+    );
 
 
-  move.multiplyScalar(
-    movementSpeed
-  );
+    /*
+      BRAK KOLIZJI.
+      Kamera może swobodnie
+      przechodzić przez model.
+    */
 
-
-  /*
-    Próbujemy wykonać ruch.
-  */
-
-  const newPosition =
-    camera.position
-      .clone()
-      .add(
-        move
-      );
-
-
-  /*
-    Zostawiamy wysokość oczu.
-  */
-
-  newPosition.y =
-    1.65;
-
-
-  if (
-    canMoveTo(
-      newPosition
-    )
-  ) {
-
-    camera.position.copy(
-      newPosition
+    camera.position.add(
+      move
     );
 
   }
+
+
+  camera.position.y =
+    1.65;
 
 }
 
@@ -3789,7 +3045,7 @@ document
       );
 
 
-      updateFloorNavigation();
+      updateFloorArrows();
 
     }
 
@@ -3897,9 +3153,9 @@ document
 
         "Użyj W, A, S, D, aby się poruszać.\n\n" +
 
-        "Kliknij strzałkę na podłodze, aby przejść " +
+        "Możesz również korzystać ze strzałek " +
 
-        "do kolejnego lub poprzedniego pomieszczenia."
+        "na podłodze, aby przechodzić między punktami."
 
       );
 
@@ -3935,6 +3191,9 @@ window.addEventListener(
 
     );
 
+
+    updateFloorArrows();
+
   }
 
 );
@@ -3958,6 +3217,14 @@ function animate() {
 
 
   updateLook();
+
+
+  /*
+    Strzałki są cały czas
+    przeliczane względem kamery.
+  */
+
+  updateFloorArrows();
 
 
   renderer.render(
