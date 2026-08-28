@@ -20,40 +20,25 @@
 
 html,
 body {
-
   margin: 0;
-
   width: 100%;
   height: 100%;
-
   overflow: hidden;
-
   background: #11110f;
-
-  font-family:
-    Arial,
-    Helvetica,
-    sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 #app {
-
   position: fixed;
-
   inset: 0;
-
   overflow: hidden;
-
   background: #11110f;
 }
 
 canvas {
-
   display: block;
-
   width: 100%;
   height: 100%;
-
 }
 
 
@@ -62,17 +47,11 @@ canvas {
 ========================================= */
 
 #startScreen {
-
   position: fixed;
-
   inset: 0;
-
   z-index: 100;
-
   display: flex;
-
   align-items: center;
-
   justify-content: center;
 
   background:
@@ -89,92 +68,55 @@ canvas {
 }
 
 #startScreen.hidden {
-
   opacity: 0;
-
   visibility: hidden;
-
   pointer-events: none;
 }
 
 .startBox {
-
   text-align: center;
-
   color: white;
-
   width: min(520px, 90%);
 }
 
 .startSmall {
-
   font-size: 10px;
-
   letter-spacing: .3em;
-
   text-transform: uppercase;
-
   opacity: .55;
-
   margin-bottom: 20px;
 }
 
 .startTitle {
-
-  font-size:
-    clamp(42px, 7vw, 72px);
-
+  font-size: clamp(42px, 7vw, 72px);
   font-weight: 300;
-
   letter-spacing: -.05em;
-
   margin: 0;
 }
 
 .startDescription {
-
-  margin:
-    22px auto 30px;
-
+  margin: 22px auto 30px;
   max-width: 430px;
-
   font-size: 13px;
-
   line-height: 1.7;
-
-  color:
-    rgba(255,255,255,.65);
+  color: rgba(255,255,255,.65);
 }
 
 #startButton {
-
   border: 0;
-
   background: #eee9de;
-
   color: #171713;
-
   height: 50px;
-
-  padding:
-    0 28px;
-
+  padding: 0 28px;
   border-radius: 999px;
-
   font-size: 11px;
-
   letter-spacing: .08em;
-
   cursor: pointer;
-
-  transition:
-    transform .2s ease;
+  transition: transform .2s ease;
 }
 
 #startButton:hover {
-
-  transform:
-    scale(1.03);
+  transform: scale(1.03);
 }
 
 
@@ -183,28 +125,19 @@ canvas {
 ========================================= */
 
 #topBar {
-
   position: fixed;
-
   z-index: 20;
-
   top: 0;
   left: 0;
   right: 0;
 
-  padding:
-    25px 28px;
+  padding: 25px 28px;
 
   display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
 
-  justify-content:
-    space-between;
-
-  align-items:
-    flex-start;
-
-  pointer-events:
-    none;
+  pointer-events: none;
 
   background:
     linear-gradient(
@@ -214,56 +147,37 @@ canvas {
 }
 
 .brand {
-
   color: white;
 }
 
 .brandSmall {
-
   font-size: 9px;
-
   letter-spacing: .25em;
-
   text-transform: uppercase;
-
   opacity: .5;
-
   margin-bottom: 7px;
 }
 
 .brandTitle {
-
   font-size: 21px;
-
   font-weight: 500;
 }
 
 .brandSubtitle {
-
   font-size: 11px;
-
   opacity: .45;
-
   margin-top: 5px;
 }
 
 .topButtons {
-
   display: flex;
-
   gap: 8px;
-
-  pointer-events:
-    auto;
+  pointer-events: auto;
 }
 
 .topButton {
-
   height: 40px;
-
-  padding:
-    0 15px;
-
+  padding: 0 15px;
   border-radius: 999px;
 
   border:
@@ -275,8 +189,7 @@ canvas {
 
   color: white;
 
-  backdrop-filter:
-    blur(15px);
+  backdrop-filter: blur(15px);
 
   cursor: pointer;
 }
@@ -287,20 +200,15 @@ canvas {
 ========================================= */
 
 #rooms {
-
   position: fixed;
-
   z-index: 20;
 
   left: 25px;
-
   top: 50%;
 
-  transform:
-    translateY(-50%);
+  transform: translateY(-50%);
 
   width: 235px;
-
   padding: 15px;
 
   border-radius: 18px;
@@ -312,29 +220,23 @@ canvas {
     1px solid
     rgba(255,255,255,.13);
 
-  backdrop-filter:
-    blur(20px);
+  backdrop-filter: blur(20px);
 
   color: white;
 }
 
 .roomsTitle {
-
   font-size: 9px;
-
   letter-spacing: .2em;
-
   text-transform: uppercase;
 
   color:
     rgba(255,255,255,.45);
 
-  padding:
-    4px 8px 11px;
+  padding: 4px 8px 11px;
 }
 
 .room {
-
   width: 100%;
 
   display: grid;
@@ -346,8 +248,7 @@ canvas {
 
   border: 0;
 
-  background:
-    transparent;
+  background: transparent;
 
   color:
     rgba(255,255,255,.65);
@@ -366,7 +267,6 @@ canvas {
 }
 
 .room:hover {
-
   background:
     rgba(255,255,255,.07);
 
@@ -374,7 +274,6 @@ canvas {
 }
 
 .room.active {
-
   background:
     rgba(255,255,255,.11);
 
@@ -382,21 +281,16 @@ canvas {
 }
 
 .roomNumber {
-
   font-size: 9px;
-
   opacity: .4;
 }
 
 .roomName {
-
   font-size: 12px;
 }
 
 .roomArea {
-
   font-size: 9px;
-
   opacity: .35;
 }
 
@@ -406,33 +300,22 @@ canvas {
 ========================================= */
 
 #bottom {
-
   position: fixed;
-
   z-index: 20;
 
   left: 25px;
-
   right: 25px;
-
   bottom: 20px;
 
   display: flex;
+  justify-content: space-between;
+  align-items: center;
 
-  justify-content:
-    space-between;
-
-  align-items:
-    center;
-
-  pointer-events:
-    none;
+  pointer-events: none;
 }
 
 #hint {
-
-  padding:
-    10px 13px;
+  padding: 10px 13px;
 
   border-radius: 11px;
 
@@ -443,8 +326,7 @@ canvas {
     1px solid
     rgba(255,255,255,.12);
 
-  backdrop-filter:
-    blur(15px);
+  backdrop-filter: blur(15px);
 
   color:
     rgba(255,255,255,.5);
@@ -453,9 +335,7 @@ canvas {
 }
 
 #controls {
-
   display: flex;
-
   gap: 4px;
 
   padding: 5px;
@@ -469,25 +349,19 @@ canvas {
     1px solid
     rgba(255,255,255,.13);
 
-  backdrop-filter:
-    blur(15px);
+  backdrop-filter: blur(15px);
 
-  pointer-events:
-    auto;
+  pointer-events: auto;
 }
 
 .control {
-
   width: 40px;
-
   height: 36px;
 
   border: 0;
-
   border-radius: 999px;
 
-  background:
-    transparent;
+  background: transparent;
 
   color: white;
 
@@ -495,31 +369,25 @@ canvas {
 }
 
 .control:hover {
-
   background:
     rgba(255,255,255,.08);
 }
 
 
 /* =========================================
-   LABEL PUNKTU
+   AKTUALNY PUNKT
 ========================================= */
 
 #navigationLabel {
-
   position: fixed;
-
   z-index: 45;
 
   left: 50%;
-
   bottom: 95px;
 
-  transform:
-    translateX(-50%);
+  transform: translateX(-50%);
 
-  padding:
-    8px 13px;
+  padding: 8px 13px;
 
   border-radius: 999px;
 
@@ -530,8 +398,7 @@ canvas {
     1px solid
     rgba(255,255,255,.12);
 
-  backdrop-filter:
-    blur(15px);
+  backdrop-filter: blur(15px);
 
   color:
     rgba(255,255,255,.75);
@@ -549,7 +416,6 @@ canvas {
 }
 
 #navigationLabel.visible {
-
   opacity: 1;
 }
 
@@ -559,47 +425,34 @@ canvas {
 ========================================= */
 
 #loading {
-
   position: fixed;
-
   inset: 0;
-
   z-index: 200;
 
   display: flex;
-
   align-items: center;
-
   justify-content: center;
 
   background: #161613;
-
   color: white;
 
-  transition:
-    opacity .5s ease;
+  transition: opacity .5s ease;
 }
 
 #loading.hidden {
-
   opacity: 0;
-
   pointer-events: none;
 }
 
 .loader {
-
   text-align: center;
 }
 
 .spinner {
-
   width: 30px;
-
   height: 30px;
 
-  margin:
-    0 auto 15px;
+  margin: 0 auto 15px;
 
   border-radius: 50%;
 
@@ -607,24 +460,19 @@ canvas {
     2px solid
     rgba(255,255,255,.15);
 
-  border-top-color:
-    white;
+  border-top-color: white;
 
   animation:
     spin 1s linear infinite;
 }
 
 @keyframes spin {
-
   to {
-
-    transform:
-      rotate(360deg);
+    transform: rotate(360deg);
   }
 }
 
 .loadingText {
-
   font-size: 13px;
 }
 
@@ -636,33 +484,25 @@ canvas {
 @media(max-width:700px) {
 
   #topBar {
-
     padding: 16px;
   }
 
   .brandTitle {
-
     font-size: 18px;
   }
 
   .brandSubtitle {
-
     display: none;
   }
 
   .topButton:first-child {
-
     display: none;
   }
 
   #rooms {
-
     left: 10px;
-
     right: 10px;
-
     bottom: 70px;
-
     top: auto;
 
     width: auto;
@@ -677,31 +517,24 @@ canvas {
   }
 
   .roomsTitle {
-
     display: none;
   }
 
   .room {
-
     min-width: 145px;
   }
 
   #bottom {
-
     left: 10px;
-
     right: 10px;
-
     bottom: 10px;
   }
 
   #hint {
-
     display: none;
   }
 
   #navigationLabel {
-
     bottom: 65px;
   }
 
@@ -753,11 +586,9 @@ canvas {
     </h1>
 
     <p class="startDescription">
-
       Zobacz układ mieszkania z góry,
       a następnie rozpocznij spacer
       i przejdź do jego wnętrza.
-
     </p>
 
     <button id="startButton">
@@ -841,10 +672,8 @@ canvas {
 <div id="bottom">
 
   <div id="hint">
-
     Przeciągnij, aby się rozglądać
     · WASD = poruszanie
-
   </div>
 
   <div id="controls">
@@ -876,10 +705,8 @@ canvas {
 
 {
   "imports": {
-
     "three":
       "https://unpkg.com/three@0.160.0/build/three.module.js"
-
   }
 }
 
@@ -890,7 +717,6 @@ canvas {
 
 import * as THREE
   from "three";
-
 
 import {
   GLTFLoader
@@ -1056,102 +882,48 @@ let scenes = [];
 const roomSettings = {
 
   "SPACER_KORYTARZ": {
-
     number: "01",
-
     name: "Korytarz",
-
     area: "11,48 m²"
-
   },
 
   "SPACER_SALON_KUCHNIA": {
-
     number: "02",
-
     name: "Salon + kuchnia",
-
     area: "30,77 m²"
-
   },
 
   "SPACER_LAZIENKA": {
-
     number: "03",
-
     name: "Łazienka",
-
     area: "4,96 m²"
-
   },
 
   "SPACER_SYPIALNIA_01": {
-
     number: "04",
-
     name: "Sypialnia 01",
-
     area: "11,83 m²"
-
   },
 
   "SPACER_WC": {
-
     number: "05",
-
     name: "WC",
-
     area: "1,65 m²"
-
   },
 
   "SPACER_GARDEROBA": {
-
     number: "06",
-
     name: "Garderoba",
-
     area: "2,35 m²"
-
   },
 
   "SPACER_SYPIALNIA_02": {
-
     number: "07",
-
     name: "Sypialnia 02",
-
     area: "12,63 m²"
-
   }
 
 };
-
-
-/* =====================================================
-   KOLEJNOŚĆ PUNKTÓW
-===================================================== */
-
-const navigationOrder = [
-
-  "SPACER_KORYTARZ",
-
-  "SPACER_SALON_KUCHNIA",
-
-  "SPACER_LAZIENKA",
-
-  "SPACER_SYPIALNIA_01",
-
-  "SPACER_WC",
-
-  "SPACER_GARDEROBA",
-
-  "SPACER_SYPIALNIA_02"
-
-];
-
-
-let currentNavigationIndex = 0;
 
 
 /* =====================================================
@@ -1164,21 +936,18 @@ const SKETCHUP_TO_THREE =
 
 function convertPoint(point) {
 
-  return {
+  return new THREE.Vector3(
 
-    x:
-      point.x *
+    point.x *
       SKETCHUP_TO_THREE,
 
-    y:
-      point.z *
+    point.z *
       SKETCHUP_TO_THREE,
 
-    z:
-      -point.y *
+    -point.y *
       SKETCHUP_TO_THREE
 
-  };
+  );
 
 }
 
@@ -1286,7 +1055,7 @@ function createRoomButtons() {
     roomSettings
   ).forEach(
 
-    (sceneName) => {
+    sceneName => {
 
       const settings =
         roomSettings[
@@ -1324,7 +1093,7 @@ function createRoomButtons() {
 
       if (
         sceneName ===
-        navigationOrder[0]
+        "SPACER_KORYTARZ"
       ) {
 
         button.classList.add(
@@ -1393,50 +1162,35 @@ function createRoomButtons() {
       );
 
 
+      /*
+        KLIKNIĘCIE POMIESZCZENIA
+
+        Pobieramy scenę z JSON
+        i ustawiamy dokładnie
+        jej eye / target / up / fov.
+      */
+
       button.addEventListener(
 
         "click",
 
         () => {
 
-          const navIndex =
-            navigationOrder.indexOf(
-              sceneName
-            );
-
-
-          if (
-            navIndex >= 0
-          ) {
-
-            currentNavigationIndex =
-              navIndex;
-
-          }
-
+          hideStartScreen();
 
           renderer.clippingPlanes =
             [];
 
+          cameraTransition =
+            null;
 
-          hideStartScreen();
-
-
-          /*
-            Przejście korzysta
-            z dokładnych danych
-            zapisanych w JSON.
-          */
-
-          smoothMoveTo(
+          setCameraFromScene(
             sceneData
           );
-
 
           updateRoomActive(
             sceneName
           );
-
 
           updateNavigationLabel();
 
@@ -1489,7 +1243,7 @@ function updateRoomActive(
 
 
 /* =====================================================
-   AKTUALIZACJA NAPISU
+   LABEL
 ===================================================== */
 
 function updateNavigationLabel() {
@@ -1500,15 +1254,30 @@ function updateNavigationLabel() {
     );
 
 
-  const currentName =
-    navigationOrder[
-      currentNavigationIndex
-    ];
+  const active =
+    document.querySelector(
+      ".room.active"
+    );
+
+
+  if (!active) {
+
+    label.classList.remove(
+      "visible"
+    );
+
+    return;
+
+  }
+
+
+  const sceneName =
+    active.dataset.scene;
 
 
   const settings =
     roomSettings[
-      currentName
+      sceneName
     ];
 
 
@@ -1537,7 +1306,7 @@ function updateNavigationLabel() {
 
 
 /* =====================================================
-   KAMERA — DOKŁADNIE Z JSON
+   KAMERA — DOKŁADNY PUNKT
 ===================================================== */
 
 function setCameraFromScene(
@@ -1549,7 +1318,7 @@ function setCameraFromScene(
 
 
   /*
-    POZYCJA "eye"
+    DOKŁADNE EYE
   */
 
   const position =
@@ -1559,7 +1328,7 @@ function setCameraFromScene(
 
 
   /*
-    CEL "target"
+    DOKŁADNY TARGET
   */
 
   const target =
@@ -1569,26 +1338,23 @@ function setCameraFromScene(
 
 
   /*
-    Dokładna pozycja kamery.
+    DOKŁADNA POZYCJA
   */
 
-  camera.position.set(
-
-    position.x,
-
-    position.y,
-
-    position.z
-
+  camera.position.copy(
+    position
   );
 
 
   /*
-    Dokładny UP z JSON.
+    DOKŁADNY UP
 
-    Uwaga:
-    convertPoint zmienia układ
-    współrzędnych SketchUp → Three.js.
+    Jeżeli JSON go zawiera,
+    wykorzystujemy go.
+
+    Jeżeli nie,
+    używamy standardowego
+    up Three.js.
   */
 
   if (sceneData.up) {
@@ -1599,14 +1365,8 @@ function setCameraFromScene(
       );
 
 
-    camera.up.set(
-
-      up.x,
-
-      up.y,
-
-      up.z
-
+    camera.up.copy(
+      up
     );
 
 
@@ -1617,20 +1377,16 @@ function setCameraFromScene(
   else {
 
     camera.up.set(
-
       0,
-
       1,
-
       0
-
     );
 
   }
 
 
   /*
-    Dokładny FOV.
+    DOKŁADNY FOV
   */
 
   camera.fov =
@@ -1642,23 +1398,17 @@ function setCameraFromScene(
 
 
   /*
-    Dokładny kierunek.
+    DOKŁADNY KIERUNEK
   */
 
   camera.lookAt(
-
-    target.x,
-
-    target.y,
-
-    target.z
-
+    target
   );
 
 
   /*
-    Synchronizacja sterowania
-    myszką z punktem.
+    Aktualizacja sterowania
+    myszką.
   */
 
   updateAnglesFromCamera(
@@ -1673,7 +1423,7 @@ function setCameraFromScene(
 
 
 /* =====================================================
-   WIDOK STARTOWY Z GÓRY
+   WIDOK STARTOWY
 ===================================================== */
 
 function showTopView() {
@@ -1715,25 +1465,15 @@ function showTopView() {
     );
 
 
-  camera.position.set(
-
-    position.x,
-
-    position.y,
-
-    position.z
-
+  camera.position.copy(
+    position
   );
 
 
   camera.up.set(
-
     0,
-
     0,
-
     -1
-
   );
 
 
@@ -1746,13 +1486,7 @@ function showTopView() {
 
 
   camera.lookAt(
-
-    target.x,
-
-    target.y,
-
-    target.z
-
+    target
   );
 
 }
@@ -1788,10 +1522,6 @@ function startWalk() {
   hideStartScreen();
 
 
-  currentNavigationIndex =
-    0;
-
-
   const start =
     getScene(
       "SPACER_KORYTARZ"
@@ -1799,11 +1529,6 @@ function startWalk() {
 
 
   if (start) {
-
-    /*
-      Tutaj również używamy
-      dokładnie punktu JSON.
-    */
 
     setCameraFromScene(
       start
@@ -1818,298 +1543,6 @@ function startWalk() {
 
 
   updateNavigationLabel();
-
-}
-
-
-/* =====================================================
-   PŁYNNE PRZEJŚCIE
-===================================================== */
-
-let cameraTransition = null;
-
-
-function smoothMoveTo(
-  sceneData
-) {
-
-  if (!sceneData)
-    return;
-
-
-  /*
-    Dokładne eye z JSON.
-  */
-
-  const position =
-    convertPoint(
-      sceneData.eye
-    );
-
-
-  /*
-    Dokładne target z JSON.
-  */
-
-  const target =
-    convertPoint(
-      sceneData.target
-    );
-
-
-  /*
-    Aktualna pozycja.
-  */
-
-  const startPosition =
-    camera.position.clone();
-
-
-  /*
-    Aktualny kierunek.
-  */
-
-  const startDirection =
-    new THREE.Vector3();
-
-
-  camera.getWorldDirection(
-    startDirection
-  );
-
-
-  /*
-    Końcowy kierunek.
-  */
-
-  const endDirection =
-    new THREE.Vector3()
-      .subVectors(
-        target,
-        position
-      )
-      .normalize();
-
-
-  /*
-    Dokładny UP z JSON.
-  */
-
-  let endUp =
-    new THREE.Vector3(
-      0,
-      1,
-      0
-    );
-
-
-  if (sceneData.up) {
-
-    endUp =
-      convertPoint(
-        sceneData.up
-      );
-
-
-    endUp.normalize();
-
-  }
-
-
-  cameraTransition = {
-
-    startPosition:
-
-      startPosition,
-
-    endPosition:
-
-      position.clone(),
-
-    startDirection:
-
-      startDirection,
-
-    endDirection:
-
-      endDirection,
-
-    startUp:
-
-      camera.up.clone(),
-
-    endUp:
-
-      endUp,
-
-    sceneData:
-
-      sceneData,
-
-    startTime:
-
-      performance.now(),
-
-    duration:
-
-      900
-
-  };
-
-
-  /*
-    FOV również przechodzi
-    do wartości zapisanej
-    w punkcie.
-  */
-
-  camera.fov =
-    sceneData.fov ||
-    70;
-
-
-  camera.updateProjectionMatrix();
-
-}
-
-
-/* =====================================================
-   AKTUALIZACJA PRZEJŚCIA
-===================================================== */
-
-function updateCameraTransition() {
-
-  if (!cameraTransition)
-    return;
-
-
-  const now =
-    performance.now();
-
-
-  let progress =
-
-    (
-      now -
-      cameraTransition.startTime
-    ) /
-    cameraTransition.duration;
-
-
-  progress =
-    Math.min(
-      progress,
-      1
-    );
-
-
-  /*
-    Smoothstep
-  */
-
-  const eased =
-    progress *
-    progress *
-    (
-      3 -
-      2 *
-      progress
-    );
-
-
-  /*
-    POZYCJA
-  */
-
-  camera.position.lerpVectors(
-
-    cameraTransition.startPosition,
-
-    cameraTransition.endPosition,
-
-    eased
-
-  );
-
-
-  /*
-    KIERUNEK
-  */
-
-  const direction =
-    new THREE.Vector3()
-      .lerpVectors(
-
-        cameraTransition.startDirection,
-
-        cameraTransition.endDirection,
-
-        eased
-
-      )
-      .normalize();
-
-
-  const lookTarget =
-    camera.position
-      .clone()
-      .add(
-        direction.multiplyScalar(2)
-      );
-
-
-  camera.lookAt(
-    lookTarget
-  );
-
-
-  /*
-    UP
-  */
-
-  camera.up.lerpVectors(
-
-    cameraTransition.startUp,
-
-    cameraTransition.endUp,
-
-    eased
-
-  );
-
-
-  camera.up.normalize();
-
-
-  /*
-    KONIEC PRZEJŚCIA
-  */
-
-  if (
-    progress >= 1
-  ) {
-
-    /*
-      Najważniejsze:
-      na samym końcu ustawiamy
-      kamerę JESZCZE RAZ bezpośrednio
-      z JSON.
-
-      Dzięki temu nie zostaje
-      żaden błąd interpolacji.
-    */
-
-    setCameraFromScene(
-
-      cameraTransition.sceneData
-
-    );
-
-
-    cameraTransition =
-      null;
-
-  }
 
 }
 
@@ -2387,11 +1820,6 @@ renderer.domElement.addEventListener(
     }
 
 
-    /*
-      Kliknięcie na model
-      przerywa ewentualne przejście.
-    */
-
     cameraTransition =
       null;
 
@@ -2541,7 +1969,7 @@ window.addEventListener(
 
 
 /* =====================================================
-   RUCH WASD
+   RUCH WASD — BEZ KOLIZJI
 ===================================================== */
 
 const direction =
@@ -2570,13 +1998,6 @@ function updateMovement() {
       )
 
   ) {
-
-    return;
-
-  }
-
-
-  if (cameraTransition) {
 
     return;
 
@@ -2650,10 +2071,6 @@ function updateMovement() {
 
     /*
       BRAK KOLIZJI.
-
-      Kamera może swobodnie
-      przechodzić przez model,
-      meble i ściany.
     */
 
     camera.position.add(
@@ -2661,16 +2078,6 @@ function updateMovement() {
     );
 
   }
-
-
-  /*
-    NIE wymuszamy tutaj
-    wysokości 1.65.
-
-    Dzięki temu nie niszczymy
-    dokładnej pozycji punktu
-    zapisanej w JSON.
-  */
 
 }
 
@@ -2693,13 +2100,6 @@ function updateLook() {
       )
 
   ) {
-
-    return;
-
-  }
-
-
-  if (cameraTransition) {
 
     return;
 
@@ -2823,10 +2223,6 @@ document
 
       cameraTransition =
         null;
-
-
-      currentNavigationIndex =
-        0;
 
 
       renderer.clippingPlanes =
@@ -3016,9 +2412,6 @@ function animate() {
   requestAnimationFrame(
     animate
   );
-
-
-  updateCameraTransition();
 
 
   updateMovement();
