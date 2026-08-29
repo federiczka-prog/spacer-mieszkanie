@@ -3,738 +3,650 @@
 
 <head>
 
-  <meta charset="UTF-8" />
+<meta charset="UTF-8">
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  />
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+/>
 
-  <title>Wirtualny spacer — mieszkanie</title>
+<title>Wirtualny spacer — mieszkanie</title>
 
+<style>
 
-  <style>
+* {
+  box-sizing: border-box;
+}
 
-    * {
-      box-sizing: border-box;
-    }
+html,
+body {
 
+  margin: 0;
 
-    html,
-    body {
+  width: 100%;
+  height: 100%;
 
-      margin: 0;
+  overflow: hidden;
 
-      width: 100%;
-      height: 100%;
+  background: #11110f;
 
-      overflow: hidden;
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+}
 
-      background: #11110f;
+#app {
 
-      font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
+  position: fixed;
 
-    }
+  inset: 0;
 
+  overflow: hidden;
 
-    #app {
+  background: #11110f;
+}
 
-      position: fixed;
+canvas {
 
-      inset: 0;
+  display: block;
 
-      overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
 
-      background: #11110f;
 
-    }
+/* =========================================
+   START SCREEN
+========================================= */
 
+#startScreen {
 
-    canvas {
+  position: fixed;
 
-      display: block;
+  inset: 0;
 
-      width: 100%;
-      height: 100%;
+  z-index: 100;
 
-    }
+  display: flex;
 
+  align-items: center;
+  justify-content: center;
 
-    /* =========================================
-       START SCREEN
-    ========================================= */
+  background:
+    linear-gradient(
+      rgba(15,15,13,.55),
+      rgba(15,15,13,.65)
+    );
 
-    #startScreen {
+  backdrop-filter: blur(4px);
 
-      position: fixed;
+  transition:
+    opacity .6s ease,
+    visibility .6s ease;
+}
 
-      inset: 0;
+#startScreen.hidden {
 
-      z-index: 100;
+  opacity: 0;
 
-      display: flex;
+  visibility: hidden;
 
-      align-items: center;
-      justify-content: center;
+  pointer-events: none;
+}
 
-      background:
-        linear-gradient(
-          rgba(15,15,13,.55),
-          rgba(15,15,13,.65)
-        );
+.startBox {
 
-      backdrop-filter: blur(4px);
+  text-align: center;
 
-      transition:
-        opacity .6s ease,
-        visibility .6s ease;
+  color: white;
 
-    }
+  width: min(520px, 90%);
+}
 
+.startSmall {
 
-    #startScreen.hidden {
+  font-size: 10px;
 
-      opacity: 0;
+  letter-spacing: .3em;
 
-      visibility: hidden;
+  text-transform: uppercase;
 
-      pointer-events: none;
+  opacity: .55;
 
-    }
+  margin-bottom: 20px;
+}
 
+.startTitle {
 
-    .startBox {
+  font-size:
+    clamp(42px, 7vw, 72px);
 
-      text-align: center;
+  font-weight: 300;
 
-      color: white;
+  letter-spacing: -.05em;
 
-      width: min(520px, 90%);
+  margin: 0;
+}
 
-    }
+.startDescription {
 
+  margin:
+    22px auto 30px;
 
-    .startSmall {
+  max-width: 430px;
 
-      font-size: 10px;
+  font-size: 13px;
 
-      letter-spacing: .3em;
+  line-height: 1.7;
 
-      text-transform: uppercase;
+  color:
+    rgba(255,255,255,.65);
+}
 
-      opacity: .55;
+#startButton {
 
-      margin-bottom: 20px;
+  border: 0;
 
-    }
+  background: #eee9de;
 
+  color: #171713;
 
-    .startTitle {
+  height: 50px;
 
-      font-size:
-        clamp(42px, 7vw, 72px);
+  padding:
+    0 28px;
 
-      font-weight: 300;
+  border-radius: 999px;
 
-      letter-spacing: -.05em;
+  font-size: 11px;
 
-      margin: 0;
+  letter-spacing: .08em;
 
-    }
+  cursor: pointer;
 
+  transition:
+    transform .2s ease;
+}
 
-    .startDescription {
+#startButton:hover {
 
-      margin:
-        22px auto 30px;
+  transform:
+    scale(1.03);
+}
 
-      max-width: 430px;
 
-      font-size: 13px;
+/* =========================================
+   TOP BAR
+========================================= */
 
-      line-height: 1.7;
+#topBar {
 
-      color:
-        rgba(255,255,255,.65);
+  position: fixed;
 
-    }
+  z-index: 20;
 
+  top: 0;
+  left: 0;
+  right: 0;
 
-    #startButton {
+  padding:
+    25px 28px;
 
-      border: 0;
+  display: flex;
 
-      background: #eee9de;
+  justify-content:
+    space-between;
 
-      color: #171713;
+  align-items:
+    flex-start;
 
-      height: 50px;
+  pointer-events:
+    none;
 
-      padding:
-        0 28px;
+  background:
+    linear-gradient(
+      rgba(12,12,10,.55),
+      transparent
+    );
+}
 
-      border-radius: 999px;
+.brand {
 
-      font-size: 11px;
+  color: white;
+}
 
-      letter-spacing: .08em;
+.brandSmall {
 
-      cursor: pointer;
+  font-size: 9px;
 
-      transition:
-        transform .2s ease;
+  letter-spacing: .25em;
 
-    }
+  text-transform: uppercase;
 
+  opacity: .5;
 
-    #startButton:hover {
+  margin-bottom: 7px;
+}
 
-      transform:
-        scale(1.03);
+.brandTitle {
 
-    }
+  font-size: 21px;
 
+  font-weight: 500;
+}
 
-    /* =========================================
-       TOP BAR
-    ========================================= */
+.brandSubtitle {
 
-    #topBar {
+  font-size: 11px;
 
-      position: fixed;
+  opacity: .45;
 
-      z-index: 20;
+  margin-top: 5px;
+}
 
-      top: 0;
-      left: 0;
-      right: 0;
+.topButtons {
 
-      padding:
-        25px 28px;
+  display: flex;
 
-      display: flex;
+  gap: 8px;
 
-      justify-content:
-        space-between;
+  pointer-events:
+    auto;
+}
 
-      align-items:
-        flex-start;
+.topButton {
 
-      pointer-events:
-        none;
+  height: 40px;
 
-      background:
-        linear-gradient(
-          rgba(12,12,10,.55),
-          transparent
-        );
+  padding:
+    0 15px;
 
-    }
+  border-radius: 999px;
 
+  border:
+    1px solid
+    rgba(255,255,255,.15);
 
-    .brand {
+  background:
+    rgba(20,20,17,.65);
 
-      color: white;
+  color: white;
 
-    }
+  backdrop-filter:
+    blur(15px);
 
+  cursor: pointer;
+}
 
-    .brandSmall {
 
-      font-size: 9px;
+/* =========================================
+   ROOMS
+========================================= */
 
-      letter-spacing: .25em;
+#rooms {
 
-      text-transform: uppercase;
+  position: fixed;
 
-      opacity: .5;
+  z-index: 20;
 
-      margin-bottom: 7px;
+  left: 25px;
 
-    }
+  top: 50%;
 
+  transform:
+    translateY(-50%);
 
-    .brandTitle {
+  width: 235px;
 
-      font-size: 21px;
+  padding: 15px;
 
-      font-weight: 500;
+  border-radius: 18px;
 
-    }
+  background:
+    rgba(20,20,17,.76);
 
+  border:
+    1px solid
+    rgba(255,255,255,.13);
 
-    .brandSubtitle {
+  backdrop-filter:
+    blur(20px);
 
-      font-size: 11px;
+  color: white;
+}
 
-      opacity: .45;
+.roomsTitle {
 
-      margin-top: 5px;
+  font-size: 9px;
 
-    }
+  letter-spacing: .2em;
 
+  text-transform: uppercase;
 
-    .topButtons {
+  color:
+    rgba(255,255,255,.45);
 
-      display: flex;
+  padding:
+    4px 8px 11px;
+}
 
-      gap: 8px;
+.room {
 
-      pointer-events:
-        auto;
+  width: 100%;
 
-    }
+  display: grid;
 
+  grid-template-columns:
+    25px 1fr auto;
 
-    .topButton {
+  gap: 7px;
 
-      height: 40px;
+  border: 0;
 
-      padding:
-        0 15px;
+  background:
+    transparent;
 
-      border-radius: 999px;
+  color:
+    rgba(255,255,255,.65);
 
-      border:
-        1px solid
-        rgba(255,255,255,.15);
+  text-align: left;
 
-      background:
-        rgba(20,20,17,.65);
+  padding: 9px;
 
-      color: white;
+  border-radius: 10px;
 
-      backdrop-filter:
-        blur(15px);
+  cursor: pointer;
 
-      cursor: pointer;
+  transition:
+    background .2s ease,
+    color .2s ease;
+}
 
-    }
+.room:hover {
 
+  background:
+    rgba(255,255,255,.07);
 
-    /* =========================================
-       ROOMS
-    ========================================= */
+  color: white;
+}
 
-    #rooms {
+.room.active {
 
-      position: fixed;
+  background:
+    rgba(255,255,255,.11);
 
-      z-index: 20;
+  color: white;
+}
 
-      left: 25px;
+.roomNumber {
 
-      top: 50%;
+  font-size: 9px;
 
-      transform:
-        translateY(-50%);
+  opacity: .4;
+}
 
-      width: 235px;
+.roomName {
 
-      padding: 15px;
+  font-size: 12px;
+}
 
-      border-radius: 18px;
+.roomArea {
 
-      background:
-        rgba(20,20,17,.76);
+  font-size: 9px;
 
-      border:
-        1px solid
-        rgba(255,255,255,.13);
+  opacity: .35;
+}
 
-      backdrop-filter:
-        blur(20px);
 
-      color: white;
+/* =========================================
+   BOTTOM
+========================================= */
 
-    }
+#bottom {
 
+  position: fixed;
 
-    .roomsTitle {
+  z-index: 20;
 
-      font-size: 9px;
+  left: 25px;
 
-      letter-spacing: .2em;
+  right: 25px;
 
-      text-transform: uppercase;
+  bottom: 20px;
 
-      color:
-        rgba(255,255,255,.45);
+  display: flex;
 
-      padding:
-        4px 8px 11px;
+  justify-content:
+    space-between;
 
-    }
+  align-items:
+    center;
 
+  pointer-events:
+    none;
+}
 
-    .room {
+#hint {
 
-      width: 100%;
+  padding:
+    10px 13px;
 
-      display: grid;
+  border-radius: 11px;
 
-      grid-template-columns:
-        25px 1fr auto;
+  background:
+    rgba(20,20,17,.7);
 
-      gap: 7px;
+  border:
+    1px solid
+    rgba(255,255,255,.12);
 
-      border: 0;
+  backdrop-filter:
+    blur(15px);
 
-      background:
-        transparent;
+  color:
+    rgba(255,255,255,.5);
 
-      color:
-        rgba(255,255,255,.65);
+  font-size: 10px;
+}
 
-      text-align: left;
+#controls {
 
-      padding: 9px;
+  display: flex;
 
-      border-radius: 10px;
+  gap: 4px;
 
-      cursor: pointer;
+  padding: 5px;
 
-      transition:
-        background .2s ease,
-        color .2s ease;
+  border-radius: 999px;
 
-    }
+  background:
+    rgba(20,20,17,.75);
 
+  border:
+    1px solid
+    rgba(255,255,255,.13);
 
-    .room:hover {
+  backdrop-filter:
+    blur(15px);
 
-      background:
-        rgba(255,255,255,.07);
+  pointer-events:
+    auto;
+}
 
-      color: white;
+.control {
 
-    }
+  width: 40px;
 
+  height: 36px;
 
-    .room.active {
+  border: 0;
 
-      background:
-        rgba(255,255,255,.11);
+  border-radius: 999px;
 
-      color: white;
+  background:
+    transparent;
 
-    }
+  color: white;
 
+  cursor: pointer;
+}
 
-    .roomNumber {
+.control:hover {
 
-      font-size: 9px;
+  background:
+    rgba(255,255,255,.08);
+}
 
-      opacity: .4;
 
-    }
+/* =========================================
+   LOADING
+========================================= */
 
+#loading {
 
-    .roomName {
+  position: fixed;
 
-      font-size: 12px;
+  inset: 0;
 
-    }
+  z-index: 200;
 
+  display: flex;
 
-    .roomArea {
+  align-items: center;
+  justify-content: center;
 
-      font-size: 9px;
+  background: #161613;
 
-      opacity: .35;
+  color: white;
 
-    }
+  transition:
+    opacity .5s ease;
+}
 
+#loading.hidden {
 
-    /* =========================================
-       BOTTOM
-    ========================================= */
+  opacity: 0;
 
-    #bottom {
+  pointer-events: none;
+}
 
-      position: fixed;
+.loader {
 
-      z-index: 20;
+  text-align: center;
+}
 
-      left: 25px;
+.spinner {
 
-      right: 25px;
+  width: 30px;
 
-      bottom: 20px;
+  height: 30px;
 
-      display: flex;
+  margin:
+    0 auto 15px;
 
-      justify-content:
-        space-between;
+  border-radius: 50%;
 
-      align-items:
-        center;
+  border:
+    2px solid
+    rgba(255,255,255,.15);
 
-      pointer-events:
-        none;
+  border-top-color:
+    white;
 
-    }
+  animation:
+    spin 1s linear infinite;
+}
 
+@keyframes spin {
 
-    #hint {
+  to {
 
-      padding:
-        10px 13px;
+    transform:
+      rotate(360deg);
+  }
+}
 
-      border-radius: 11px;
+.loadingText {
 
-      background:
-        rgba(20,20,17,.7);
+  font-size: 13px;
+}
 
-      border:
-        1px solid
-        rgba(255,255,255,.12);
 
-      backdrop-filter:
-        blur(15px);
+/* =========================================
+   MOBILE
+========================================= */
 
-      color:
-        rgba(255,255,255,.5);
+@media(max-width:700px) {
 
-      font-size: 10px;
+  #topBar {
 
-    }
+    padding: 16px;
+  }
 
+  .brandTitle {
 
-    #controls {
+    font-size: 18px;
+  }
 
-      display: flex;
+  .brandSubtitle {
 
-      gap: 4px;
+    display: none;
+  }
 
-      padding: 5px;
+  .topButton:first-child {
 
-      border-radius: 999px;
+    display: none;
+  }
 
-      background:
-        rgba(20,20,17,.75);
+  #rooms {
 
-      border:
-        1px solid
-        rgba(255,255,255,.13);
+    left: 10px;
 
-      backdrop-filter:
-        blur(15px);
+    right: 10px;
 
-      pointer-events:
-        auto;
+    bottom: 70px;
 
-    }
+    top: auto;
 
+    width: auto;
 
-    .control {
+    transform: none;
 
-      width: 40px;
+    display: flex;
 
-      height: 36px;
+    overflow-x: auto;
 
-      border: 0;
+    padding: 7px;
+  }
 
-      border-radius: 999px;
+  .roomsTitle {
 
-      background:
-        transparent;
+    display: none;
+  }
 
-      color: white;
+  .room {
 
-      cursor: pointer;
+    min-width: 145px;
+  }
 
-    }
+  #bottom {
 
+    left: 10px;
 
-    .control:hover {
+    right: 10px;
 
-      background:
-        rgba(255,255,255,.08);
+    bottom: 10px;
+  }
 
-    }
+  #hint {
 
+    display: none;
+  }
 
-    /* =========================================
-       LOADING
-    ========================================= */
+}
 
-    #loading {
-
-      position: fixed;
-
-      inset: 0;
-
-      z-index: 200;
-
-      display: flex;
-
-      align-items: center;
-      justify-content: center;
-
-      background: #161613;
-
-      color: white;
-
-      transition:
-        opacity .5s ease;
-
-    }
-
-
-    #loading.hidden {
-
-      opacity: 0;
-
-      pointer-events: none;
-
-    }
-
-
-    .loader {
-
-      text-align: center;
-
-    }
-
-
-    .spinner {
-
-      width: 30px;
-
-      height: 30px;
-
-      margin:
-        0 auto 15px;
-
-      border-radius: 50%;
-
-      border:
-        2px solid
-        rgba(255,255,255,.15);
-
-      border-top-color:
-        white;
-
-      animation:
-        spin 1s linear infinite;
-
-    }
-
-
-    @keyframes spin {
-
-      to {
-
-        transform:
-          rotate(360deg);
-
-      }
-
-    }
-
-
-    .loadingText {
-
-      font-size: 13px;
-
-    }
-
-
-    /* =========================================
-       MOBILE
-    ========================================= */
-
-    @media(max-width:700px) {
-
-      #topBar {
-
-        padding: 16px;
-
-      }
-
-
-      .brandTitle {
-
-        font-size: 18px;
-
-      }
-
-
-      .brandSubtitle {
-
-        display: none;
-
-      }
-
-
-      .topButton:first-child {
-
-        display: none;
-
-      }
-
-
-      #rooms {
-
-        left: 10px;
-
-        right: 10px;
-
-        bottom: 70px;
-
-        top: auto;
-
-        width: auto;
-
-        transform: none;
-
-        display: flex;
-
-        overflow-x: auto;
-
-        padding: 7px;
-
-      }
-
-
-      .roomsTitle {
-
-        display: none;
-
-      }
-
-
-      .room {
-
-        min-width: 145px;
-
-      }
-
-
-      #bottom {
-
-        left: 10px;
-
-        right: 10px;
-
-        bottom: 10px;
-
-      }
-
-
-      #hint {
-
-        display: none;
-
-      }
-
-    }
-
-  </style>
+</style>
 
 </head>
 
@@ -776,11 +688,9 @@
       Wirtualny spacer
     </div>
 
-
     <h1 class="startTitle">
       Mieszkanie
     </h1>
-
 
     <p class="startDescription">
 
@@ -789,7 +699,6 @@
       i przejdź do jego wnętrza.
 
     </p>
-
 
     <button id="startButton">
       ROZPOCZNIJ SPACER
@@ -812,11 +721,9 @@
       Wirtualny spacer
     </div>
 
-
     <div class="brandTitle">
       Mieszkanie
     </div>
-
 
     <div class="brandSubtitle">
       Interaktywna prezentacja wnętrza
@@ -824,24 +731,20 @@
 
   </div>
 
-
   <div class="topButtons">
 
     <button
       class="topButton"
-      id="infoButton">
-
+      id="infoButton"
+    >
       O projekcie
-
     </button>
-
 
     <button
       class="topButton"
-      id="fullscreenButton">
-
+      id="fullscreenButton"
+    >
       ⛶
-
     </button>
 
   </div>
@@ -851,11 +754,6 @@
 
 <!-- =========================================
      ROOMS
-     
-     PUSTE.
-     
-     Pomieszczenia są tworzone automatycznie
-     z punkty_spaceru.json.
 ========================================= -->
 
 <aside id="rooms">
@@ -880,24 +778,20 @@
 
   </div>
 
-
   <div id="controls">
 
     <button
       class="control"
-      id="resetButton">
-
+      id="resetButton"
+    >
       ↻
-
     </button>
-
 
     <button
       class="control"
-      id="fullscreenButton2">
-
+      id="fullscreenButton2"
+    >
       ⛶
-
     </button>
 
   </div>
@@ -1014,11 +908,6 @@ renderer.toneMappingExposure =
   1;
 
 
-/*
-  Clipping jest używany tylko
-  podczas rzutu z góry.
-*/
-
 renderer.localClippingEnabled =
   true;
 
@@ -1087,12 +976,21 @@ let modelCenter = null;
 
 let modelSize = null;
 
+let topCutPlane = null;
+
 
 /* =====================================================
    SCENY Z JSON
 ===================================================== */
 
 let scenes = [];
+
+
+/* =====================================================
+   PŁYNNE PRZEJŚCIE KAMERY
+===================================================== */
+
+let cameraTransition = null;
 
 
 /* =====================================================
@@ -1111,7 +1009,6 @@ const roomSettings = {
 
   },
 
-
   "SPACER_SALON_KUCHNIA": {
 
     number: "02",
@@ -1121,7 +1018,6 @@ const roomSettings = {
     area: "30,77 m²"
 
   },
-
 
   "SPACER_LAZIENKA": {
 
@@ -1133,7 +1029,6 @@ const roomSettings = {
 
   },
 
-
   "SPACER_SYPIALNIA_01": {
 
     number: "04",
@@ -1143,7 +1038,6 @@ const roomSettings = {
     area: "11,83 m²"
 
   },
-
 
   "SPACER_WC": {
 
@@ -1155,7 +1049,6 @@ const roomSettings = {
 
   },
 
-
   "SPACER_GARDEROBA": {
 
     number: "06",
@@ -1165,7 +1058,6 @@ const roomSettings = {
     area: "2,35 m²"
 
   },
-
 
   "SPACER_SYPIALNIA_02": {
 
@@ -1183,31 +1075,6 @@ const roomSettings = {
 /* =====================================================
    KONWERSJA SKETCHUP → THREE.JS
 ===================================================== */
-
-/*
-  SketchUp:
-
-    X = X
-
-    Y = głębokość
-
-    Z = wysokość
-
-
-  Three.js:
-
-    X = X
-
-    Y = wysokość
-
-    Z = głębokość
-
-
-  Dodatkowo model jest w calach,
-  dlatego przeliczamy na metry.
-
-  39.37007874 cala = 1 metr.
-*/
 
 const SKETCHUP_TO_THREE =
   1 / 39.37007874015748;
@@ -1331,9 +1198,10 @@ function createRoomButtons() {
   );
 
 
-  const names = Object.keys(
-    roomSettings
-  );
+  const names =
+    Object.keys(
+      roomSettings
+    );
 
 
   names.forEach(
@@ -1373,6 +1241,11 @@ function createRoomButtons() {
         "room";
 
 
+      /*
+        Po uruchomieniu spaceru
+        Korytarz będzie aktywny.
+      */
+
       if (index === 0) {
 
         button.classList.add(
@@ -1380,6 +1253,10 @@ function createRoomButtons() {
         );
 
       }
+
+
+      button.dataset.scene =
+        sceneName;
 
 
       const number =
@@ -1440,7 +1317,9 @@ function createRoomButtons() {
 
 
       button.addEventListener(
+
         "click",
+
         () => {
 
           startRoom(
@@ -1449,6 +1328,7 @@ function createRoomButtons() {
           );
 
         }
+
       );
 
 
@@ -1457,6 +1337,7 @@ function createRoomButtons() {
       );
 
     }
+
   );
 
 }
@@ -1469,6 +1350,10 @@ function createRoomButtons() {
 function setCameraFromScene(
   sceneData
 ) {
+
+  if (!sceneData)
+    return;
+
 
   const position =
     convertPoint(
@@ -1492,11 +1377,6 @@ function setCameraFromScene(
 
   );
 
-
-  /*
-    Podczas spaceru standardowe
-    Y jest pionem.
-  */
 
   camera.up.set(
     0,
@@ -1538,19 +1418,6 @@ function setCameraFromScene(
 /* =====================================================
    TOP VIEW
 ===================================================== */
-
-let topCutPlane = null;
-
-
-/*
-  Pierwszy widok korzysta z:
-
-  SPACER_START
-
-  z punkty_spaceru.json.
-
-  Sufit zostaje ukryty tylko tutaj.
-*/
 
 function showTopView() {
 
@@ -1595,12 +1462,6 @@ function showTopView() {
 
   );
 
-
-  /*
-    Dla widoku z góry
-    ustawiamy orientację ekranu
-    zgodną z układem modelu.
-  */
 
   camera.up.set(
 
@@ -1647,6 +1508,10 @@ function showTopView() {
 
 function startWalk() {
 
+  cameraTransition =
+    null;
+
+
   renderer.clippingPlanes =
     [];
 
@@ -1674,6 +1539,46 @@ function startWalk() {
       "hidden"
     );
 
+
+  /*
+    Korytarz zawsze aktywny
+    po rozpoczęciu spaceru.
+  */
+
+  updateRoomActive(
+    "SPACER_KORYTARZ"
+  );
+
+}
+
+
+/* =====================================================
+   AKTYWNE POMIESZCZENIE
+===================================================== */
+
+function updateRoomActive(
+  sceneName
+) {
+
+  document
+    .querySelectorAll(
+      ".room"
+    )
+    .forEach(
+      button => {
+
+        button.classList.toggle(
+
+          "active",
+
+          button.dataset.scene ===
+          sceneName
+
+        );
+
+      }
+    );
+
 }
 
 
@@ -1685,6 +1590,10 @@ function startRoom(
   sceneData,
   button
 ) {
+
+  if (!sceneData)
+    return;
+
 
   renderer.clippingPlanes =
     [];
@@ -1699,26 +1608,299 @@ function startRoom(
     );
 
 
-  document
-    .querySelectorAll(
-      ".room"
-    )
-    .forEach(
-      item =>
-        item.classList.remove(
-          "active"
-        )
+  /*
+    DOKŁADNE wartości z JSON.
+    Niczego tutaj nie zmieniamy.
+  */
+
+  const position =
+    convertPoint(
+      sceneData.eye
     );
 
 
-  button.classList.add(
-    "active"
+  const target =
+    convertPoint(
+      sceneData.target
+    );
+
+
+  /*
+    Aktualna pozycja.
+  */
+
+  const startPosition =
+    camera.position.clone();
+
+
+  /*
+    Aktualny kierunek patrzenia.
+  */
+
+  const startDirection =
+    new THREE.Vector3();
+
+
+  camera.getWorldDirection(
+    startDirection
   );
 
 
-  setCameraFromScene(
-    sceneData
+  /*
+    Docelowy kierunek
+    dokładnie z target.
+  */
+
+  const endDirection =
+    new THREE.Vector3()
+      .subVectors(
+        target,
+        position
+      )
+      .normalize();
+
+
+  /*
+    Tworzymy animację.
+  */
+
+  cameraTransition = {
+
+    startPosition:
+
+      startPosition,
+
+    endPosition:
+
+      new THREE.Vector3(
+
+        position.x,
+
+        position.y,
+
+        position.z
+
+      ),
+
+    startDirection:
+
+      startDirection,
+
+    endDirection:
+
+      endDirection,
+
+    startFov:
+
+      camera.fov,
+
+    endFov:
+
+      sceneData.fov ||
+      70,
+
+    startTime:
+
+      performance.now(),
+
+    duration:
+
+      1000
+
+  };
+
+
+  /*
+    Aktywne pomieszczenie
+    zmieniamy od razu.
+  */
+
+  updateRoomActive(
+    button.dataset.scene
   );
+
+}
+
+
+/* =====================================================
+   AKTUALIZACJA ANIMACJI KAMERY
+===================================================== */
+
+function updateCameraTransition() {
+
+  if (!cameraTransition)
+    return;
+
+
+  const now =
+    performance.now();
+
+
+  let progress =
+
+    (
+      now -
+      cameraTransition.startTime
+    ) /
+    cameraTransition.duration;
+
+
+  progress =
+    Math.min(
+      progress,
+      1
+    );
+
+
+  /*
+    Smoothstep:
+    łagodny początek
+    i łagodne zakończenie.
+  */
+
+  const eased =
+
+    progress *
+    progress *
+    (
+      3 -
+      2 *
+      progress
+    );
+
+
+  /*
+    Płynna pozycja.
+  */
+
+  camera.position.lerpVectors(
+
+    cameraTransition.startPosition,
+
+    cameraTransition.endPosition,
+
+    eased
+
+  );
+
+
+  /*
+    Płynny kierunek.
+  */
+
+  const direction =
+
+    new THREE.Vector3()
+      .lerpVectors(
+
+        cameraTransition.startDirection,
+
+        cameraTransition.endDirection,
+
+        eased
+
+      )
+      .normalize();
+
+
+  const lookTarget =
+
+    camera.position
+      .clone()
+      .add(
+        direction.multiplyScalar(2)
+      );
+
+
+  camera.lookAt(
+    lookTarget
+  );
+
+
+  /*
+    Płynny FOV.
+  */
+
+  camera.fov =
+
+    THREE.MathUtils.lerp(
+
+      cameraTransition.startFov,
+
+      cameraTransition.endFov,
+
+      eased
+
+    );
+
+
+  camera.updateProjectionMatrix();
+
+
+  /*
+    KONIEC.
+
+    Ustawiamy dokładnie
+    pozycję i kierunek docelowy.
+  */
+
+  if (
+    progress >= 1
+  ) {
+
+    camera.position.copy(
+
+      cameraTransition.endPosition
+
+    );
+
+
+    camera.fov =
+
+      cameraTransition.endFov;
+
+
+    camera.updateProjectionMatrix();
+
+
+    const finalTarget =
+
+      camera.position
+        .clone()
+        .add(
+
+          cameraTransition.endDirection
+            .clone()
+            .multiplyScalar(2)
+
+        );
+
+
+    camera.lookAt(
+      finalTarget
+    );
+
+
+    /*
+      Aktualizujemy yaw/pitch,
+      żeby dalsze rozglądanie
+      myszką zaczynało się
+      dokładnie od nowego kierunku.
+    */
+
+    updateAnglesFromCamera(
+
+      camera.position,
+
+      finalTarget
+
+    );
+
+
+    cameraTransition =
+      null;
+
+  }
 
 }
 
@@ -1754,21 +1936,26 @@ async function loadModel() {
       await Promise.all(
 
         files.map(
+
           async file => {
 
             const response =
               await fetch(
+
                 file +
                 "?" +
                 Date.now()
+
               );
 
 
             if (!response.ok) {
 
               throw new Error(
+
                 "Nie można wczytać " +
                 file
+
               );
 
             }
@@ -1777,6 +1964,7 @@ async function loadModel() {
             return response.arrayBuffer();
 
           }
+
         )
 
       );
@@ -1818,6 +2006,7 @@ async function loadModel() {
 
 
     await new Promise(
+
       (resolve, reject) => {
 
         loader.parse(
@@ -1836,10 +2025,6 @@ async function loadModel() {
               model
             );
 
-
-            /*
-              Obliczamy granice modelu.
-            */
 
             modelBox =
               new THREE.Box3()
@@ -1871,15 +2056,6 @@ async function loadModel() {
               modelSize
             );
 
-
-            /*
-              POZIOM CIĘCIA SUFITU.
-
-              Wszystko powyżej tego
-              poziomu zostaje ukryte
-              tylko podczas rzutu
-              z góry.
-            */
 
             const cutY =
 
@@ -1918,19 +2094,15 @@ async function loadModel() {
         );
 
       }
+
     );
 
-
-    /*
-      Punkty pobieramy dopiero
-      po załadowaniu modelu.
-    */
 
     await loadScenePoints();
 
 
     /*
-      Pokazujemy pierwszy widok.
+      Pierwszy widok z góry.
     */
 
     showTopView();
@@ -1991,12 +2163,8 @@ renderer.domElement.addEventListener(
 
   event => {
 
-    /*
-      Rozglądanie działa
-      tylko po rozpoczęciu spaceru.
-    */
-
     if (
+
       !document
         .getElementById(
           "startScreen"
@@ -2004,7 +2172,21 @@ renderer.domElement.addEventListener(
         .classList.contains(
           "hidden"
         )
+
     ) {
+
+      return;
+
+    }
+
+
+    /*
+      Podczas animacji
+      nie rozpoczynamy
+      rozglądania.
+    */
+
+    if (cameraTransition) {
 
       return;
 
@@ -2039,6 +2221,10 @@ renderer.domElement.addEventListener(
   event => {
 
     if (!dragging)
+      return;
+
+
+    if (cameraTransition)
       return;
 
 
@@ -2173,11 +2359,6 @@ const move =
 
 function updateMovement() {
 
-  /*
-    Nie poruszamy się
-    na ekranie startowym.
-  */
-
   if (
 
     !document
@@ -2189,6 +2370,21 @@ function updateMovement() {
       )
 
   ) {
+
+    return;
+
+  }
+
+
+  /*
+    Bardzo ważne:
+
+    podczas przejścia
+    WASD nie może zmieniać
+    pozycji kamery.
+  */
+
+  if (cameraTransition) {
 
     return;
 
@@ -2283,11 +2479,6 @@ function updateMovement() {
 
 function updateLook() {
 
-  /*
-    Podczas rzutu z góry
-    nie zmieniamy kamery.
-  */
-
   if (
 
     !document
@@ -2299,6 +2490,18 @@ function updateLook() {
       )
 
   ) {
+
+    return;
+
+  }
+
+
+  /*
+    Animacja ma pełną kontrolę
+    nad kamerą.
+  */
+
+  if (cameraTransition) {
 
     return;
 
@@ -2420,6 +2623,15 @@ document
 
     () => {
 
+      /*
+        Anulujemy ewentualną
+        trwającą animację.
+      */
+
+      cameraTransition =
+        null;
+
+
       renderer.clippingPlanes =
         [];
 
@@ -2447,9 +2659,19 @@ document
 
       }
 
+
+      /*
+        Po resecie zawsze
+        zaznaczamy Korytarz.
+      */
+
+      updateRoomActive(
+        "SPACER_KORYTARZ"
+      );
+
     }
 
-  );
+);
 
 
 /* =====================================================
@@ -2470,7 +2692,7 @@ document
 
     }
 
-  );
+);
 
 
 /* =====================================================
@@ -2555,13 +2777,13 @@ document
 
         "Kliknij pomieszczenie na liście, " +
 
-        "aby przejść bezpośrednio do wybranego miejsca."
+        "aby płynnie przejść do wybranego punktu."
 
       );
 
     }
 
-  );
+);
 
 
 /* =====================================================
@@ -2606,6 +2828,18 @@ function animate() {
     animate
   );
 
+
+  /*
+    Najpierw animacja kamery.
+  */
+
+  updateCameraTransition();
+
+
+  /*
+    Potem normalne sterowanie.
+    Podczas animacji jest blokowane.
+  */
 
   updateMovement();
 
