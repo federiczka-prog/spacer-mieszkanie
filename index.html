@@ -57,7 +57,7 @@ canvas {
 
 
 /* =========================================
-   START SCREEN
+  START SCREEN
 ========================================= */
 
 #startScreen {
@@ -166,18 +166,21 @@ canvas {
   cursor: pointer;
 
   transition:
-    transform .2s ease;
+    transform .2s ease,
+    background .2s ease;
 }
 
 #startButton:hover {
 
   transform:
     scale(1.03);
+
+  background: #ffffff;
 }
 
 
 /* =========================================
-   TOP BAR
+  TOP BAR
 ========================================= */
 
 #topBar {
@@ -277,11 +280,24 @@ canvas {
     blur(15px);
 
   cursor: pointer;
+
+  transition:
+    background .2s ease,
+    transform .2s ease;
+}
+
+.topButton:hover {
+
+  background:
+    rgba(255,255,255,.12);
+
+  transform:
+    translateY(-1px);
 }
 
 
 /* =========================================
-   ROOMS
+  ROOMS
 ========================================= */
 
 #rooms {
@@ -360,7 +376,8 @@ canvas {
 
   transition:
     background .2s ease,
-    color .2s ease;
+    color .2s ease,
+    transform .2s ease;
 }
 
 .room:hover {
@@ -369,6 +386,9 @@ canvas {
     rgba(255,255,255,.07);
 
   color: white;
+
+  transform:
+    translateX(2px);
 }
 
 .room.active {
@@ -400,7 +420,7 @@ canvas {
 
 
 /* =========================================
-   BOTTOM
+  BOTTOM
 ========================================= */
 
 #bottom {
@@ -490,17 +510,24 @@ canvas {
   color: white;
 
   cursor: pointer;
+
+  transition:
+    background .2s ease,
+    transform .2s ease;
 }
 
 .control:hover {
 
   background:
     rgba(255,255,255,.08);
+
+  transform:
+    scale(1.05);
 }
 
 
 /* =========================================
-   LOADING
+  LOADING
 ========================================= */
 
 #loading {
@@ -574,7 +601,7 @@ canvas {
 
 
 /* =========================================
-   MOBILE
+  MOBILE
 ========================================= */
 
 @media(max-width:700px) {
@@ -658,7 +685,7 @@ canvas {
 
 
 <!-- =========================================
-     LOADING
+    LOADING
 ========================================= -->
 
 <div id="loading">
@@ -677,7 +704,7 @@ canvas {
 
 
 <!-- =========================================
-     START
+    START
 ========================================= -->
 
 <div id="startScreen">
@@ -710,7 +737,7 @@ canvas {
 
 
 <!-- =========================================
-     TOP
+    TOP
 ========================================= -->
 
 <header id="topBar">
@@ -753,7 +780,7 @@ canvas {
 
 
 <!-- =========================================
-     ROOMS
+    ROOMS
 ========================================= -->
 
 <aside id="rooms">
@@ -766,7 +793,7 @@ canvas {
 
 
 <!-- =========================================
-     BOTTOM
+    BOTTOM
 ========================================= -->
 
 <div id="bottom">
@@ -800,7 +827,7 @@ canvas {
 
 
 <!-- =========================================
-     THREE.JS IMPORTMAP
+    THREE.JS IMPORTMAP
 ========================================= -->
 
 <script type="importmap">
@@ -831,7 +858,7 @@ from
 
 
 /* =====================================================
-   SCENE
+  SCENE
 ===================================================== */
 
 const scene =
@@ -845,7 +872,7 @@ scene.background =
 
 
 /* =====================================================
-   CAMERA
+  CAMERA
 ===================================================== */
 
 const camera =
@@ -864,7 +891,7 @@ const camera =
 
 
 /* =====================================================
-   RENDERER
+  RENDERER
 ===================================================== */
 
 const renderer =
@@ -872,7 +899,9 @@ const renderer =
 
     antialias: true,
 
-    logarithmicDepthBuffer: true
+    logarithmicDepthBuffer: true,
+
+    powerPreference: "high-performance"
 
   });
 
@@ -896,19 +925,55 @@ renderer.setSize(
 );
 
 
+/*
+  Kolor przestrzeni.
+*/
+
 renderer.outputColorSpace =
   THREE.SRGBColorSpace;
 
+
+/*
+  Filmowe mapowanie tonów.
+*/
 
 renderer.toneMapping =
   THREE.ACESFilmicToneMapping;
 
 
-renderer.toneMappingExposure =
-  1;
+/*
+  Delikatnie większa ekspozycja
+  dla jasnego wnętrza.
+*/
 
+renderer.toneMappingExposure =
+  1.05;
+
+
+/*
+  Cienie.
+*/
+
+renderer.shadowMap.enabled = true;
+
+renderer.shadowMap.type =
+  THREE.PCFSoftShadowMap;
+
+
+/*
+  Clipping.
+*/
 
 renderer.localClippingEnabled =
+  true;
+
+
+/*
+  Fizyczne poprawienie wyglądu
+  materiałów i światła.
+*/
+
+renderer.physicallyCorrectLights =
   true;
 
 
@@ -920,30 +985,41 @@ document
 
 
 /* =====================================================
-   LIGHT
+  ŚWIATŁO — ŚWIATŁO DZIENNE
 ===================================================== */
 
-scene.add(
 
+/*
+  Bardzo miękkie światło otoczenia.
+*/
+
+const hemisphere =
   new THREE.HemisphereLight(
 
-    0xffffff,
+    0xfff8ec,
 
-    0x555555,
+    0x4b4035,
 
-    2
+    1.35
 
-  )
+  );
 
+
+scene.add(
+  hemisphere
 );
 
+
+/*
+  Główne światło dzienne.
+*/
 
 const directional =
   new THREE.DirectionalLight(
 
-    0xffffff,
+    0xfff4df,
 
-    2
+    2.4
 
   );
 
@@ -952,11 +1028,49 @@ directional.position.set(
 
   110,
 
-  30,
+  80,
 
   275
 
 );
+
+
+directional.castShadow =
+  true;
+
+
+/*
+  Duża mapa cieni daje
+  gładsze cienie.
+*/
+
+directional.shadow.mapSize.width =
+  2048;
+
+directional.shadow.mapSize.height =
+  2048;
+
+
+/*
+  Zakres kamery cieni.
+*/
+
+directional.shadow.camera.near =
+  0.1;
+
+directional.shadow.camera.far =
+  500;
+
+
+/*
+  Miękkość cieni.
+*/
+
+directional.shadow.bias =
+  -0.0001;
+
+directional.shadow.normalBias =
+  0.02;
 
 
 scene.add(
@@ -965,7 +1079,87 @@ scene.add(
 
 
 /* =====================================================
-   MODEL
+  ŚWIATŁO WNĘTRZA
+===================================================== */
+
+
+/*
+  Delikatne ciepłe światło
+  wypełniające wnętrze.
+*/
+
+const warmFill =
+  new THREE.PointLight(
+
+    0xffd6a3,
+
+    15,
+
+    25,
+
+    2
+
+  );
+
+
+warmFill.position.set(
+
+  0,
+
+  2.7,
+
+  0
+
+);
+
+
+warmFill.castShadow =
+  false;
+
+
+scene.add(
+  warmFill
+);
+
+
+/*
+  Drugie delikatne światło,
+  żeby wnętrze nie było czarne
+  w głębszych miejscach.
+*/
+
+const warmFill2 =
+  new THREE.PointLight(
+
+    0xffe2bd,
+
+    8,
+
+    18,
+
+    2
+
+  );
+
+
+warmFill2.position.set(
+
+  -4,
+
+  2.4,
+
+  -3
+
+);
+
+
+scene.add(
+  warmFill2
+);
+
+
+/* =====================================================
+  MODEL
 ===================================================== */
 
 let model = null;
@@ -980,21 +1174,21 @@ let topCutPlane = null;
 
 
 /* =====================================================
-   SCENY Z JSON
+  SCENY Z JSON
 ===================================================== */
 
 let scenes = [];
 
 
 /* =====================================================
-   PŁYNNE PRZEJŚCIE KAMERY
+  PŁYNNE PRZEJŚCIE KAMERY
 ===================================================== */
 
 let cameraTransition = null;
 
 
 /* =====================================================
-   NAZWY POMIESZCZEŃ
+  NAZWY POMIESZCZEŃ
 ===================================================== */
 
 const roomSettings = {
@@ -1073,7 +1267,7 @@ const roomSettings = {
 
 
 /* =====================================================
-   KONWERSJA SKETCHUP → THREE.JS
+  KONWERSJA SKETCHUP → THREE.JS
 ===================================================== */
 
 const SKETCHUP_TO_THREE =
@@ -1102,7 +1296,136 @@ function convertPoint(point) {
 
 
 /* =====================================================
-   POBIERANIE PUNKTÓW
+  POPRAWA MATERIAŁÓW MODELU
+===================================================== */
+
+function improveModelMaterials() {
+
+  if (!model)
+    return;
+
+
+  model.traverse(
+    object => {
+
+      if (!object.isMesh)
+        return;
+
+
+      /*
+        Cienie.
+      */
+
+      object.castShadow =
+        true;
+
+      object.receiveShadow =
+        true;
+
+
+      const material =
+        object.material;
+
+
+      /*
+        Model może mieć
+        pojedynczy materiał
+        albo tablicę materiałów.
+      */
+
+      const materials =
+        Array.isArray(material)
+          ? material
+          : [material];
+
+
+      materials.forEach(
+        mat => {
+
+          if (!mat)
+            return;
+
+
+          /*
+            Jeżeli materiał jest typu
+            MeshStandard/Physical,
+            poprawiamy jego parametry.
+          */
+
+          if (
+            mat.isMeshStandardMaterial ||
+            mat.isMeshPhysicalMaterial
+          ) {
+
+            /*
+              Delikatniejszy połysk.
+            */
+
+            if (
+              mat.roughness === undefined ||
+              mat.roughness === 0
+            ) {
+
+              mat.roughness =
+                0.72;
+
+            }
+
+
+            /*
+              Minimalny metaliczny efekt
+              tylko tam, gdzie materiał
+              już go posiada.
+            */
+
+            if (
+              mat.metalness !== undefined
+            ) {
+
+              mat.metalness =
+                Math.min(
+                  mat.metalness,
+                  0.15
+                );
+
+            }
+
+
+            /*
+              Delikatne fizyczne odbicie.
+            */
+
+            if (
+              mat.isMeshPhysicalMaterial
+            ) {
+
+              mat.clearcoat =
+                Math.min(
+                  mat.clearcoat || 0,
+                  0.25
+                );
+
+            }
+
+
+            mat.needsUpdate =
+              true;
+
+          }
+
+        }
+
+      );
+
+    }
+
+  );
+
+}
+
+
+/* =====================================================
+  POBIERANIE PUNKTÓW
 ===================================================== */
 
 async function loadScenePoints() {
@@ -1151,7 +1474,7 @@ async function loadScenePoints() {
 
 
 /* =====================================================
-   ZNAJDŹ SCENĘ
+  ZNAJDŹ SCENĘ
 ===================================================== */
 
 function getScene(name) {
@@ -1165,7 +1488,7 @@ function getScene(name) {
 
 
 /* =====================================================
-   UTWÓRZ MENU
+  UTWÓRZ MENU
 ===================================================== */
 
 function createRoomButtons() {
@@ -1240,11 +1563,6 @@ function createRoomButtons() {
       button.className =
         "room";
 
-
-      /*
-        Po uruchomieniu spaceru
-        Korytarz będzie aktywny.
-      */
 
       if (index === 0) {
 
@@ -1344,7 +1662,7 @@ function createRoomButtons() {
 
 
 /* =====================================================
-   CAMERA Z PUNKTU
+  CAMERA Z PUNKTU
 ===================================================== */
 
 function setCameraFromScene(
@@ -1416,7 +1734,7 @@ function setCameraFromScene(
 
 
 /* =====================================================
-   TOP VIEW
+  TOP VIEW
 ===================================================== */
 
 function showTopView() {
@@ -1503,7 +1821,7 @@ function showTopView() {
 
 
 /* =====================================================
-   START SPACERU
+  START SPACERU
 ===================================================== */
 
 function startWalk() {
@@ -1540,11 +1858,6 @@ function startWalk() {
     );
 
 
-  /*
-    Korytarz zawsze aktywny
-    po rozpoczęciu spaceru.
-  */
-
   updateRoomActive(
     "SPACER_KORYTARZ"
   );
@@ -1553,7 +1866,7 @@ function startWalk() {
 
 
 /* =====================================================
-   AKTYWNE POMIESZCZENIE
+  AKTYWNE POMIESZCZENIE
 ===================================================== */
 
 function updateRoomActive(
@@ -1583,7 +1896,7 @@ function updateRoomActive(
 
 
 /* =====================================================
-   START KONKRETNEGO POMIESZCZENIA
+  START KONKRETNEGO POMIESZCZENIA
 ===================================================== */
 
 function startRoom(
@@ -1608,11 +1921,6 @@ function startRoom(
     );
 
 
-  /*
-    DOKŁADNE wartości z JSON.
-    Niczego tutaj nie zmieniamy.
-  */
-
   const position =
     convertPoint(
       sceneData.eye
@@ -1625,17 +1933,9 @@ function startRoom(
     );
 
 
-  /*
-    Aktualna pozycja.
-  */
-
   const startPosition =
     camera.position.clone();
 
-
-  /*
-    Aktualny kierunek patrzenia.
-  */
 
   const startDirection =
     new THREE.Vector3();
@@ -1646,11 +1946,6 @@ function startRoom(
   );
 
 
-  /*
-    Docelowy kierunek
-    dokładnie z target.
-  */
-
   const endDirection =
     new THREE.Vector3()
       .subVectors(
@@ -1660,18 +1955,12 @@ function startRoom(
       .normalize();
 
 
-  /*
-    Tworzymy animację.
-  */
-
   cameraTransition = {
 
     startPosition:
-
       startPosition,
 
     endPosition:
-
       new THREE.Vector3(
 
         position.x,
@@ -1683,37 +1972,26 @@ function startRoom(
       ),
 
     startDirection:
-
       startDirection,
 
     endDirection:
-
       endDirection,
 
     startFov:
-
       camera.fov,
 
     endFov:
-
       sceneData.fov ||
       70,
 
     startTime:
-
       performance.now(),
 
     duration:
-
       1000
 
   };
 
-
-  /*
-    Aktywne pomieszczenie
-    zmieniamy od razu.
-  */
 
   updateRoomActive(
     button.dataset.scene
@@ -1723,7 +2001,7 @@ function startRoom(
 
 
 /* =====================================================
-   AKTUALIZACJA ANIMACJI KAMERY
+  AKTUALIZACJA ANIMACJI KAMERY
 ===================================================== */
 
 function updateCameraTransition() {
@@ -1752,12 +2030,6 @@ function updateCameraTransition() {
     );
 
 
-  /*
-    Smoothstep:
-    łagodny początek
-    i łagodne zakończenie.
-  */
-
   const eased =
 
     progress *
@@ -1769,10 +2041,6 @@ function updateCameraTransition() {
     );
 
 
-  /*
-    Płynna pozycja.
-  */
-
   camera.position.lerpVectors(
 
     cameraTransition.startPosition,
@@ -1783,10 +2051,6 @@ function updateCameraTransition() {
 
   );
 
-
-  /*
-    Płynny kierunek.
-  */
 
   const direction =
 
@@ -1817,10 +2081,6 @@ function updateCameraTransition() {
   );
 
 
-  /*
-    Płynny FOV.
-  */
-
   camera.fov =
 
     THREE.MathUtils.lerp(
@@ -1836,13 +2096,6 @@ function updateCameraTransition() {
 
   camera.updateProjectionMatrix();
 
-
-  /*
-    KONIEC.
-
-    Ustawiamy dokładnie
-    pozycję i kierunek docelowy.
-  */
 
   if (
     progress >= 1
@@ -1881,13 +2134,6 @@ function updateCameraTransition() {
     );
 
 
-    /*
-      Aktualizujemy yaw/pitch,
-      żeby dalsze rozglądanie
-      myszką zaczynało się
-      dokładnie od nowego kierunku.
-    */
-
     updateAnglesFromCamera(
 
       camera.position,
@@ -1906,7 +2152,7 @@ function updateCameraTransition() {
 
 
 /* =====================================================
-   LOAD MODEL
+  LOAD MODEL
 ===================================================== */
 
 const loading =
@@ -2026,6 +2272,14 @@ async function loadModel() {
             );
 
 
+            /*
+              Włączamy realistyczne
+              materiały i cienie.
+            */
+
+            improveModelMaterials();
+
+
             modelBox =
               new THREE.Box3()
                 .setFromObject(
@@ -2079,6 +2333,37 @@ async function loadModel() {
               );
 
 
+            /*
+              Dopasowujemy światła
+              do środka modelu.
+            */
+
+            warmFill.position.set(
+
+              modelCenter.x,
+
+              modelBox.min.y +
+                modelSize.y * 0.55,
+
+              modelCenter.z
+
+            );
+
+
+            warmFill2.position.set(
+
+              modelCenter.x -
+                modelSize.x * 0.25,
+
+              modelBox.min.y +
+                modelSize.y * 0.45,
+
+              modelCenter.z -
+                modelSize.z * 0.25
+
+            );
+
+
             resolve();
 
           },
@@ -2100,10 +2385,6 @@ async function loadModel() {
 
     await loadScenePoints();
 
-
-    /*
-      Pierwszy widok z góry.
-    */
 
     showTopView();
 
@@ -2143,7 +2424,7 @@ loadModel();
 
 
 /* =====================================================
-   MOUSE LOOK
+  MOUSE LOOK
 ===================================================== */
 
 let yaw = 0;
@@ -2179,12 +2460,6 @@ renderer.domElement.addEventListener(
 
     }
 
-
-    /*
-      Podczas animacji
-      nie rozpoczynamy
-      rozglądania.
-    */
 
     if (cameraTransition) {
 
@@ -2305,7 +2580,7 @@ renderer.domElement.addEventListener(
 
 
 /* =====================================================
-   KEYBOARD
+  KEYBOARD
 ===================================================== */
 
 const keys = {};
@@ -2342,7 +2617,7 @@ window.addEventListener(
 
 
 /* =====================================================
-   MOVEMENT
+  MOVEMENT
 ===================================================== */
 
 const direction =
@@ -2375,14 +2650,6 @@ function updateMovement() {
 
   }
 
-
-  /*
-    Bardzo ważne:
-
-    podczas przejścia
-    WASD nie może zmieniać
-    pozycji kamery.
-  */
 
   if (cameraTransition) {
 
@@ -2474,7 +2741,7 @@ function updateMovement() {
 
 
 /* =====================================================
-   LOOK
+  LOOK
 ===================================================== */
 
 function updateLook() {
@@ -2495,11 +2762,6 @@ function updateLook() {
 
   }
 
-
-  /*
-    Animacja ma pełną kontrolę
-    nad kamerą.
-  */
 
   if (cameraTransition) {
 
@@ -2550,7 +2812,7 @@ function updateLook() {
 
 
 /* =====================================================
-   UPDATE ANGLES
+  UPDATE ANGLES
 ===================================================== */
 
 function updateAnglesFromCamera(
@@ -2610,7 +2872,7 @@ function updateAnglesFromCamera(
 
 
 /* =====================================================
-   RESET
+  RESET
 ===================================================== */
 
 document
@@ -2622,11 +2884,6 @@ document
     "click",
 
     () => {
-
-      /*
-        Anulujemy ewentualną
-        trwającą animację.
-      */
 
       cameraTransition =
         null;
@@ -2660,22 +2917,17 @@ document
       }
 
 
-      /*
-        Po resecie zawsze
-        zaznaczamy Korytarz.
-      */
-
       updateRoomActive(
         "SPACER_KORYTARZ"
       );
 
     }
 
-);
+  );
 
 
 /* =====================================================
-   START BUTTON
+  START BUTTON
 ===================================================== */
 
 document
@@ -2692,11 +2944,11 @@ document
 
     }
 
-);
+  );
 
 
 /* =====================================================
-   FULLSCREEN
+  FULLSCREEN
 ===================================================== */
 
 async function fullscreen() {
@@ -2754,7 +3006,7 @@ document
 
 
 /* =====================================================
-   INFO
+  INFO
 ===================================================== */
 
 document
@@ -2783,11 +3035,11 @@ document
 
     }
 
-);
+  );
 
 
 /* =====================================================
-   RESIZE
+  RESIZE
 ===================================================== */
 
 window.addEventListener(
@@ -2819,7 +3071,7 @@ window.addEventListener(
 
 
 /* =====================================================
-   ANIMATION
+  ANIMATION
 ===================================================== */
 
 function animate() {
@@ -2829,17 +3081,8 @@ function animate() {
   );
 
 
-  /*
-    Najpierw animacja kamery.
-  */
-
   updateCameraTransition();
 
-
-  /*
-    Potem normalne sterowanie.
-    Podczas animacji jest blokowane.
-  */
 
   updateMovement();
 
